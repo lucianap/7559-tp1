@@ -17,7 +17,7 @@ class Productor {
         std::vector<int> distribuidores;
     
     public:
-        Productor(std::vector<int> distribuidores, const int ramos_por_cajon);
+        Productor(int id, std::vector<int> distribuidores, const int ramos_por_cajon);
         Ramo producir_ramo();
         void enviar_cajon(std::vector<Ramo> ramos);
 
