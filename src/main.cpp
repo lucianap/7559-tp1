@@ -4,14 +4,26 @@
 #include <sys/wait.h>
 #include <vector>
 
-#include "Productor/Productor.h"
 
-const int productores = 50;
-const int distribuidores = 30;
+#include "Productor/Productor.h"
+#include "Distribuidor/Distribuidor.h"
+
+
+using std::vector;
+
+const int productores = 5;
+const int distribuidores = 3;
 
 const int ramos_por_cajon = 10;
 
+void limpiarDistribuidores(vector<Distribuidor *> &vector);
+
 int main() {
+
+
+    Logger logger("log.txt", true);
+    logger.log("Cargando oficina de aduanas de conculandia");
+
 
     const int distribuidores_por_productor = distribuidores / productores;
 
@@ -29,6 +41,13 @@ int main() {
         }
     }
 
+    vector<Distribuidor*> distribuidoresList;
+    for (int j = 0; j < distribuidores; ++j) {
+        Distribuidor* distribuidor = new Distribuidor(logger);
+        distribuidoresList.push_back(distribuidor);
+        distribuidor->ejecutar();
+    }
+
     //Creación de los productores en procesos separados..
     for(int i = 0; i < productores; i++) {
         if(fork() == 0) {
@@ -43,11 +62,17 @@ int main() {
 		}
     }
 
-    while(true) {
-        //TODO mostrar menu.
-        //Opciones:
-        //.............getstats
-        //.............finalizar
-        //.............??
+    //TODO mostrar menu.
+
+    limpiarDistribuidores(distribuidoresList);
+}
+
+void limpiarDistribuidores(vector<Distribuidor *> &distribuidores) {
+
+    for (int i = 0; i < distribuidores.size(); ++i) {
+        Distribuidor* distribuidor = distribuidores.at(i);
+        distribuidor->terminar();
+        delete(distribuidor);
     }
+
 }

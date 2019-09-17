@@ -1,0 +1,12 @@
+set(SOURCE
+        ${SOURCE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/LockFile.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/LockReadFile.cpp
+        PARENT_SCOPE
+        )
+set(HEADERS
+        ${HEADERS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/LockFile.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/LockReadFile.h
+        PARENT_SCOPE
+        )
