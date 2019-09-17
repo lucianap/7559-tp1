@@ -1,12 +1,2 @@
-# Ignore the build and lib dirs
-build
-lib/*
-.vscode/*
-*.o
-tp1
-
-# Ignore any executables
-bin/*
-
-# Ignore Mac specific files
-.DS_Store
+cmake-build-debug/
+.idea

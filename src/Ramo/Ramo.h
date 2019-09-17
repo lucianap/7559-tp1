@@ -2,13 +2,13 @@
 #define RAMO_H_
 
 #include <string>
-#include "../Flores.h"
+#include "../TipoFlor/TipoFlor.h"
 
 class Ramo {
     private:
         int id;
         int producido_por;
-        Flores tipo_flores;
+        TipoFlor tipoFlor;
     public:
         Ramo(int id_productor);
         Ramo(std::string ramo_seralizado);
