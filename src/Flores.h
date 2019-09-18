@@ -1,4 +1,0 @@
-enum Flores {
-    Tulipan,
-    Rosa
-};

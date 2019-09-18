@@ -7,12 +7,13 @@
 
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"
+#include "Menu/Menu.h"
 
 
 using std::vector;
 
-const int productores = 5;
-const int distribuidores = 3;
+const int productores = 2;
+const int distribuidores = 2;
 
 const int ramos_por_cajon = 10;
 
@@ -20,7 +21,7 @@ void limpiarDistribuidores(vector<Distribuidor *> &vector);
 
 int main() {
 
-
+    Menu menu;
     Logger logger("log.txt", true);
     logger.log("Cargando oficina de aduanas de conculandia");
 
@@ -62,8 +63,9 @@ int main() {
 		}
     }
 
-    //TODO mostrar menu.
+    menu.iniciar();
 
+    // liberar recursos de memoria e ipc
     limpiarDistribuidores(distribuidoresList);
 }
 

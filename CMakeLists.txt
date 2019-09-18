@@ -19,5 +19,6 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Logger")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Distribuidor")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoHijo")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Signal")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/Menu")
 
 add_executable(7559_tp1 ${SOURCE} ${HEADERS})
