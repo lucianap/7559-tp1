@@ -14,11 +14,9 @@ public:
     explicit Logger(string output, bool debug);
     ~Logger();
 
-    int getFileDescriptor();
     void log(string message);
 
 private:
-    LockFile lock;
     bool debug;
 
 };

@@ -2,10 +2,6 @@
 
 #include "./Logger.h"
 
-int Logger::getFileDescriptor() {
-    return lock.getFileDescriptor();
-}
-
 void Logger::log(string message) {
     if (!debug) return;
 
@@ -15,13 +11,11 @@ void Logger::log(string message) {
     string pid = to_string(getpid());
     string logMessage = "pid: " + pid + " (" + timeString + ") " + message + "\n";
 
-    lock.tomarLock();
-    lock.escribir(logMessage.c_str(), logMessage.length());
-    lock.liberarLock();
+    // escribir(logMessage.c_str(), logMessage.length());
+
 }
 
 Logger::Logger(string output, bool debug) :
-    lock(LockFile(output)),
-    debug(debug) {}
+        debug(debug) {}
 
 Logger::~Logger() = default;

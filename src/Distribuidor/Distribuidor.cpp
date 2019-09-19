@@ -5,8 +5,8 @@
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
 
-Distribuidor::Distribuidor(Logger& logger)  :
-        ProcesoHijo(logger) {
+Distribuidor::Distribuidor(Logger& logger, Pipe* pipeEntrada)  :
+        ProcesoHijo(logger), pipeEntrada(pipeEntrada) {
 }
 
 Distribuidor::~Distribuidor() {
