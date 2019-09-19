@@ -1,5 +1,5 @@
-#ifndef CONCULANDIA_LOGGER_H
-#define CONCULANDIA_LOGGER_H
+#ifndef HH_LOGGER_H
+#define HH_LOGGER_H
 
 #include <iostream>
 #include <string>
@@ -22,4 +22,4 @@ private:
 };
 
 
-#endif // CONCULANDIA_LOGGER_H
+#endif

@@ -19,7 +19,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     Menu menu;
     Logger logger("log.txt", true);
-    logger.log("Cargando oficina de aduanas de conculandia");
+    logger.log("Cargando");
 
 
     const int distribuidores_por_productor = distribuidores / productores;
@@ -38,13 +38,15 @@ void ProcesoInicial::iniciarEjecucion() {
         }
     }
 
-    vector<Distribuidor*> distribuidoresList;
-    vector<Pipe*> distribuidoresEntradasPipe;
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor = new Pipe();
-        Distribuidor* distribuidor = new Distribuidor(logger, pipeInDistribuidor);
+        this->distribuidoresEntrada.push_back(pipeInDistribuidor);
+    }
 
-        distribuidoresList.push_back(distribuidor);
+    for (int j = 0; j < distribuidores; ++j) {
+        Distribuidor* distribuidor = new Distribuidor(logger,
+                            this->distribuidoresEntrada.at(j));
+        this->distribuidoresList.push_back(distribuidor);
         distribuidor->ejecutar();
     }
 
@@ -68,23 +70,21 @@ void ProcesoInicial::iniciarEjecucion() {
 
 ProcesoInicial::~ProcesoInicial() {
     // liberar recursos de memoria e ipc
-    //this->limpiarDistribuidores(distribuidoresList, distribuidoresEntradasPipe);
-
+    this->limpiarDistribuidores();
 }
 
 
 
-void ProcesoInicial::limpiarDistribuidores(vector<Distribuidor *> &distribuidores,
-                           vector<Pipe *> &distribuidoresEntrada) {
+void ProcesoInicial::limpiarDistribuidores() {
 
-    for (int i = 0; i < distribuidores.size(); ++i) {
-        Distribuidor* distribuidor = distribuidores.at(i);
+    for (int i = 0; i < this->distribuidoresList.size(); ++i) {
+        Distribuidor* distribuidor = this->distribuidoresList.at(i);
         distribuidor->terminar();
         delete(distribuidor);
     }
 
     for (int j = 0; j < distribuidoresEntrada.size(); ++j) {
-        delete(distribuidores.at(j));
+        delete(this->distribuidoresEntrada.at(j));
     }
 
 }

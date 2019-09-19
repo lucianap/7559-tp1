@@ -20,16 +20,20 @@ using std::vector;
 
 class ProcesoInicial {
 
+
+
+private:
+
+    vector<Distribuidor *> distribuidoresList;
+    vector<Pipe *> distribuidoresEntrada;
+
+    void limpiarDistribuidores();
+
 public:
     ProcesoInicial();
     ~ProcesoInicial();
 
     void iniciarEjecucion();
-
-private:
-
-    void limpiarDistribuidores(vector<Distribuidor *> &distribuidores,
-                               vector<Pipe *> &distribuidoresEntrada);
 
 };
 
