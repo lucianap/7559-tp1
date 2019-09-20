@@ -5,8 +5,7 @@
 using std::vector;
 
 
-ProcesoInicial::ProcesoInicial() {
-
+ProcesoInicial::ProcesoInicial(t_parametros parametros): parametros(parametros) {
 }
 
 void ProcesoInicial::iniciarEjecucion() {
