@@ -11,7 +11,6 @@ ProcesoInicial::ProcesoInicial() {
 
 void ProcesoInicial::iniciarEjecucion() {
 
-
     int productores = 2;
     int distribuidores = 2;
 
@@ -21,26 +20,15 @@ void ProcesoInicial::iniciarEjecucion() {
     Logger logger("log.txt", true);
     logger.log("Cargando");
 
-
-    const int distribuidores_por_productor = distribuidores / productores;
-
-    //Se guardan los files descriptors de los pipe creados para luego asignar sus extremos a otros procesos.
-    std::vector<int[2]> file_d_productor_distribuidor(distribuidores);
-
-    for(int i = 0; i < distribuidores; i++){
-        //un pipe por distribuidor.
-        //TODO usar la clase pipe.
-        pipe(file_d_productor_distribuidor.at(i));
-
-        if(fork() == 0) {
-            //TODO EJECUTAR DISTRIBUIDOR ASIGNANDO EL EXTREMO DE LECTURA DEL PIPE RECIÉN CREADO
-            exit(0);
-        }
-    }
+    //Mapa de asignación de productores a distribuidores.
+    //La key es el número de orden del productor
+    //El valor es el Pipe al cual se conecta el distribuidor.
+    std::map<int, vector<Pipe*>> distribuidores_por_productor;
 
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor = new Pipe();
         this->distribuidoresEntrada.push_back(pipeInDistribuidor);
+        this->asignar_productor(j, pipeInDistribuidor, productores, distribuidores_por_productor);
     }
 
     for (int j = 0; j < distribuidores; ++j) {
@@ -54,13 +42,9 @@ void ProcesoInicial::iniciarEjecucion() {
     for(int i = 0; i < productores; i++) {
         if(fork() == 0) {
             std::cout << "Soy hijo.." << std::endl;
-
-            std::vector<int> distribuidores_escuchando;
-
-            Productor* p = new Productor(getpid(), distribuidores_escuchando, ramos_por_cajon);
-            p->ejecutar_productor();
-            delete(p);
-            exit(0);
+            std::vector<Pipe*> distribuidores_escuchando = distribuidores_por_productor.at(i);
+            Productor* p = new Productor(getpid(), distribuidores_escuchando, ramos_por_cajon, logger);
+            p->ejecutar();
         }
     }
 
@@ -73,7 +57,22 @@ ProcesoInicial::~ProcesoInicial() {
     this->limpiarDistribuidores();
 }
 
+void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
+        std::map<int, vector<Pipe*>> distribuidores_por_productor ) {
 
+    //Se asigna el distribuidor j a un productor N y se guarda el resultado en el mapa distribuidores_por productor.
+    int n = j % cantidad_productores;
+
+    //if(mapOfWords.find("sun") != mapOfWords.end())
+    if(distribuidores_por_productor.find(n) == distribuidores_por_productor.end()) {
+        std::vector<Pipe*> pipe_vector{pipeInDistribuidor};
+        distribuidores_por_productor.insert(std::make_pair(n, pipe_vector));
+    } else {
+        std::vector<Pipe*> pipe_vector = distribuidores_por_productor.at(n);
+        pipe_vector.push_back(pipeInDistribuidor);
+    }
+
+}
 
 void ProcesoInicial::limpiarDistribuidores() {
 
