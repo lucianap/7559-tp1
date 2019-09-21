@@ -10,8 +10,8 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros): parametros(parametros) 
 
 void ProcesoInicial::iniciarEjecucion() {
 
-    int productores = 1; //parametros.cantProductores;
-    int distribuidores = 1; //parametros.cantDistribuidores;
+    int productores = 3; //parametros.cantProductores;
+    int distribuidores = 8; //parametros.cantDistribuidores;
 
     int ramos_por_cajon = 10;
 
