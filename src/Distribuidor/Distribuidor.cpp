@@ -1,12 +1,11 @@
-//
-// Created by nestor on 17/09/19.
-//
-
+#include <Ramo/Ramo.h>
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
 
-Distribuidor::Distribuidor(Logger& logger, Pipe* pipeEntrada)  :
-        ProcesoHijo(logger), pipeEntrada(pipeEntrada) {
+Distribuidor::Distribuidor(Logger& logger, int idDistribuidor)  :
+        ProcesoHijo(logger),
+        idDistribuidor(idDistribuidor),
+        entradaFlores() { // todo validar
 }
 
 Distribuidor::~Distribuidor() {
@@ -34,6 +33,33 @@ pid_t Distribuidor::ejecutar() {
 }
 
 void Distribuidor::iniciarAtencion() {
+    char buffer[20];        // cambiarlo con Lu
+    Ramo paqueteFlores(1); // cambiarlo con Lu
 
-    // TODO: LOOPEAR
+    while (sigint_handler.getGracefulQuit() == 0) {
+        try {
+            paqueteFlores = recibirPaquetesFlores(buffer);
+            // todo agregar logica y enviar a punto de venta
+        } catch (std::string &error) {
+            logger.log("Error atendiendo personas: " + error);
+            break;
+        }
+    }
+
+    entradaFlores.cerrar();
 }
+
+// todo: refactor
+Ramo Distribuidor::recibirPaquetesFlores(char *buffer) {
+    string mensajeError;
+    ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), 20);  // cambiarlo con lu
+    if (bytesleidos != 20) { // cambiarlo con lu
+        if (bytesleidos == -1)
+            mensajeError = strerror(errno);
+        else
+            mensajeError = "Error al leer la siguiente persona en la fifo";
+        throw(std::string(mensajeError));
+    }
+    Ramo paqueteRecibido(buffer);
+    return paqueteRecibido;
+};
