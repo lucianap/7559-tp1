@@ -12,7 +12,8 @@ class Cajon {
     public:
         Cajon(std::vector<Ramo*> ramos);
         Cajon(const std::string& cajon_serializado, int ramos_por_cajon);
-        std::string serializar(); 
+        std::string serializar();
+        ~Cajon();
 };
 
 #endif /* CAJON_H_ */

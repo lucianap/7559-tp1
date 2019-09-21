@@ -37,7 +37,7 @@ public:
     void iniciarEjecucion();
 
     void asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
-                            std::map<int, vector<Pipe*>> distribuidores_por_productor );
+                            std::map<int, vector<Pipe*>>* distribuidores_por_productor );
 
 };
 

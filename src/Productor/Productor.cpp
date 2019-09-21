@@ -1,8 +1,10 @@
 #include <Signal/SignalHandler.h>
+
+#include <utility>
 #include "Productor.h"
 
 Productor::Productor(int id, std::vector<Pipe*> distribuidores, int ramos_por_cajon, Logger& logger):
-        ProcesoHijo(logger), id(id), distribuidores(distribuidores), ramos_por_cajon(ramos_por_cajon) {};
+        ProcesoHijo(logger), id(id), distribuidores(std::move(distribuidores)), ramos_por_cajon(ramos_por_cajon) {};
 
 Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
         ProcesoHijo(logger), id(id), ramos_por_cajon(ramos_por_cajon) {};

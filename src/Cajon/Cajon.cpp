@@ -18,12 +18,23 @@ Cajon::Cajon(const std::string& cajon_serializado, int ramos_por_cajon) {
 //lo que hace es serializar un cajón, concatenando las serializaciones de sus ramos,
 //para deserializarlo habría que hacer split por el separador y deserializar cada ramo.
 std::string Cajon::serializar(){
+
     std::vector<std::string> string_vector;
-    for (std::vector<Ramo*>::iterator it = this->ramos.begin() ; it != this->ramos.end(); ++it) {
+
+    for (auto it = this->ramos.begin() ; it != this->ramos.end(); ++it) {
         Ramo* r = *it;
         string_vector.push_back(r->serializar());
     }
+
     std::string cajon_serializado;
     Utils::join(string_vector, cajon_serializado);
     return cajon_serializado;
+}
+
+Cajon::~Cajon() {
+    std::cout << "Se descarta el cajón." << std::endl;
+    for (auto r : ramos){
+        delete r;
+    }
+    ramos.clear();
 }
