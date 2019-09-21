@@ -19,9 +19,8 @@ void Productor::ejecutar_productor(){
 
     auto distribuidores_iterator = distribuidores.begin();
 
-    bool TRUE = true;
     //Distribuye uniformemente entre los distribuidores asignados a este productor.
-    while(TRUE) {
+    while (sigint_handler.getGracefulQuit() == 0) {
 
         //Voy recorriendo el array de distribuidores para ir enviando cajones equitativamente.
         Pipe* distribuidor_actual = *distribuidores_iterator;
