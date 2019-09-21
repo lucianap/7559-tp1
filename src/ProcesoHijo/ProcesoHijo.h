@@ -1,5 +1,5 @@
-#ifndef CONCULANDIA_PROCESOHIJO_H
-#define CONCULANDIA_PROCESOHIJO_H
+#ifndef PROCESOHIJO_H
+#define PROCESOHIJO_H
 
 #include <unistd.h>
 
@@ -34,4 +34,4 @@ protected:
 };
 
 
-#endif // CONCULANDIA_PROCESOHIJO_H
+#endif // PROCESOHIJO_H

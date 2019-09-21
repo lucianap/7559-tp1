@@ -20,7 +20,7 @@ void Menu::iniciar() {
         switch (input) {
             case '0':
                 cout << endl;
-                cout << "Se procedera a cerrar la oficina de aduanas" << endl;
+                cout << "Se cierran los procesos." << endl;
                 break;
             default:
                 cout << "Opcion no reconocida" << endl;

@@ -2,8 +2,8 @@
 // Created by nestor on 30/04/18.
 //
 
-#ifndef ADUANACONCULANDIA_LOCKREADFILE_H
-#define ADUANACONCULANDIA_LOCKREADFILE_H
+#ifndef _LOCKREADFILE_H
+#define _LOCKREADFILE_H
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -32,4 +32,4 @@ public:
 };
 
 
-#endif //ADUANACONCULANDIA_LOCKREADFILE_H
+#endif //_LOCKREADFILE_H
