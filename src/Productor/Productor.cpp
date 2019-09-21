@@ -10,7 +10,7 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 void Productor::ejecutar_productor(){
 
     std::cout << "Soy el hijo " << this->id << " y comienzo mi ejecución." << std::endl;
-    std::vector<Ramo> ramos_a_enviar;
+    std::vector<Ramo*> ramos_a_enviar;
     ramos_a_enviar.reserve(10);
 
     int ramos_producidos = 0;
@@ -29,7 +29,7 @@ void Productor::ejecutar_productor(){
             distribuidor_actual = *distribuidores_iterator;
         }
 
-        Ramo r = this->producir_ramo();
+        Ramo* r = this->producir_ramo();
         ramos_a_enviar.push_back(r);
 
         ramos_producidos++;
@@ -65,13 +65,13 @@ void Productor::agregar_distribuidor(Pipe* distribuidor) {
     this->distribuidores.push_back(distribuidor);
 }
 
-Ramo Productor::producir_ramo() {
+Ramo* Productor::producir_ramo() {
     //Solo para simular la producción del ramo.
     sleep(5);
-    return Ramo(this->id);
+    return new Ramo(this->id);
 }
 
-void Productor::enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino) {
+void Productor::enviar_cajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
     Cajon c(ramos);
     std::string cajon_a_enviar = c.serializar();
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), sizeof(cajon_a_enviar.c_str()));

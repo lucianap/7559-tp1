@@ -2,7 +2,11 @@
 #define RAMO_H_
 
 #include <string>
+#include <iomanip>
+#include <sstream>
+#include <iostream>
 #include "../TipoFlor/TipoFlor.h"
+#include "../Utils/Utils.h"
 
 class Ramo {
     private:
@@ -11,10 +15,12 @@ class Ramo {
         TipoFlor tipoFlor;
     public:
         Ramo(int id_productor);
+        Ramo(int id_productor, TipoFlor f);
         Ramo(std::string ramo_seralizado);
 
         int get_productor();
-        std::string serializar();        
+        TipoFlor getTipoFlor();
+        std::string serializar();
 };
 
 #endif /* RAMO_H_ */

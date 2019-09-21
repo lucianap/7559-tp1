@@ -14,6 +14,32 @@ void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    }
 }
 
+void Utils::join(const std::vector<std::string>& v, std::string& s) {
+    s.clear();
+    for (std::vector<std::string>::const_iterator p = v.begin();
+         p != v.end(); ++p) {
+        s += *p;
+    }
+}
+
+std::string& Utils::ltrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
+{
+    str.erase(0, str.find_first_not_of(chars));
+    return str;
+}
+
+std::string& Utils::rtrim(std::string& str, const std::string& chars = "\t\n\v\f\r ")
+{
+    str.erase(str.find_last_not_of(chars) + 1);
+    return str;
+}
+
+std::string& Utils::trim(std::string& str)
+{
+    const std::string& chars = "\t\n\v\f\r ";
+    return ltrim(rtrim(str, chars), chars);
+}
+
 t_parametros Utils::tomarParametros(int argc,char* argv[]) {
    int c;
    bool pendingParams = true;
