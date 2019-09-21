@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <vector>
 #include <map>
+#include <Utils/Utils.h>
 
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"
@@ -21,17 +22,16 @@ using std::vector;
 
 class ProcesoInicial {
 
-
-
 private:
 
+    t_parametros parametros;
     vector<Distribuidor *> distribuidoresList;
     vector<Pipe *> distribuidoresEntrada;
 
     void limpiarDistribuidores();
 
 public:
-    ProcesoInicial();
+    ProcesoInicial(t_parametros parametros);
     ~ProcesoInicial();
 
     void iniciarEjecucion();
