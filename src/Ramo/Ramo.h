@@ -14,7 +14,6 @@ class Ramo {
         int producido_por;
         TipoFlor tipoFlor;
     public:
-        Ramo(int id_productor);
         Ramo(int id_productor, TipoFlor f);
         Ramo(std::string ramo_seralizado);
 

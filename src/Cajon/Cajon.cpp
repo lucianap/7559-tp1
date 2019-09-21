@@ -32,7 +32,6 @@ std::string Cajon::serializar(){
 }
 
 Cajon::~Cajon() {
-    std::cout << "Se descarta el cajón." << std::endl;
     for (auto r : ramos){
         delete r;
     }

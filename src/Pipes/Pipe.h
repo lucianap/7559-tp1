@@ -7,11 +7,14 @@
 class Pipe {
 
 private:
-	int descriptores[2];
+
 	bool lectura;
 	bool escritura;
 
+    int descriptores[2];
+
 public:
+
 	static const int LECTURA = 0;
 	static const int ESCRITURA = 1;
 

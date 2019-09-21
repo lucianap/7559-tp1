@@ -15,10 +15,10 @@ private:
 
     void iniciarAtencion();
 
-    Ramo recibirPaquetesFlores(char *buffer);
+    Cajon* recibirCajon(char *buffer);
 
 public:
-    Distribuidor(Logger& logger, int idDistribuidor);
+    Distribuidor(Logger& logger, int idDistribuidor, Pipe* pipe);
     ~Distribuidor() override;
 
     pid_t ejecutar() override;

@@ -8,8 +8,8 @@
 class Cajon {
     private:
         int id;
-        std::vector<Ramo*> ramos;
     public:
+        std::vector<Ramo*> ramos;
         Cajon(std::vector<Ramo*> ramos);
         Cajon(const std::string& cajon_serializado, int ramos_por_cajon);
         std::string serializar();

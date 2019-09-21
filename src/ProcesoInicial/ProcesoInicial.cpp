@@ -10,8 +10,8 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros): parametros(parametros) 
 
 void ProcesoInicial::iniciarEjecucion() {
 
-    int productores = 10; //parametros.cantProductores;
-    int distribuidores = 15; //parametros.cantDistribuidores;
+    int productores = 1; //parametros.cantProductores;
+    int distribuidores = 1; //parametros.cantDistribuidores;
 
     int ramos_por_cajon = 10;
 
@@ -31,7 +31,7 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     for (int j = 0; j < distribuidores; ++j) {
-        Distribuidor* distribuidor = new Distribuidor(logger, j);
+        Distribuidor* distribuidor = new Distribuidor(logger, j, this->distribuidoresEntrada.at(j));
         this->distribuidoresList.push_back(distribuidor);
         distribuidor->ejecutar();
     }

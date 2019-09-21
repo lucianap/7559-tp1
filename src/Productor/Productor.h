@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <unistd.h>
+#include <cstdlib>
 #include <ProcesoHijo/ProcesoHijo.h>
 #include <Pipes/Pipe.h>
 #include "../Ramo/Ramo.h"
