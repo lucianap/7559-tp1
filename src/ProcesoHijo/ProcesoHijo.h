@@ -26,6 +26,7 @@ public:
     virtual ~ProcesoHijo();
     virtual pid_t ejecutar() = 0;
 
+
 protected:
     Logger& logger;
     pid_t pid;

@@ -1,21 +1,31 @@
 #include <ctime>
 
 #include "./Logger.h"
+#include <cstring>
+#include <Utils/Utils.h>
+
+Logger::Logger(bool debug) :
+        debug(debug) {}
+
+Logger::~Logger() = default;
 
 void Logger::log(string message) {
     if (!debug) return;
 
-    time_t timestamp = time(nullptr);
-    string timeString = asctime(localtime(&timestamp));
-    timeString.pop_back();
-    string pid = to_string(getpid());
-    string logMessage = "pid: " + pid + " (" + timeString + ") " + message + "\n";
+    string logMessage = Utils::formatearMensajeLog(message);
 
-    // escribir(logMessage.c_str(), logMessage.length());
+    this->pipe.setearModo(Pipe::ESCRITURA);
+    ssize_t tamanioEnviado = this->pipe.escribir(logMessage.c_str(), MENSAGE_LOG_SIZE);
 
+    if (tamanioEnviado == -1) {
+        string mensajeError = strerror(errno);
+        cerr<<(string(mensajeError))<<endl;
+    } else if (tamanioEnviado != MENSAGE_LOG_SIZE) {
+        string mensajeError = "No se pudo completar la escritura en el log para pid" + getpid();
+        cerr<<(string(mensajeError))<<endl;
+    }
 }
 
-Logger::Logger(string output, bool debug) :
-        debug(debug) {}
-
-Logger::~Logger() = default;
+const Pipe &Logger::getPipe() const {
+    return pipe;
+}

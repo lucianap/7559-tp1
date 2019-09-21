@@ -1,9 +1,14 @@
 #include "Pipe.h"
+#include <iostream>
+#include <cstring>
+using std::cerr;
+using std::endl;
 
 Pipe :: Pipe() : lectura(true), escritura(true) {
-	pipe ( this->descriptores );
-	/*fcntl ( this->descriptors[0],F_SETFL,O_NONBLOCK );
-	fcntl ( this->descriptors[1],F_SETFL,O_NONBLOCK );*/
+	int status = pipe ( this->descriptores );
+	if (status == -1) {
+		std::cerr<<strerror(errno)<<endl;
+	}
 }
 
 Pipe::~Pipe() {

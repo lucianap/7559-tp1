@@ -52,7 +52,7 @@ void Distribuidor::iniciarAtencion() {
 
             // todo agregar logica y enviar a punto de venta
         } catch (std::string &error) {
-            logger.log("Error atendiendo personas: " + error);
+            logger.log("Error atendiendo a productores: " + error);
             break;
         }
     }

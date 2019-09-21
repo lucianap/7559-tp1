@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <getopt.h>
+#include <sstream>
 
 void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    s.clear();
@@ -92,4 +93,14 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
    }
 
    return params;
+}
+
+
+std::string Utils::formatearMensajeLog(std::string mensaje) {
+    time_t timestamp = time(nullptr);
+    string timeString = asctime(localtime(&timestamp));
+    timeString.pop_back();
+    std::stringstream logMessage;
+    logMessage << "pid: " << std::setw(5) << to_string(getpid()) <<" ("<< std::setw(24) << timeString <<") "<< mensaje;
+    return logMessage.str();
 }

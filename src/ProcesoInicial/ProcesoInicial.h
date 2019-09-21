@@ -16,7 +16,8 @@
 #include "Distribuidor/Distribuidor.h"
 #include "Menu/Menu.h"
 #include "ProcesoInicial/ProcesoInicial.h"
-
+#include "Logger/LoggerProcess.h"
+#include "Logger/Logger.h"
 using std::vector;
 
 
@@ -29,6 +30,10 @@ private:
     vector<Productor*> productores;
     vector<Pipe *> distribuidoresEntrada;
     void limpiar();
+
+    Logger logger;
+    LoggerProcess loggerProcess;
+
 
 public:
     ProcesoInicial(t_parametros parametros);

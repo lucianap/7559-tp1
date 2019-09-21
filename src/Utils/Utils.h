@@ -3,6 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <unistd.h>
+#include <ctime>
+#include <iomanip>
+
 
 
 using namespace std;
@@ -30,6 +34,8 @@ class Utils {
         static std::string& trim(std::string& str);
 
         static t_parametros tomarParametros(int argc,char* argv[]);
+
+        static std::string formatearMensajeLog(std::string mensaje);
 
 private:
         //para hacer completamente estática la clase prohíbo la construcción

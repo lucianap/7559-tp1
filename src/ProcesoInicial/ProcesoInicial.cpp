@@ -5,19 +5,20 @@
 using std::vector;
 
 
-ProcesoInicial::ProcesoInicial(t_parametros parametros): parametros(parametros) {
+ProcesoInicial::ProcesoInicial(t_parametros parametros):
+        parametros(parametros), logger(true), loggerProcess("log.txt", logger) {
 }
 
 void ProcesoInicial::iniciarEjecucion() {
 
-    int productores = 3; //parametros.cantProductores;
-    int distribuidores = 8; //parametros.cantDistribuidores;
+    int productores = 1; //parametros.cantProductores;
+    int distribuidores = 1; //parametros.cantDistribuidores;
 
     int ramos_por_cajon = 10;
 
     Menu menu;
-    Logger logger("log.txt", true);
-    logger.log("Cargando");
+    loggerProcess.ejecutar();
+    logger.log("-----------Iniciando sistema-------------");
 
     //Mapa de asignación de productores a distribuidores.
     //La key es el número de orden del productor
@@ -103,5 +104,7 @@ void ProcesoInicial::limpiar() {
     for (int j = 0; j < distribuidores.size(); ++j) {
         delete(distribuidores.at(j));
     }
+
+    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }
