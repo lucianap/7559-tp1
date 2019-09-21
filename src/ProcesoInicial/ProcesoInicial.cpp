@@ -10,14 +10,15 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros): parametros(parametros) 
 
 void ProcesoInicial::iniciarEjecucion() {
 
-    int productores = 2;
-    int distribuidores = 2;
+    int productores = parametros.cantProductores;
+    int distribuidores = parametros.cantDistribuidores;
 
     int ramos_por_cajon = 10;
 
     Menu menu;
     Logger logger("log.txt", true);
     logger.log("Cargando");
+
 
     //Mapa de asignación de productores a distribuidores.
     //La key es el número de orden del productor
@@ -30,9 +31,9 @@ void ProcesoInicial::iniciarEjecucion() {
         this->asignar_productor(j, pipeInDistribuidor, productores, distribuidores_por_productor);
     }
 
+
     for (int j = 0; j < distribuidores; ++j) {
-        Distribuidor* distribuidor = new Distribuidor(logger,
-                            this->distribuidoresEntrada.at(j));
+        Distribuidor* distribuidor = new Distribuidor(logger, j);
         this->distribuidoresList.push_back(distribuidor);
         distribuidor->ejecutar();
     }

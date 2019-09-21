@@ -2,21 +2,26 @@
 #ifndef INC_7559_TP1_DISTRIBUIDOR_H
 #define INC_7559_TP1_DISTRIBUIDOR_H
 
+#include <Fifos/FifoLectura.h>
+#include <Pipes/Pipe.h>
 #include "../ProcesoHijo/ProcesoHijo.h"
-#include "../Pipes/Pipe.h"
 
 class Distribuidor : public ProcesoHijo {
 
-    Pipe* pipeEntrada;
+
+private:
+    int idDistribuidor;
+    Pipe entradaFlores;
+
+    void iniciarAtencion();
+
+    Ramo recibirPaquetesFlores(char *buffer);
 
 public:
-    Distribuidor(Logger& logger, Pipe* pipeEntrada);
+    Distribuidor(Logger& logger, int idDistribuidor);
     ~Distribuidor() override;
 
     pid_t ejecutar() override;
-
-private:
-    void iniciarAtencion();
 
 };
 
