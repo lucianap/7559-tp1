@@ -32,7 +32,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     for (int j = 0; j < distribuidores; ++j) {
         Distribuidor* distribuidor = new Distribuidor(logger, j, this->distribuidoresEntrada.at(j));
-        this->distribuidoresList.push_back(distribuidor);
+        this->distribuidores.push_back(distribuidor);
         distribuidor->ejecutar();
     }
 
@@ -48,6 +48,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
                 std::vector<Pipe*> distribuidores_escuchando = distribuidores_por_productor.at(0);
                 Productor* p = new Productor(getpid(), distribuidores_escuchando, ramos_por_cajon, logger);
+                this->productores.push_back(p);
                 p->ejecutar();
 
             }
@@ -61,7 +62,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
 ProcesoInicial::~ProcesoInicial() {
     // liberar recursos de memoria e ipc
-    this->limpiarDistribuidores();
+    this->limpiar();
 }
 
 void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
@@ -80,16 +81,27 @@ void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, co
 
 }
 
-void ProcesoInicial::limpiarDistribuidores() {
 
-    for (int i = 0; i < this->distribuidoresList.size(); ++i) {
-        Distribuidor* distribuidor = this->distribuidoresList.at(i);
-        distribuidor->terminar();
-        delete(distribuidor);
+void ProcesoInicial::limpiar() {
+
+    for (int i = 0; i < this->productores.size(); ++i) {
+        ProcesoHijo* proceso = this->productores.at(i);
+        proceso->terminar();
+        delete(proceso);
     }
 
-    for (int j = 0; j < distribuidoresEntrada.size(); ++j) {
-        delete(this->distribuidoresEntrada.at(j));
+    for (int i = 0; i < this->distribuidores.size(); ++i) {
+        ProcesoHijo* proceso = this->distribuidores.at(i);
+        proceso->terminar();
+        delete(proceso);
+    }
+
+    for (int j = 0; j < productores.size(); ++j) {
+        delete(productores.at(j));
+    }
+
+    for (int j = 0; j < distribuidores.size(); ++j) {
+        delete(distribuidores.at(j));
     }
 
 }

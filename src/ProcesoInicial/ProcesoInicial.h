@@ -25,10 +25,10 @@ class ProcesoInicial {
 private:
 
     t_parametros parametros;
-    vector<Distribuidor *> distribuidoresList;
+    vector<Distribuidor*> distribuidores;
+    vector<Productor*> productores;
     vector<Pipe *> distribuidoresEntrada;
-
-    void limpiarDistribuidores();
+    void limpiar();
 
 public:
     ProcesoInicial(t_parametros parametros);
