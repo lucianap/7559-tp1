@@ -11,8 +11,8 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros):
 
 void ProcesoInicial::iniciarEjecucion() {
 
-    int productores = 1; //parametros.cantProductores;
-    int distribuidores = 1; //parametros.cantDistribuidores;
+    int productores = parametros.cantProductores;
+    int distribuidores = parametros.cantDistribuidores;
 
     int ramos_por_cajon = 10;
 
@@ -40,15 +40,11 @@ void ProcesoInicial::iniciarEjecucion() {
     //Creación de los productores en procesos separados..
     for(int i = 0; i < productores; i++) {
         if(fork() == 0) {
-            std::cout << "Soy Productor Nro. " << i << std::endl;
             if(distribuidores_por_productor.find(0) == distribuidores_por_productor.end()) {
-
-                std::cout << "No hay distribuidores para mi " << i << " :c "<< std::endl;
-
+                logger.log("No hay distribuidores para el productor " + to_string(i));
             } else {
-
                 std::vector<Pipe*> distribuidores_escuchando = distribuidores_por_productor.at(0);
-                Productor* p = new Productor(getpid(), distribuidores_escuchando, ramos_por_cajon, logger);
+                Productor* p = new Productor(i, distribuidores_escuchando, ramos_por_cajon, logger);
                 this->productores.push_back(p);
                 p->ejecutar();
 

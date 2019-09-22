@@ -9,7 +9,7 @@ Productor::Productor(int id, std::vector<Pipe*> distribuidores, int ramos_por_ca
 Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
         ProcesoHijo(logger), id(id), ramos_por_cajon(ramos_por_cajon) {};
 
-void Productor::ejecutar_productor(){
+void Productor::producir() {
 
     std::vector<Ramo*> ramos_a_enviar;
     ramos_a_enviar.reserve(10);
@@ -42,6 +42,16 @@ void Productor::ejecutar_productor(){
         }
 
     }
+
+    this->cerrarPipes();
+
+
+}
+
+void Productor::cerrarPipes() {
+    for(auto itPipes = this->distribuidores.begin(); itPipes != this->distribuidores.end(); itPipes++){
+        (*itPipes)->cerrar();
+    }
 }
 
 pid_t Productor::ejecutar() {
@@ -53,7 +63,7 @@ pid_t Productor::ejecutar() {
     if (pid != 0) return pid;
 
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-    this->ejecutar_productor();
+    this->producir();
 
     logger.log("Termino la tarea de la productor");
     SignalHandler::destruir();
@@ -75,12 +85,17 @@ Ramo* Productor::producir_ramo() {
 
 void Productor::enviar_cajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
 
-    cout << "PRODUCTOR " << this->id << " envía cajón a destino." << endl;
+    std::stringstream ss;
+    ss << "PRODUCTOR " << this->id << " envía cajón a destino." << endl;
+    logger.log(ss.str());
 
     Cajon c(ramos);
     std::string cajon_a_enviar = c.serializar();
 
-    cout << "mensaje: " << cajon_a_enviar.c_str() << endl;
+    std::stringstream ss2;
+    ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;
+    logger.log(ss.str());
+
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
 
 }

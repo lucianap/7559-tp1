@@ -24,7 +24,7 @@ pid_t Distribuidor::ejecutar() {
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
 
-    cout << "Naci como distribuidor y tengo el pid: "+to_string(getpid()) << endl;
+    logger.log("Naci como distribuidor y tengo el pid: "+to_string(getpid()));
 
     this->iniciarAtencion();
     logger.log("Termino la tarea de la distribuidor");
@@ -40,17 +40,18 @@ void Distribuidor::iniciarAtencion() {
     while (sigint_handler.getGracefulQuit() == 0) {
         try {
 
-            cout << "Soy el distribuidor y voy a intentar recibir un cajon" << endl;
-
             paqueteCajon = recibirCajon(buffer);
 
-
-            cout << "DIST Nro " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
+            std::stringstream ss;
+            ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                cout << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
             }
 
+            logger.log(ss.str());
+
             // todo agregar logica y enviar a punto de venta
+
         } catch (std::string &error) {
             logger.log("Error atendiendo a productores: " + error);
             break;
@@ -63,8 +64,13 @@ void Distribuidor::iniciarAtencion() {
 // todo: refactor
 Cajon* Distribuidor::recibirCajon(char *buffer) {
     string mensajeError;
-    ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), 200);  // cambiarlo con lu RECORDA QUE SE ENVIAN DE A CAJONES.
-    cout << "Soy el DISTRIBUIDOR y lei " << bytesleidos << " del pipe." << endl;
+
+    //TODO este 200 debería ser un parámetro de configuración.
+    ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), 200);
+
+    std::stringstream ss;
+    ss << "DISTRIBUIDOR "<< this->idDistribuidor << " lee " << bytesleidos << " bytes del pipe." << endl;
+
     if (bytesleidos != 200) { // cambiarlo con lu
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
@@ -73,7 +79,9 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
         throw(std::string(mensajeError));
     }
 
-    cout << "buffer recibido: " << buffer << endl;
+    ss << "Datos recibidos: " << buffer << endl;
+    logger.log(ss.str());
+
     Cajon* paqueteRecibido = new Cajon(buffer, 10);
     return paqueteRecibido;
 };
