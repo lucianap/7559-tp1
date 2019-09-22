@@ -18,7 +18,6 @@ typedef struct parametros {
 } t_parametros;
 
 
-
 class Utils {
     public:
 

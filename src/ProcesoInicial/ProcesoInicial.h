@@ -12,8 +12,10 @@
 #include <map>
 #include <Utils/Utils.h>
 
+#include <ProcesoClientes/ProcesoClientes.h>
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"
+#include "PuntoVenta/PuntoVenta.h"
 #include "Menu/Menu.h"
 #include "ProcesoInicial/ProcesoInicial.h"
 #include "Logger/LoggerProcess.h"
@@ -28,7 +30,11 @@ private:
     t_parametros parametros;
     vector<Distribuidor*> distribuidores;
     vector<Productor*> productores;
+    vector<PuntoVenta*> puntosVenta;
+    vector<ProcesoClientes*> procesosClientes;
     vector<Pipe *> distribuidoresEntrada;
+    vector<Pipe *> pVentasEntrada;
+    vector<Pipe *> pVentasEntradaClientes;
     void limpiar();
 
     Logger logger;
@@ -41,8 +47,9 @@ public:
 
     void iniciarEjecucion();
 
-    void asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
+    void asignar_pipes(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
                             std::map<int, vector<Pipe*>>* distribuidores_por_productor );
+
 
 };
 

@@ -7,7 +7,7 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/ProcesoClientes/ProcesoClientes.cpp src/ProcesoClientes/ProcesoClientes.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
@@ -17,6 +17,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Utils")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Lock")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Logger")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Distribuidor")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/PuntoVenta")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoHijo")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Signal")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Menu")
@@ -24,4 +25,4 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Pipes")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Fifos")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoInicial")
 
-add_executable(7559_tp1 ${SOURCE} ${HEADERS})
+add_executable(7559_tp1 ${SOURCE} ${HEADERS} src/ProcesoClientes/ProcesoClientes.cpp src/ProcesoClientes/ProcesoClientes.h)

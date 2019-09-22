@@ -3,8 +3,9 @@
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
 
-Distribuidor::Distribuidor(Logger& logger, int idDistribuidor, Pipe* entrada)  :
+Distribuidor::Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int idDistribuidor, Pipe* entrada)  :
         ProcesoHijo(logger),
+        ptos_de_venta(ptos_de_venta),
         idDistribuidor(idDistribuidor),
         entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
 }
@@ -34,21 +35,43 @@ pid_t Distribuidor::ejecutar() {
 }
 
 void Distribuidor::iniciarAtencion() {
-    char buffer[200]; // cambiarlo con Lu
-    Cajon* paqueteCajon; // cambiarlo con Lu
+    char buffer[200];
+    Cajon* paqueteCajon;
+
+    int ramos_recibidos = 0;
+    std::vector<Ramo*> stock;
+
+    auto ptos_venta_iterator = ptos_de_venta.begin();
 
     while (sigint_handler.getGracefulQuit() == 0) {
         try {
-
+            Pipe* pto_venta_actual = *ptos_venta_iterator;
             paqueteCajon = recibirCajon(buffer);
 
+            //std::stringstream ss;
+
+            //ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             std::stringstream ss;
-            ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
                 ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                stock.push_back(*it);
+                ramos_recibidos++;
+                ss << "Cant actual " << ramos_recibidos << endl;
+                logger.log(ss.str());
+                ss.clear();
+                if(ramos_recibidos == 100){
+                    enviarCajon(stock, pto_venta_actual);
+                    stock.clear();
+                    ++ptos_venta_iterator;
+                    ramos_recibidos = 0;
+                }
             }
 
-            logger.log(ss.str());
+
+            if(ptos_venta_iterator == ptos_de_venta.end()) {
+                ptos_venta_iterator = ptos_de_venta.begin();
+                pto_venta_actual = *ptos_venta_iterator;
+            }
 
             // todo agregar logica y enviar a punto de venta
 
@@ -85,3 +108,20 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
     Cajon* paqueteRecibido = new Cajon(buffer, 10);
     return paqueteRecibido;
 };
+
+void Distribuidor::enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
+
+    std::stringstream ss;
+    ss << "DISTRIBUIDOR " << this->idDistribuidor << " envía cajón a destino." << endl;
+    logger.log(ss.str());
+
+    Cajon c(ramos);
+    std::string cajon_a_enviar = c.serializar();
+
+    std::stringstream ss2;
+    ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;
+    logger.log(ss.str());
+
+    distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
+
+}

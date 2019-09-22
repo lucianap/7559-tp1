@@ -13,12 +13,14 @@ private:
     int idDistribuidor;
     Pipe entradaFlores;
 
+    std::vector<Pipe*> ptos_de_venta;
     void iniciarAtencion();
 
     Cajon* recibirCajon(char *buffer);
-
+    void enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) ;
 public:
-    Distribuidor(Logger& logger, int idDistribuidor, Pipe* pipe);
+    Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int idDistribuidor, Pipe* pipe);
+
     ~Distribuidor() override;
 
     pid_t ejecutar() override;
