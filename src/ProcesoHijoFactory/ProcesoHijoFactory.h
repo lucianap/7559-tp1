@@ -17,13 +17,13 @@ class ProcesoHijoFactory {
             //El tipo de proceso siempre viene en los primeros 5 bytes.
             auto t = (TipoProceso) std::stoi(procesoSerializado.substr(0,5));
             switch (t) {
-                case vendedor:
+                case VENDEDOR_T:
                     //TODO
                     break;
-                case distribuidor:
+                case DISTRIBUIDOR_T:
                     //TODO
                     break;
-                case productor:
+                case PRODUCTOR_T:
                     return new Productor(logger, procesoSerializado);
             }
         }

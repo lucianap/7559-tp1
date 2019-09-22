@@ -53,7 +53,7 @@ std::string Productor::serializar() {
     std::stringstream ss;
 
     //5 bytes: tipo de proceso.
-    ss << std::setw(5) << productor;
+    ss << std::setw(5) << TipoProceso::PRODUCTOR_T;
 
     //5 bytes: cantidad de ramos a enviar.
     ss << std::setw(5) << ramosAEnviar.size();
@@ -130,7 +130,7 @@ pid_t Productor::ejecutar() {
     SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
     this->producir();
 
-    logger.log("Termino la tarea de la productor");
+    logger.log("Termino la tarea del productor");
     SignalHandler::destruir();
 
     exit(0);

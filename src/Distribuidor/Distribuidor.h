@@ -19,6 +19,8 @@ private:
 
     Cajon* recibirCajon(char *buffer);
 
+    std::string serializar() override;
+
 public:
     Distribuidor(Logger& logger, int idDistribuidor, Pipe* pipe);
     ~Distribuidor() override;

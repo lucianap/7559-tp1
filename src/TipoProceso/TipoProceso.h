@@ -7,9 +7,9 @@
 
 
 enum TipoProceso {
-    productor,
-    distribuidor,
-    vendedor
+    PRODUCTOR_T,
+    DISTRIBUIDOR_T,
+    VENDEDOR_T
 };
 
 
