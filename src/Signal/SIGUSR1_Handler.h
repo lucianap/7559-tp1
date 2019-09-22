@@ -27,7 +27,7 @@ public:
     }
 
     virtual int handleSignal ( int signum ) {
-        assert ( signum == SIGINT );
+        assert ( signum == SIGUSR1 );
         this->saveStateAndQuit = 1;
         return 0;
     }

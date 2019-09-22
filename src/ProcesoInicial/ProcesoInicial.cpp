@@ -51,6 +51,9 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     Menu menu;
+
+    menu.agregarProcesos(this->productores);
+    menu.agregarProcesos(this->distribuidores);
     menu.iniciar();
 
 }

@@ -1,6 +1,8 @@
 #include <Signal/SignalHandler.h>
 
 #include <utility>
+#include <Guardador/Guardador.h>
+
 #include "Productor.h"
 
 Productor::Productor(int id, std::vector<Pipe*> distribuidores, int ramos_por_cajon, Logger& logger):
@@ -40,7 +42,8 @@ Productor::Productor(Logger &logger, std::string productorSerializado) : Proceso
     }
 }
 
-//Protocolo de serializacion: 5 bytes: cantidad de ramos a enviar, 20 bytes: repetido por ramo, 5 bytes: ramosPorCajon, útlimos 5 bytes: siguiente productor.
+//Protocolo de serializacion: 5 bytes el id, 5 bytes del tipo de proceso,
+// 5 bytes: cantidad de ramos a enviar, 20 bytes: repetido por ramo, 5 bytes: ramosPorCajon, útlimos 5 bytes: siguiente productor.
 std::string Productor::serializar() {
     std::stringstream ss;
     ss << std::setw(5) << ramosAEnviar.size();
@@ -81,10 +84,12 @@ void Productor::producir() {
 
     }
 
-    stringstream ss;
-    ss<<"Productor serializado: ";
-    ss<<this->serializar()<<endl;
-    cout << ss.str();
+    if(sigusr1_handler.getSaveAndQuit() != 0) {
+        cout << "Me di cuenta que me quieren guardar y me guardo" << endl;
+        Guardador g;
+        g.guardar(this);
+    }
+
     this->cerrarPipes();
 
 }

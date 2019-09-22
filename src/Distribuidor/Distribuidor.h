@@ -2,12 +2,14 @@
 #ifndef INC_7559_TP1_DISTRIBUIDOR_H
 #define INC_7559_TP1_DISTRIBUIDOR_H
 
+#include <Ramo/Ramo.h>
+#include <Cajon/Cajon.h>
+#include "Distribuidor.h"
 #include <Fifos/FifoLectura.h>
 #include <Pipes/Pipe.h>
 #include "../ProcesoHijo/ProcesoHijo.h"
 
 class Distribuidor : public ProcesoHijo {
-
 
 private:
     int idDistribuidor;
