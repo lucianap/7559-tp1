@@ -1,4 +1,5 @@
 
+#include <Guardador/Guardador.h>
 #include "ProcesoInicial.h"
 
 
@@ -13,6 +14,9 @@ void ProcesoInicial::iniciarEjecucion() {
 
     int productores = parametros.cantProductores;
     int distribuidores = parametros.cantDistribuidores;
+
+    Guardador::cleanUp();
+    Guardador::inicializar();
 
     int ramos_por_cajon = 10;
 

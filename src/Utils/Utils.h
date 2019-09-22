@@ -37,6 +37,8 @@ class Utils {
 
         static std::string formatearMensajeLog(std::string mensaje);
 
+        static int remove_directory(const char* path);
+
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();

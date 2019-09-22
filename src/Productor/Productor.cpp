@@ -16,42 +16,61 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 };
 
 Productor::Productor(Logger &logger, std::string productorSerializado) : ProcesoHijo(logger) {
+    int tamanioTipoDeProceso = 5;
     int tamanioRamoEnBytes = 20;
     int tamanioSizeEnBytes = 5;
     int tamanioRamosPorCajonEnBytes = 5;
 
-    int size = std::stoi(productorSerializado.substr(0,tamanioSizeEnBytes));
+    int inicio = tamanioTipoDeProceso;
+    int fin = tamanioTipoDeProceso+tamanioSizeEnBytes;
+
+    int size = std::stoi(productorSerializado.substr(inicio, fin));
     for(int i = 0; i < size; i++){
         //leo un ramo
-        int inicio = i*tamanioRamoEnBytes + tamanioSizeEnBytes;
-        std::string ramoStr = productorSerializado.substr(inicio, inicio + tamanioRamoEnBytes);
+        int inicioRamo = i * tamanioRamoEnBytes + inicio;
+        std::string ramoStr = productorSerializado.substr(inicioRamo, inicioRamo + tamanioRamoEnBytes);
         Ramo* r = new Ramo(ramoStr);
         ramosAEnviar.push_back(r);
     }
 
     //Ramos por cajon
-    int inicioRamosPorCajon = tamanioRamoEnBytes*size+tamanioSizeEnBytes;
-    int ramosPorCajon = std::stoi(productorSerializado.substr(inicioRamosPorCajon, inicioRamosPorCajon + tamanioRamosPorCajonEnBytes));
-    this->ramosPorCajon = ramosPorCajon;
+    inicio = tamanioRamoEnBytes*size+tamanioSizeEnBytes+tamanioTipoDeProceso;
+    fin = inicio+tamanioRamosPorCajonEnBytes;
+    int ramosPorCajonLeido = std::stoi(productorSerializado.substr(inicio, fin));
+    this->ramosPorCajon = ramosPorCajonLeido;
 
     //Por último avanzo el iterador al próximo distribuidor a postear.
-    int inicio = tamanioRamoEnBytes*size+tamanioSizeEnBytes+tamanioRamosPorCajonEnBytes;
-    int siguienteDistribuidorLeido = std::stoi(productorSerializado.substr(inicio, inicio + 5));
+    inicio = fin;
+    fin = inicio + 5;
+    int siguienteDistribuidorLeido = std::stoi(productorSerializado.substr(inicio, fin));
     for(int i = 0; i < siguienteDistribuidorLeido; i++) {
         distribuidoresIterator++;
     }
 }
 
-//Protocolo de serializacion: 5 bytes el id, 5 bytes del tipo de proceso,
-// 5 bytes: cantidad de ramos a enviar, 20 bytes: repetido por ramo, 5 bytes: ramosPorCajon, útlimos 5 bytes: siguiente productor.
+
 std::string Productor::serializar() {
     std::stringstream ss;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << productor;
+
+    //5 bytes: cantidad de ramos a enviar.
     ss << std::setw(5) << ramosAEnviar.size();
+
+    //20 bytes por ramo.
     for(auto it = ramosAEnviar.begin(); it != ramosAEnviar.end(); it++) {
         ss << (*it)->serializar();
     }
+
+    //5 bytes: cantidad de ramos por cajón
     ss << std::setw(5) << ramosPorCajon;
-    ss << std::setw(5) << siguienteDistribuidor << endl;
+
+    //5 bytes: siguiente productor a entregar cajón.
+    ss << std::setw(5) << siguienteDistribuidor;
+
+    //5 bytes finales para el id del productor.
+    ss << std::setw(5) << this->id << endl;
     return ss.str();
 }
 

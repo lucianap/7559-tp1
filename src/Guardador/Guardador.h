@@ -14,6 +14,7 @@
 
 class Guardador {
 
+    static const std::string carpeta;
     static const std::string prefijoProductores;
     static const std::string prefijoDistribuidores;
     static const std::string prefijoVendedores;
@@ -22,11 +23,20 @@ class Guardador {
 
         Guardador();
 
+        static void inicializar();
+        static void cleanUp();
+
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);
 
         //TODO
         //static void guardar(Vendedor &proceso);
+
+        void restaurarProductores();
+        void restaurarDistribuidores();
+
+        //TODO
+        //void restaurarVendedores;
 
 
     private:

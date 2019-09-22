@@ -10,7 +10,7 @@ Menu::Menu() {
 
 void Menu::iniciar() {
     char input = 'a';
-    while (input != '0') {
+    while (input != '0' && input != '1') {
         cout << endl;
         cout << "------- MENU -------" << endl;
         cout << "1: Salvar" << endl;
