@@ -16,24 +16,20 @@ void ProcesoInicial::iniciarEjecucion() {
 
     int ramos_por_cajon = 10;
 
-    Menu menu;
-
-    loggerProcess.ejecutar();
-    logger.log("-----------Iniciando sistema-------------");
+    /***** inicializamos los pipes para todo el sistema *****/
 
     //Mapa de asignación de productores a distribuidores.
     //La key es el número del productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
     std::map<int, vector<Pipe*>> distribuidores_por_productor;
-
-    //Este pipe se genera acá y no va a ninguún lado, pero empíricamente vimos que toma el valor del fileDescriptor del log
-    //TODO ver una forma más alegre de solucionarlo.
-    Pipe* discardedPipe = new Pipe();
-
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor1 = new Pipe();
         this->distribuidoresEntrada.push_back(pipeInDistribuidor1);
         this->asignar_productor(j, pipeInDistribuidor1, productores, &distribuidores_por_productor);
     }
+
+    /**** hasta este punto se deben inicializar todos los pipes ****/
+    loggerProcess.ejecutar();
+    logger.log("-----------Iniciando sistema-------------");
 
     //Creación de los productores en procesos separados..
     for(int i = 0; i < productores; i++) {
@@ -54,6 +50,7 @@ void ProcesoInicial::iniciarEjecucion() {
         distribuidor->ejecutar();
     }
 
+    Menu menu;
     menu.iniciar();
 
 }
