@@ -40,10 +40,10 @@ void ProcesoInicial::iniciarEjecucion() {
     //Creación de los productores en procesos separados..
     for(int i = 0; i < productores; i++) {
         if(fork() == 0) {
-            if(distribuidores_por_productor.find(0) == distribuidores_por_productor.end()) {
+            if(distribuidores_por_productor.find(i) == distribuidores_por_productor.end()) {
                 logger.log("No hay distribuidores para el productor " + to_string(i));
             } else {
-                std::vector<Pipe*> distribuidores_escuchando = distribuidores_por_productor.at(0);
+                std::vector<Pipe*> distribuidores_escuchando = distribuidores_por_productor.at(i);
                 Productor* p = new Productor(i, distribuidores_escuchando, ramos_por_cajon, logger);
                 this->productores.push_back(p);
                 p->ejecutar();
