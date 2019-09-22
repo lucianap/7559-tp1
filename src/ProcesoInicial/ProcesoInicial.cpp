@@ -16,25 +16,20 @@ void ProcesoInicial::iniciarEjecucion() {
 
     int ramos_por_cajon = 10;
 
-    loggerProcess.ejecutar();
-    logger.log("-----------Iniciando sistema-------------");
+    /***** inicializamos los pipes para todo el sistema *****/
 
     //Mapa de asignación de productores a distribuidores.
-    //La key es el número de orden del productor
-    //El valor es el Pipe al cual se conecta el distribuidor.
+    //La key es el número del productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
     std::map<int, vector<Pipe*>> distribuidores_por_productor;
-
     for (int j = 0; j < distribuidores; ++j) {
-        Pipe* pipeInDistribuidor = new Pipe();
-        this->distribuidoresEntrada.push_back(pipeInDistribuidor);
-        this->asignar_productor(j, pipeInDistribuidor, productores, &distribuidores_por_productor);
+        Pipe* pipeInDistribuidor1 = new Pipe();
+        this->distribuidoresEntrada.push_back(pipeInDistribuidor1);
+        this->asignar_productor(j, pipeInDistribuidor1, productores, &distribuidores_por_productor);
     }
 
-    for (int j = 0; j < distribuidores; ++j) {
-        Distribuidor* distribuidor = new Distribuidor(logger, j, this->distribuidoresEntrada.at(j));
-        this->distribuidores.push_back(distribuidor);
-        distribuidor->ejecutar();
-    }
+    /**** hasta este punto se deben inicializar todos los pipes ****/
+    loggerProcess.ejecutar();
+    logger.log("-----------Iniciando sistema-------------");
 
     //Creación de los productores en procesos separados..
     for(int i = 0; i < productores; i++) {
@@ -47,6 +42,12 @@ void ProcesoInicial::iniciarEjecucion() {
             p->ejecutar();
 
         }
+    }
+
+    for (int j = 0; j < distribuidores; ++j) {
+        Distribuidor* distribuidor = new Distribuidor(logger, j, this->distribuidoresEntrada.at(j));
+        this->distribuidores.push_back(distribuidor);
+        distribuidor->ejecutar();
     }
 
     Menu menu;
@@ -71,6 +72,8 @@ void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, co
     } else {
         std::vector<Pipe*> pipe_vector = distribuidores_por_productor->at(n);
         pipe_vector.push_back(pipeInDistribuidor);
+        distribuidores_por_productor->erase(n);
+        distribuidores_por_productor->insert(std::make_pair(n, pipe_vector));
     }
 
 }
