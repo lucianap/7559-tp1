@@ -23,6 +23,7 @@ pid_t Distribuidor::ejecutar() {
 
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     logger.log("Naci como distribuidor y tengo el pid: "+to_string(getpid()));
 

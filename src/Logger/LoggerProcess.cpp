@@ -25,6 +25,7 @@ pid_t LoggerProcess::ejecutar() {
 
     entradaMensajes.setearModo(Pipe::LECTURA);
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     this->iniciarAtencion();
 
