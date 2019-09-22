@@ -16,7 +16,6 @@ void ProcesoInicial::iniciarEjecucion() {
 
     int ramos_por_cajon = 10;
 
-    Menu menu;
     loggerProcess.ejecutar();
     logger.log("-----------Iniciando sistema-------------");
 
@@ -53,6 +52,7 @@ void ProcesoInicial::iniciarEjecucion() {
         }
     }
 
+    Menu menu;
     menu.iniciar();
 
 }
@@ -84,13 +84,11 @@ void ProcesoInicial::limpiar() {
     for (int i = 0; i < this->productores.size(); ++i) {
         ProcesoHijo* proceso = this->productores.at(i);
         proceso->terminar();
-        delete(proceso);
     }
 
     for (int i = 0; i < this->distribuidores.size(); ++i) {
         ProcesoHijo* proceso = this->distribuidores.at(i);
         proceso->terminar();
-        delete(proceso);
     }
 
     for (int j = 0; j < productores.size(); ++j) {
