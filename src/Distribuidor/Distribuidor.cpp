@@ -4,10 +4,14 @@
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
 
+Distribuidor::Distribuidor(Logger& logger): ProcesoHijo(logger) {
+
+}
+
 Distribuidor::Distribuidor(Logger& logger, int idDistribuidor, Pipe* entrada)  :
         ProcesoHijo(logger),
         idDistribuidor(idDistribuidor),
-        entradaFlores(*entrada) {
+        entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
 }
 
 Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) : ProcesoHijo(logger) {
@@ -48,29 +52,22 @@ pid_t Distribuidor::ejecutar() {
 
 void Distribuidor::iniciarAtencion() {
     char buffer[Cajon::TAM_TOTAL_BYTES];
-    Cajon* paqueteCajon;
+
 
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         try {
 
-            paqueteCajon = recibirCajon(buffer);
+            Cajon unCajon = recibirCajon(buffer);
 
-            if(paqueteCajon != NULL) {
-
-                std::stringstream ss;
-                ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
-                for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                    //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
-                    ss << (*it)->toString() << endl;
+            if(!unCajon.estaVacio()) {
+                this->clasificar(unCajon);
+                this->logearStatus();
+                if (this->hayDiponiblidadParaEnvio()) {
+                    this->enviarAPuntosDeVenta();
+                } else {
                 }
 
-                logger.log(ss.str());
-
-                // todo agregar logica y enviar a punto de venta
-
             }
-
-
 
         } catch (std::string &error) {
             logger.log("Error atendiendo a productores: " + error);
@@ -88,17 +85,17 @@ void Distribuidor::iniciarAtencion() {
         g.guardar(this);
     }
 
+
     entradaFlores.cerrar();
 }
 
-// todo: refactor
-Cajon* Distribuidor::recibirCajon(char *buffer) {
+Cajon Distribuidor::recibirCajon(char *buffer) {
     string mensajeError;
 
     ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), Cajon::TAM_TOTAL_BYTES);
 
     std::stringstream ss;
-    ss << "DISTRIBUIDOR "<< this->idDistribuidor << " lee " << bytesleidos << " bytes del pipe." << endl;
+    ss << "DISTRIBUIDOR "<< this->idDistribuidor << " lee " << bytesleidos << " bytes del pipe.";
 
     if (bytesleidos != Cajon::TAM_TOTAL_BYTES) {
         if (bytesleidos == -1)
@@ -113,17 +110,28 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
 
     //FIN del pipe, siginifica que los productores están siendo destruidos.
     //Por convención tomo que muera al recibir el primer EOF.
+
     if(stoi(string(buffer)) == EOF) {
         stringstream ss;
         ss << "EOF RECIBIDO. Distribuidor " << idDistribuidor;
         logger.log(ss.str());
 
         //fin del pipe, significa que se está apagando todo.
-        return NULL;
+        //Devuelvo un cajón vacío para indicar que se tiene que ir guardando.
+        return Cajon();
     };
 
-    Cajon* paqueteRecibido = new Cajon(buffer, 10);
-    return paqueteRecibido;
+    Cajon unCajon(buffer, Cajon::CAPACIDAD_RAMOS);
+
+    std::stringstream msg;
+    msg << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
+    for(auto it = unCajon.ramos.begin(); it != unCajon.ramos.end(); ++it ) {
+        msg << (*it).toString() << endl;
+    }
+    logger.log(msg.str());
+
+
+    return unCajon;
 }
 
 std::string Distribuidor::serializar() {
@@ -137,5 +145,48 @@ std::string Distribuidor::serializar() {
 
     return ss.str();
 
+}
+
+void Distribuidor::clasificar(Cajon &cajon) {
+
+    vector<Ramo> rosas = cajon.filtrar(TipoFlor::Rosa);
+    this->stockRosas.insert(this->stockRosas.end(), rosas.begin(), rosas.end());
+
+    vector<Ramo> tulipanes = cajon.filtrar(TipoFlor::Tulipan);
+    this->stockTulipanes.insert(this->stockTulipanes.end(), tulipanes.begin(), tulipanes.end());
+
+}
+
+bool Distribuidor::hayDiponiblidadParaEnvio() {
+    return (this->stockTulipanes.size() >= CANT_RAMOS_PARA_ENVIO
+            && this->stockRosas.size() >= CANT_RAMOS_PARA_ENVIO);
+}
+
+void Distribuidor::enviarAPuntosDeVenta() {
+    // TODO: ENVIO A PUNTOS DE VENTA
+}
+
+const vector<Ramo> &Distribuidor::getStockRosas() const {
+    return stockRosas;
+}
+
+void Distribuidor::setStockRosas(const vector<Ramo> &stockRosas) {
+    Distribuidor::stockRosas = stockRosas;
+}
+
+const vector<Ramo> &Distribuidor::getStockTulipanes() const {
+    return stockTulipanes;
+}
+
+void Distribuidor::setStockTulipanes(const vector<Ramo> &stockTulipanes) {
+    Distribuidor::stockTulipanes = stockTulipanes;
+}
+
+void Distribuidor::logearStatus() {
+    std::stringstream msg;
+    msg << "STATUS DISTRIBUIDOR " << this->idDistribuidor
+        << " [Rosas=" << this->stockRosas.size()
+        << ", Tulipanes="<<this->stockTulipanes.size()<<"]";
+    logger.log(msg.str());
 }
 

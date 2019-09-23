@@ -8,7 +8,10 @@
 class Cajon {
     private:
         int id;
+
     public:
+
+        std::vector<Ramo> ramos;
 
         /***
          * Capacidad para completar el cajon con ramos necesarios para el envio al distribuidor
@@ -20,11 +23,13 @@ class Cajon {
          */
         static const int TAM_TOTAL_BYTES = CAPACIDAD_RAMOS * (Ramo::TAM_TIPO_FLOR + Ramo::TAM_ID_PRODUCTOR);
 
-        std::vector<Ramo*> ramos;
         Cajon();
-        Cajon(std::vector<Ramo*> ramos);
+        Cajon(const Cajon & cajon);
+        Cajon(std::vector<Ramo> ramos);
         Cajon(const std::string& cajon_serializado, int ramos_por_cajon);
         std::string serializar();
+        vector<Ramo> filtrar(TipoFlor tipoFlor);
+        bool estaVacio();
         ~Cajon();
 
 };
