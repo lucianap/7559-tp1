@@ -36,23 +36,23 @@ pid_t Distribuidor::ejecutar() {
 
 void Distribuidor::iniciarAtencion() {
     char buffer[Cajon::TAM_TOTAL_BYTES];
-    Cajon* paqueteCajon;
 
     while (sigint_handler.getGracefulQuit() == 0) {
         try {
 
-            paqueteCajon = recibirCajon(buffer);
+            Cajon paqueteCajon = recibirCajon(buffer);
 
             std::stringstream ss;
             ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
-            for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
+            for(auto it = paqueteCajon.ramos.begin(); it != paqueteCajon.ramos.end(); ++it ) {
                 //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
-                ss << (*it)->toString() << endl;
+                ss << (*it).toString() << endl;
             }
-
             logger.log(ss.str());
 
             // todo agregar logica y enviar a punto de venta
+
+
 
         } catch (std::string &error) {
             logger.log("Error atendiendo a productores: " + error);
@@ -63,8 +63,7 @@ void Distribuidor::iniciarAtencion() {
     entradaFlores.cerrar();
 }
 
-// todo: refactor
-Cajon* Distribuidor::recibirCajon(char *buffer) {
+Cajon Distribuidor::recibirCajon(char *buffer) {
     string mensajeError;
 
     ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), Cajon::TAM_TOTAL_BYTES);
@@ -83,8 +82,8 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
     ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
 
-    Cajon* paqueteRecibido = new Cajon(buffer, 10);
-    return paqueteRecibido;
+    Cajon unCajon(buffer, 10);
+    return unCajon;
 }
 
 std::string Distribuidor::serializar() {

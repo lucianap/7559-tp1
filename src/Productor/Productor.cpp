@@ -29,8 +29,8 @@ Productor::Productor(Logger &logger, std::string productorSerializado) : Proceso
         //leo un ramo
         int inicioRamo = i * tamanioRamoEnBytes + inicio;
         std::string ramoStr = productorSerializado.substr(inicioRamo, inicioRamo + tamanioRamoEnBytes);
-        Ramo* r = new Ramo(ramoStr);
-        ramosAEnviar.push_back(r);
+        Ramo unRamo(ramoStr);
+        ramosAEnviar.push_back(unRamo);
     }
 
     //Ramos por cajon
@@ -60,7 +60,7 @@ std::string Productor::serializar() {
 
     //20 bytes por ramo.
     for(auto it = ramosAEnviar.begin(); it != ramosAEnviar.end(); it++) {
-        ss << (*it)->serializar();
+        ss << (*it).serializar();
     }
 
     //5 bytes: cantidad de ramos por cajón
@@ -89,10 +89,10 @@ void Productor::producir() {
             distribuidorActual = *this->distribuidoresIterator;
         }
 
-        Ramo* r = this->producir_ramo();
+        Ramo r = this->producir_ramo();
         ramosAEnviar.push_back(r);
 
-        if(ramosAEnviar.size() >= this->ramosPorCajon) {
+        if (ramosAEnviar.size() >= this->ramosPorCajon) {
             this->enviar_cajon(ramosAEnviar, distribuidorActual);
             ++this->distribuidoresIterator;
             ramosAEnviar.clear();
@@ -140,15 +140,16 @@ void Productor::agregarDistribuidor(Pipe* distribuidor) {
     this->distribuidores.push_back(distribuidor);
 }
 
-Ramo* Productor::producir_ramo() {
+Ramo Productor::producir_ramo() {
     //Solo para simular la producción del ramo.
     sleep(1);
     int rnd = std::rand() % 2;
     TipoFlor t = rnd == 1? TipoFlor::Rosa : TipoFlor::Tulipan;
-    return new Ramo(this->id, t);
+    Ramo unRamo(this->id, t);
+    return unRamo;
 }
 
-void Productor::enviar_cajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
+void Productor::enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino) {
     std::stringstream ss;
     ss << "PRODUCTOR " << this->id << " envía cajón a destino." << endl;
     logger.log(ss.str());

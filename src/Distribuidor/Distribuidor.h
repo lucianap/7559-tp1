@@ -17,7 +17,7 @@ private:
 
     void iniciarAtencion();
 
-    Cajon* recibirCajon(char *buffer);
+    Cajon recibirCajon(char *buffer);
 
     std::string serializar() override;
 
