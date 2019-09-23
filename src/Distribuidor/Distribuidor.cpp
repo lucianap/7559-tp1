@@ -63,13 +63,13 @@ void Distribuidor::iniciarAtencion() {
             std::stringstream ss;
             ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
+                std::stringstream ss;
                 ss << (*it)->toString() << endl;
                 stock.push_back(*it);
                 ramos_recibidos++;
                 ss << "Cant actual " << ramos_recibidos << endl;
                 logger.log(ss.str());
-                ss.clear();
-                if(ramos_recibidos == 100){
+                if(ramos_recibidos == 10){
                     enviarCajon(stock, pto_venta_actual);
                     stock.clear();
                     ++ptos_venta_iterator;
@@ -145,7 +145,7 @@ void Distribuidor::enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_dest
     logger.log(ss.str());
 
     Cajon c(ramos);
-    std::string cajon_a_enviar = c.serializar();
+    std::string cajon_a_enviar = this->serializar() + c.serializar();
 
     std::stringstream ss2;
     ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;

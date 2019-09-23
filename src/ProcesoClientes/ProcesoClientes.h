@@ -18,7 +18,7 @@ private:
 
     std::vector<t_parametros_pedido> paramPedidosInternet;
 
-    Pipe pipePtoVenta;
+    Pipe* pipePtoVenta;
 
     int idCliente;
 
@@ -33,7 +33,7 @@ public:
 
     pid_t ejecutar() override;
 
-    void enviar_pedido(t_parametros_pedido pedido,TipoPedido tipoPedido);
+    void enviar_pedido(t_parametros_pedido pedido );
 };
 
 

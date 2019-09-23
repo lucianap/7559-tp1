@@ -10,16 +10,20 @@ class PuntoVenta : public ProcesoHijo {
 
 private:
     int idPuntoVenta;
-    Pipe pipeDistribuidor;
-    Pipe pipeClientes;
+    Pipe pipeEntrada;
     std::vector<Ramo> stock_flores;
     void iniciarAtencion();
 
     Cajon* recibirCajon(char *buffer);
+    TipoProceso recibirData(char *buffer);
+
+    TipoProceso recibirHeader(char *buffer);
+
+    t_parametros_pedido recibirPedido(char *buffer);
 
 public:
 
-    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeDistribuidor, Pipe* pipeClientes);
+    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeEntrada);
 
     ~PuntoVenta() override;
 

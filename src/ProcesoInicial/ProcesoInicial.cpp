@@ -53,8 +53,6 @@ void ProcesoInicial::iniciarEjecucion() {
     }
     std::map<int, vector<Pipe*>> p_ventas_por_distribuidor;
     for (int j = 0; j < puntos_de_venta; ++j) {
-        Pipe* pipeClientes = new Pipe();
-        this->pVentasEntradaClientes.push_back(pipeClientes);
         Pipe* pipeInPVenta = new Pipe();
         this->pVentasEntrada.push_back(pipeInPVenta);
         this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
@@ -84,8 +82,8 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     for (int j = 0; j < puntos_de_venta; ++j) {
-        ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntradaClientes.at(j),config_pedidos_internet);
-        PuntoVenta* pto_venta = new PuntoVenta(logger, j, this->pVentasEntrada.at(j), this->pVentasEntradaClientes.at(j));
+        ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntrada.at(j),config_pedidos_internet);
+        PuntoVenta* pto_venta = new PuntoVenta(logger, j, this->pVentasEntrada.at(j));
         this->puntosVenta.push_back(pto_venta);
         this->procesosClientes.push_back(procesoClientes);
         procesoClientes->ejecutar();
@@ -158,6 +156,11 @@ void ProcesoInicial::limpiar() {
         proceso->terminar();
     }
 
+    for (int i = 0; i < this->procesosClientes.size(); ++i) {
+        ProcesoHijo* proceso = this->puntosVenta.at(i);
+        proceso->terminar();
+    }
+
     for (int j = 0; j < productores.size(); ++j) {
         delete(productores.at(j));
     }
@@ -168,6 +171,10 @@ void ProcesoInicial::limpiar() {
 
     for (int j = 0; j < puntosVenta.size(); ++j) {
         delete(puntosVenta.at(j));
+    }
+
+    for (int j = 0; j < procesosClientes.size(); ++j) {
+        delete(procesosClientes.at(j));
     }
 
     this->loggerProcess.terminar(); // tiene que ser el ultimo siempre

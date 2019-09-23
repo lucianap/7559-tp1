@@ -4,13 +4,14 @@
 
 
 #include <TipoProceso/TipoProceso.h>
+#include <Pedido/Pedido.h>
 #include "ProcesoClientes.h"
 
 
 ProcesoClientes::ProcesoClientes(Logger &logger, int idCliente, Pipe *pipePtoVenta, std::vector<t_parametros_pedido> paramPedidosInternet) :
         ProcesoHijo(logger),
         idCliente(idCliente),
-        pipePtoVenta(*pipePtoVenta),
+        pipePtoVenta(pipePtoVenta),
         paramPedidosInternet(paramPedidosInternet){}
 
 pid_t ProcesoClientes::ejecutar() {
@@ -39,23 +40,33 @@ void ProcesoClientes::iniciarAtencion() {
     int pideRosa;
     auto pedidos_internet_iterator = this->paramPedidosInternet.begin();
     t_parametros_pedido pedido_actual = *pedidos_internet_iterator;
-    //Distribuye uniformemente entre los distribuidores asignados a este productor.
+
+    std::stringstream ss;
+    ss << "Soy el proceso de clientes de id: "<< this->idCliente << endl;
+    //Distribuye uniformemente entre los distribuidores asignados a este productor
+    sleep(5);
     while (sigint_handler.getGracefulQuit() == 0) {
+        std::stringstream ss;
         llegaCliente = std::rand() % 2;
         if(llegaCliente == 1){
+            ss << "Se genera un pedido local: "<< this->idCliente << endl;
             pideRosa = std::rand() % 2;
             t_parametros_pedido pedido;
             pedido.cantTulipanes = pideRosa == 1? 1 : 0;
             pedido.cantRosas = pideRosa == 1? 0 : 1;
-            this->enviar_pedido(pedido, LOCAL);
+            pedido.origen = LOCAL;
+            this->enviar_pedido(pedido);
+            sleep(1);
         }
         if(pedidos_internet_iterator == this->paramPedidosInternet.end()) {
             pedidos_internet_iterator = this->paramPedidosInternet.begin();
             pedido_actual = *pedidos_internet_iterator;
         }
-        this->enviar_pedido(pedido_actual, INTERNET);
+        ss << "Se genera un pedido online: "<< this->idCliente << endl;
+        this->enviar_pedido(pedido_actual);
         ++pedidos_internet_iterator;
-        sleep(1);
+        logger.log(ss.str());
+        sleep(2);
     }
 
 }
@@ -64,13 +75,23 @@ ProcesoClientes::~ProcesoClientes() {
     logger.log("Proceso de clientes destruido");
 }
 
-void ProcesoClientes::enviar_pedido(t_parametros_pedido pedido, TipoPedido tipoPedido) {
+void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     std::stringstream ss;
+    std::stringstream debug;
     //5 bytes: tipo de proceso.
     ss << std::setw(5) << CLIENTE_T;
 
     //5 bytes: tipo de proceso.
     ss << std::setw(5) << this->idCliente;
-    
-    
+
+    Pedido pedido(this->idCliente, param_pedido);
+    std::string pedido_serializado = pedido.serializar();
+    ss << std::setw(Pedido::TAM_TOTAL)<< pedido_serializado;
+    std::string data_envio = ss.str();
+
+    debug << "Se genera un pedido: "<< pedido.toString() << endl;
+
+    logger.log(debug.str());
+    pipePtoVenta->escribir(data_envio.c_str(), data_envio.length());
+
 };

@@ -48,7 +48,6 @@ private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();
 
-    string getTextTipoPedido(TipoPedido tipoPedido);
 };
 
 #endif /* UTILS_H_ */
