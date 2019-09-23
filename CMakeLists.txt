@@ -7,7 +7,7 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/ProcesoClientes/ProcesoClientes.cpp src/ProcesoClientes/ProcesoClientes.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/ProcesoHijoFactory/ProcesoHijoFactory.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
@@ -25,4 +25,9 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Pipes")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Fifos")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoInicial")
 
-add_executable(7559_tp1 ${SOURCE} ${HEADERS} src/ProcesoClientes/ProcesoClientes.cpp src/ProcesoClientes/ProcesoClientes.h)
+add_executable(7559_tp1 ${SOURCE} ${HEADERS})
+
+target_link_libraries(7559_tp1 Ramo_lib Cajon_lib Utils_lib)
+
+
+add_subdirectory("${PROJECT_SOURCE_DIR}/tests")

@@ -8,16 +8,32 @@
 
 #include <iostream>
 #include <string>
+#include <ProcesoHijo/ProcesoHijo.h>
+#include <vector>
+#include <Distribuidor/Distribuidor.h>
+#include <Productor/Productor.h>
 
 class Menu {
 
 public:
     Menu();
 
+    void agregarProcesos(std::vector<Distribuidor*> procesos);
+    void agregarProcesos(std::vector<Productor*> procesos);
+
     /**
      * Inicia el menu interactivo para el usuario.
      */
     void iniciar();
+
+private:
+
+    //TODO extract this
+    vector<Distribuidor*> distribuidores;
+    vector<Productor*> productores;
+
+    //envía signals de salvar a todos los procesos
+    void salvar();
 
 };
 

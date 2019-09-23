@@ -1,4 +1,5 @@
 
+#include <Guardador/Guardador.h>
 #include "ProcesoInicial.h"
 
 
@@ -25,13 +26,16 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
 
+    Guardador::cleanUp();
+    Guardador::inicializar();
+
     int ramos_por_cajon = 10;
     int ramos_por_envio = 100;
 
     /***** inicializamos los pipes para todo el sistema *****/
 
     //Mapa de asignación de productores a distribuidores.
-    //La key es el número del productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
+    //La key es el número del Productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
     std::map<int, vector<Pipe*>> distribuidores_por_productor;
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor1 = new Pipe();
@@ -80,6 +84,9 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
     Menu menu;
+
+    menu.agregarProcesos(this->productores);
+    menu.agregarProcesos(this->distribuidores);
     menu.iniciar();
 
 }
@@ -92,7 +99,7 @@ ProcesoInicial::~ProcesoInicial() {
 void ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad_a_asignar,
         std::map<int, vector<Pipe*>>* pipe_map ) {
 
-    //Se asigna el distribuidor j a un productor N y se guarda el resultado en el mapa distribuidores_por productor.
+    //Se asigna el Distribuidor j a un Productor N y se guarda el resultado en el mapa distribuidores_por Productor.
     int n = j % cantidad_a_asignar;
 
     if(pipe_map->find(n) == pipe_map->end()) {
@@ -106,6 +113,7 @@ void ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad
     }
 
 }
+
 
 void ProcesoInicial::limpiar() {
 
@@ -139,4 +147,3 @@ void ProcesoInicial::limpiar() {
     this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }
-
