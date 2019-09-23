@@ -17,7 +17,6 @@ ProcesoHijo::ProcesoHijo(Logger& logger) :
     logger(logger) {}
 
 void ProcesoHijo::guardar() {
-    logger.log("Guardo y finalizo el proceso "+to_string(getProcessId()));
     kill(getProcessId(), SIGUSR1);
 }
 

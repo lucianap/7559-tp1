@@ -8,7 +8,7 @@ Menu::Menu() {
 
 }
 
-void Menu::iniciar() {
+int Menu::iniciar() {
     char input = 'a';
     while (input != '0' && input != '1') {
         cout << endl;
@@ -22,12 +22,11 @@ void Menu::iniciar() {
             case '0':
                 cout << endl;
                 cout << "Se cierran los procesos." << endl;
-                break;
+                return 0;
             case '1':
-                this->salvar();
                 cout << endl;
                 cout << "Guardando estado y finalizando." << endl;
-                break;
+                return 1;
             default:
                 cout << "Opcion no reconocida" << endl;
                 break;
@@ -35,22 +34,5 @@ void Menu::iniciar() {
     }
 }
 
-void Menu::agregarProcesos(std::vector<Distribuidor*> nuevosProcesos) {
-    this->distribuidores = nuevosProcesos;
-}
 
-void Menu::agregarProcesos(std::vector<Productor*> nuevosProcesos) {
-    this->productores = nuevosProcesos;
-}
 
-void Menu::salvar() {
-    for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
-        (*it)->guardar();
-    }
-
-    for(auto it = productores.begin(); it != productores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
-        (*it)->guardar();
-    }
-}
