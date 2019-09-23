@@ -4,6 +4,7 @@
 #include <iostream>
 #include <getopt.h>
 #include <sstream>
+#include <TipoFlor/TipoFlor.h>
 
 void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    s.clear();
@@ -103,4 +104,16 @@ std::string Utils::formatearMensajeLog(std::string mensaje) {
     std::stringstream logMessage;
     logMessage << "pid: " << std::setw(5) << to_string(getpid()) <<" ("<< std::setw(24) << timeString <<") "<< mensaje;
     return logMessage.str();
+}
+
+
+string Utils::getTextTipoFlor(TipoFlor tipoFlor) {
+    switch (tipoFlor) {
+        case Tulipan:
+            return "Tulipan";
+        case Rosa:
+            return "Rosa";
+        default:
+            return std::to_string(tipoFlor);
+    }
 }

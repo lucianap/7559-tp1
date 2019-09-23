@@ -1,10 +1,8 @@
-set(SOURCE
-        ${SOURCE}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
-        PARENT_SCOPE
+set(SOURCE_FILES
+        Utils.cpp
         )
-set(HEADERS
-        ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Utils.h
-        PARENT_SCOPE
+set(HEADER_FILES
+        Utils.h
         )
+
+add_library(Utils_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})

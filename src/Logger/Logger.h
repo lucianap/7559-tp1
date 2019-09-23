@@ -22,7 +22,7 @@ public:
     /***
      * Longitud del mensaje que va por el pipe
      */
-    static const int MENSAGE_LOG_SIZE = 255;
+    static const int MENSAGE_LOG_SIZE = 1024;
 
     const Pipe &getPipe() const;
 

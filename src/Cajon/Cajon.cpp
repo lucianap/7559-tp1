@@ -3,13 +3,17 @@
 #include <utility>
 #include "Utils/Utils.h"
 
-const char SEPARADOR_RAMOS = '|';
+
+Cajon::Cajon() {
+
+}
+
 
 Cajon::Cajon(std::vector<Ramo*> ramos): ramos(std::move(ramos)) {}
 
 Cajon::Cajon(const std::string& cajon_serializado, int ramos_por_cajon) {
     for(int i = 0; i < ramos_por_cajon; i++) {
-        std::string strRamo = cajon_serializado.substr(0,20);
+        std::string strRamo = cajon_serializado.substr(0,Ramo::TAM_TOTAL);
         Ramo *r = new Ramo(strRamo);
         this->ramos.push_back(r);
     }
@@ -37,3 +41,4 @@ Cajon::~Cajon() {
     }
     ramos.clear();
 }
+

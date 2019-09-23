@@ -1,10 +1,8 @@
-set(SOURCE
-        ${SOURCE}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Cajon.cpp
-        PARENT_SCOPE
+set(SOURCE_FILES
+        Cajon.cpp
         )
-set(HEADERS
-        ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Cajon.h
-        PARENT_SCOPE
+set(HEADER_FILES
+        Cajon.h
         )
+
+add_library(Cajon_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
