@@ -4,13 +4,10 @@
 #include <iostream>
 #include <getopt.h>
 #include <sstream>
-<<<<<<< HEAD
 #include <TipoFlor/TipoFlor.h>
-=======
 #include <dirent.h>
 #include <cstring>
 #include <sys/stat.h>
->>>>>>> master
 
 void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    s.clear();
