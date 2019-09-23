@@ -8,7 +8,7 @@ add_subdirectory(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/ProcesoHijoFactory/ProcesoHijoFactory.h)
 
 
 add_subdirectory("src/Cajon")

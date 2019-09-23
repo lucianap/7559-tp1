@@ -11,6 +11,8 @@
 #include <vector>
 #include <map>
 #include <Utils/Utils.h>
+#include <Distribuidor/Distribuidor.h>
+#include <Productor/Productor.h>
 
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"

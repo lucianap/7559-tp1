@@ -1,4 +1,5 @@
 
+#include <Guardador/Guardador.h>
 #include "ProcesoInicial.h"
 
 
@@ -14,12 +15,15 @@ void ProcesoInicial::iniciarEjecucion() {
     int productores = parametros.cantProductores;
     int distribuidores = parametros.cantDistribuidores;
 
+    Guardador::cleanUp();
+    Guardador::inicializar();
+
     int ramos_por_cajon = 10;
 
     /***** inicializamos los pipes para todo el sistema *****/
 
     //Mapa de asignación de productores a distribuidores.
-    //La key es el número del productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
+    //La key es el número del Productor, el valor es el vector de Pipes que tienen su salida en los distintos distribuidores.
     std::map<int, vector<Pipe*>> distribuidores_por_productor;
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor1 = new Pipe();
@@ -51,6 +55,9 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     Menu menu;
+
+    menu.agregarProcesos(this->productores);
+    menu.agregarProcesos(this->distribuidores);
     menu.iniciar();
 
 }
@@ -63,7 +70,7 @@ ProcesoInicial::~ProcesoInicial() {
 void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
         std::map<int, vector<Pipe*>>* distribuidores_por_productor ) {
 
-    //Se asigna el distribuidor j a un productor N y se guarda el resultado en el mapa distribuidores_por productor.
+    //Se asigna el Distribuidor j a un Productor N y se guarda el resultado en el mapa distribuidores_por Productor.
     int n = j % cantidad_productores;
 
     if(distribuidores_por_productor->find(n) == distribuidores_por_productor->end()) {

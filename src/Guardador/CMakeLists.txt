@@ -1,0 +1,10 @@
+set(SOURCE
+        ${SOURCE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/Guardador.cpp
+        PARENT_SCOPE
+        )
+set(HEADERS
+        ${HEADERS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/Guardador.h
+        PARENT_SCOPE
+        )

@@ -1,5 +1,5 @@
-#include <Ramo/Ramo.h>
-#include <Cajon/Cajon.h>
+
+#include <TipoProceso/TipoProceso.h>
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
 
@@ -15,7 +15,7 @@ Distribuidor::~Distribuidor() {
 
 pid_t Distribuidor::ejecutar() {
 
-    logger.log("Ejecutamos una distribuidor");
+    logger.log("Ejecutamos un distribuidor");
     pid = fork();
 
     // en el padre devuelvo el process id
@@ -23,11 +23,12 @@ pid_t Distribuidor::ejecutar() {
 
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     logger.log("Naci como distribuidor y tengo el pid: "+to_string(getpid()));
 
     this->iniciarAtencion();
-    logger.log("Termino la tarea de la distribuidor");
+    logger.log("Termino la tarea del distribuidor");
     SignalHandler::destruir();
 
     exit(0);
@@ -84,4 +85,15 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
 
     Cajon* paqueteRecibido = new Cajon(buffer, 10);
     return paqueteRecibido;
+}
+
+std::string Distribuidor::serializar() {
+    std::stringstream ss;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << TipoProceso::DISTRIBUIDOR_T;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << this->idDistribuidor;
+
 };

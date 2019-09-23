@@ -40,6 +40,8 @@ public:
 
     static string getTextTipoFlor(TipoFlor tipoFlor);
 
+    static int remove_directory(const char* path);
+
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();
