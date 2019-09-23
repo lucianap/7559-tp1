@@ -63,33 +63,17 @@ void ProcesoInicial::iniciarEjecucion() {
 
     Menu menu;
 
-
     int status = menu.iniciar();
-
     if (status == 1) {
-
         this->pausar();
-
-    }
-
-}
-
-void ProcesoInicial::pausar() {
-
-    for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
-        (*it)->guardar();
-    }
-
-    for(auto it = productores.begin(); it != productores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
-        (*it)->guardar();
+    } else if (status == 0) {
+        this->terminarProcesos();
     }
 }
 
 ProcesoInicial::~ProcesoInicial() {
     // liberar recursos de memoria e ipc
-    this->limpiar();
+    this->limpiarMemoria();
 }
 
 void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
@@ -110,8 +94,28 @@ void ProcesoInicial::asignar_productor(const int j, Pipe* pipeInDistribuidor, co
 
 }
 
+void ProcesoInicial::pausar() {
 
-void ProcesoInicial::limpiar() {
+    for(auto it = productores.begin(); it != productores.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
+
+    for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
+
+    //Controlo que todos los procesos se hayan guardado.
+    while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size())){}
+
+    this->terminarProcesos();
+
+}
+
+
+
+void ProcesoInicial::terminarProcesos() {
 
     for (int i = 0; i < this->productores.size(); ++i) {
         ProcesoHijo* proceso = this->productores.at(i);
@@ -123,6 +127,12 @@ void ProcesoInicial::limpiar() {
         proceso->terminar();
     }
 
+    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
+
+}
+
+void ProcesoInicial::limpiarMemoria() {
+
     for (int j = 0; j < productores.size(); ++j) {
         delete(productores.at(j));
     }
@@ -130,7 +140,5 @@ void ProcesoInicial::limpiar() {
     for (int j = 0; j < distribuidores.size(); ++j) {
         delete(distribuidores.at(j));
     }
-
-    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }

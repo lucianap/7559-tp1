@@ -31,7 +31,8 @@ private:
     vector<Distribuidor*> distribuidores;
     vector<Productor*> productores;
     vector<Pipe *> distribuidoresEntrada;
-    void limpiar();
+    void terminarProcesos();
+    void limpiarMemoria();
 
     Logger logger;
     LoggerProcess loggerProcess;

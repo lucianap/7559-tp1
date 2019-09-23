@@ -7,7 +7,7 @@
 Distribuidor::Distribuidor(Logger& logger, int idDistribuidor, Pipe* entrada)  :
         ProcesoHijo(logger),
         idDistribuidor(idDistribuidor),
-        entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
+        entradaFlores(*entrada) {
 }
 
 Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) : ProcesoHijo(logger) {
@@ -23,7 +23,6 @@ Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) 
 
 
 Distribuidor::~Distribuidor() {
-    logger.log("Distribuidor destruido");
 }
 
 pid_t Distribuidor::ejecutar() {
@@ -56,16 +55,22 @@ void Distribuidor::iniciarAtencion() {
 
             paqueteCajon = recibirCajon(buffer);
 
-            std::stringstream ss;
-            ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
-            for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
-                ss << (*it)->toString() << endl;
+            if(paqueteCajon != NULL) {
+
+                std::stringstream ss;
+                ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
+                for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
+                    //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                    ss << (*it)->toString() << endl;
+                }
+
+                logger.log(ss.str());
+
+                // todo agregar logica y enviar a punto de venta
+
             }
 
-            logger.log(ss.str());
 
-            // todo agregar logica y enviar a punto de venta
 
         } catch (std::string &error) {
             logger.log("Error atendiendo a productores: " + error);
@@ -74,10 +79,14 @@ void Distribuidor::iniciarAtencion() {
     }
 
     if(sigusr1_handler.getSaveAndQuit() != 0) {
+
+        stringstream ss;
+        ss << "Distribuidor: " << idDistribuidor << " sale." << endl;
+        logger.log(ss.str());
+
         Guardador g;
         g.guardar(this);
     }
-
 
     entradaFlores.cerrar();
 }
@@ -101,6 +110,17 @@ Cajon* Distribuidor::recibirCajon(char *buffer) {
 
     ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
+
+    //FIN del pipe, siginifica que los productores están siendo destruidos.
+    //Por convención tomo que muera al recibir el primer EOF.
+    if(stoi(string(buffer)) == EOF) {
+        stringstream ss;
+        ss << "EOF RECIBIDO. Distribuidor " << idDistribuidor;
+        logger.log(ss.str());
+
+        //fin del pipe, significa que se está apagando todo.
+        return NULL;
+    };
 
     Cajon* paqueteRecibido = new Cajon(buffer, 10);
     return paqueteRecibido;

@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <cstring>
 #include <sys/stat.h>
+#include <dirent.h>
 
 void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    s.clear();
@@ -159,4 +160,23 @@ int Utils::remove_directory(const char *path) {
         r = rmdir(path);
     }
     return r;
+}
+
+int Utils::countFiles(std::string carpeta) {
+    int count = 0;
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir (carpeta.c_str())) != NULL) {
+        /* print all the files and directories within directory */
+        while ((ent = readdir (dir)) != NULL) {
+            count++;
+        }
+        closedir (dir);
+    } else {
+        /* could not open directory */
+        perror ("");
+        return EXIT_FAILURE;
+    };
+
+    return count-2;
 }

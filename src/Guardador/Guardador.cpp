@@ -17,7 +17,7 @@ void Guardador::inicializar(){
 
 void Guardador::cleanUp() {
     int status = Utils::remove_directory(Guardador::carpeta.c_str());
-    //TODO manejar errores.
+    //TODO manejar errores.8
 }
 
 void Guardador::guardar(ProcesoHijo *proceso, std::string prefijo) {
@@ -42,5 +42,11 @@ void Guardador::guardar(Distribuidor *proceso) {
 }
 
 Guardador::Guardador() {}
+
+bool Guardador::isCantidadDeArchivosGuardadosOk(int cantidadEsperada) {
+    return (Utils::countFiles(Guardador::carpeta) == cantidadEsperada);
+}
+
+
 
 

@@ -31,6 +31,7 @@ class Guardador {
         //TODO
         //static void guardar(Vendedor &proceso);
 
+        static bool isCantidadDeArchivosGuardadosOk(int cantidadEsperada);
 
     private:
 

@@ -42,6 +42,8 @@ public:
 
     static int remove_directory(const char* path);
 
+    static int countFiles(std::string dir);
+
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();
