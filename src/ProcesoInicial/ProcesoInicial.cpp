@@ -155,12 +155,6 @@ void ProcesoInicial::terminarProcesos() {
         proceso->terminar();
     }
 
-    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
-
-}
-
-void ProcesoInicial::limpiarMemoria() {
-
     for (int i = 0; i < this->puntosVenta.size(); ++i) {
         ProcesoHijo* proceso = this->puntosVenta.at(i);
         proceso->terminar();
@@ -170,7 +164,12 @@ void ProcesoInicial::limpiarMemoria() {
         ProcesoHijo* proceso = this->puntosVenta.at(i);
         proceso->terminar();
     }
+    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
+}
+
+void ProcesoInicial::limpiarMemoria() {
+    
     for (int j = 0; j < productores.size(); ++j) {
         delete(productores.at(j));
     }
