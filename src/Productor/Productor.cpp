@@ -17,7 +17,7 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 
 Productor::Productor(Logger &logger, std::string productorSerializado) : ProcesoHijo(logger) {
     int tamanioTipoDeProceso = 5;
-    int tamanioRamoEnBytes = 20;
+    int tamanioRamoEnBytes = Ramo::TAM_TOTAL;
     int tamanioSizeEnBytes = 5;
     int tamanioRamosPorCajonEnBytes = 5;
 
@@ -104,17 +104,30 @@ void Productor::producir() {
     }
 
     if(sigusr1_handler.getSaveAndQuit() != 0) {
+        logger.log( "Productor: "+ to_string(id) +" sale.");
         Guardador g;
         g.guardar(this);
+
+        //Cierro la canilla y espero a que me maten, eventualmente
+        this->cerrarPipes();
     }
 
-    this->cerrarPipes();
+    //Espero a que me maten.
+    while(sigint_handler.getGracefulQuit() == 0) {}
 
 }
 
+/**
+ * Es un cerrado lógico, lo que hago es enviar EOF del tamaño de un cajón para que los distribuidores lo puedan leer
+ * y guardar sus datos en un archivo.
+ */
 void Productor::cerrarPipes() {
     for(auto itPipes = this->distribuidores.begin(); itPipes != this->distribuidores.end(); itPipes++){
-        (*itPipes)->cerrar();
+        //EOF A TODES
+        logger.log("Mando EOF a mis pipes. Productor "+to_string(id));
+        stringstream ss;
+        ss << setw( Cajon::TAM_TOTAL_BYTES) << EOF;
+        (*itPipes)->escribir(ss.str().c_str(), Cajon::TAM_TOTAL_BYTES);
     }
 }
 

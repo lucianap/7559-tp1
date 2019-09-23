@@ -52,3 +52,7 @@ Cajon::~Cajon() {
     ramos.clear();
 }
 
+bool Cajon::estaVacio() {
+    return this->ramos.empty();
+}
+

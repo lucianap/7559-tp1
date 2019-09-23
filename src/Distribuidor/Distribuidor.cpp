@@ -28,7 +28,6 @@ Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) 
 
 
 Distribuidor::~Distribuidor() {
-    logger.log("Distribuidor destruido");
 }
 
 pid_t Distribuidor::ejecutar() {
@@ -63,17 +62,21 @@ void Distribuidor::iniciarAtencion() {
     auto ptos_venta_iterator = ptos_de_venta.begin();
     char buffer[Cajon::TAM_TOTAL_BYTES];
 
+
     this->inicializarValores();
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         try {
 
             Cajon unCajon = recibirCajon(buffer);
 
-            this->clasificar(unCajon);
-            this->logearStatus();
-            if (this->hayDiponiblidadParaEnvio()) {
-                this->enviarAPuntosDeVenta();
-            } else {
+            if(!unCajon.estaVacio()) {
+                this->clasificar(unCajon);
+                this->logearStatus();
+                if (this->hayDiponiblidadParaEnvio()) {
+                    this->enviarAPuntosDeVenta();
+                } else {
+                }
+
             }
 
         } catch (std::string &error) {
@@ -83,6 +86,11 @@ void Distribuidor::iniciarAtencion() {
     }
 
     if(sigusr1_handler.getSaveAndQuit() != 0) {
+
+        stringstream ss;
+        ss << "Distribuidor: " << idDistribuidor << " sale." << endl;
+        logger.log(ss.str());
+
         Guardador g;
         g.guardar(this);
     }
@@ -109,6 +117,19 @@ Cajon Distribuidor::recibirCajon(char *buffer) {
 
     ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
+
+    //FIN del pipe, siginifica que los productores están siendo destruidos.
+    //Por convención tomo que muera al recibir el primer EOF.
+
+    if(stoi(string(buffer)) == EOF) {
+        stringstream ss;
+        ss << "EOF RECIBIDO. Distribuidor " << idDistribuidor;
+        logger.log(ss.str());
+
+        //fin del pipe, significa que se está apagando todo.
+        //Devuelvo un cajón vacío para indicar que se tiene que ir guardando.
+        return Cajon();
+    };
 
     Cajon unCajon(buffer, Cajon::CAPACIDAD_RAMOS);
 

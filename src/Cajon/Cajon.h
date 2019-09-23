@@ -31,6 +31,7 @@ class Cajon {
         Cajon(const std::string& cajon_serializado, int ramos_por_cajon);
         std::string serializar();
         vector<Ramo> filtrar(TipoFlor tipoFlor);
+        bool estaVacio();
         ~Cajon();
 
 };

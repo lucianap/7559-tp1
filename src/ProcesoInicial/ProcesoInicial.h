@@ -36,8 +36,9 @@ private:
     vector<ProcesoClientes*> procesosClientes;
     vector<Pipe *> distribuidoresEntrada;
     vector<Pipe *> pVentasEntrada;
-    vector<Pipe *> pVentasEntradaClientes;
     void limpiar();
+    void terminarProcesos();
+    void limpiarMemoria();
 
     Logger logger;
     LoggerProcess loggerProcess;
