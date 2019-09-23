@@ -77,7 +77,6 @@ ProcesoClientes::~ProcesoClientes() {
 
 void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     std::stringstream ss;
-    std::stringstream debug;
     //5 bytes: tipo de proceso.
     ss << std::setw(5) << CLIENTE_T;
 
@@ -89,9 +88,6 @@ void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     ss << std::setw(Pedido::TAM_TOTAL)<< pedido_serializado;
     std::string data_envio = ss.str();
 
-    debug << "Se genera un pedido: "<< pedido.toString() << endl;
-
-    logger.log(debug.str());
     pipePtoVenta->escribir(data_envio.c_str(), data_envio.length());
 
 };

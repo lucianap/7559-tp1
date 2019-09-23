@@ -30,7 +30,15 @@ private:
 
     vector<Ramo> stockTulipanes;
 
-    void enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) ;
+    vector<Pipe*>::iterator ptsVentaIterator;
+
+    Pipe* puntoVenta_actual;
+
+    int siguientePtoVenta;
+
+    void enviarCajon( Pipe *distribuidor_destino) ;
+
+    void inicializarValores();
 public:
 
     void clasificar(Cajon &cajon);

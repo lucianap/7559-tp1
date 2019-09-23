@@ -17,7 +17,7 @@ class Cajon {
          * Capacidad para completar el cajon con ramos necesarios para el envio al distribuidor
          */
         static const int CAPACIDAD_RAMOS = 10;
-        static const int CAPACIDAD_RAMOS_DISTRIBUIDOR = 10;
+        static const int CAPACIDAD_RAMOS_DISTRIBUIDOR = 100;
 
         /***
          * Tamanio del paquete de bytes que se envia desde el productor al distribuidor

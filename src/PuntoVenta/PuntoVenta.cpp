@@ -57,7 +57,7 @@ void PuntoVenta::iniciarAtencion() {
                 ss << "Pto Vta Nro " << this->idPuntoVenta << " recibe un cajón con el contenido:" << endl;
 
                 for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                    ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                    ss << "Ramo de " << (it)->get_productor() << " con flores de tipo " << (it)->getTipoFlor() << endl;
                 }
 
                 logger.log(ss.str());
@@ -90,13 +90,10 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
         throw(std::string(mensajeError));
     }
 
-    ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
 
     std::string strTipoProceso = ((string)buffer).substr(0, 5);
-    std::stringstream s;
-    s << "Debuggin: " << strTipoProceso << endl;
-    logger.log(s.str());
+
     return (TipoProceso)std::stoi(Utils::trim(strTipoProceso));
 
 };
@@ -116,11 +113,9 @@ t_parametros_pedido PuntoVenta::recibirPedido(char *buffer) {
             mensajeError = "Error al leer la siguiente persona en la fifo";
         throw(std::string(mensajeError));
     }
-
-    ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
 
-    std::string strPedido = ((string)buffer).substr(0, 5);
+    std::string strPedido = ((string)buffer).substr(0, Pedido::TAM_TOTAL);
     Pedido paqueteRecibido(buffer);
     t_parametros_pedido pedido;
     pedido.cantRosas = paqueteRecibido.get_rosas();
@@ -128,9 +123,7 @@ t_parametros_pedido PuntoVenta::recibirPedido(char *buffer) {
     pedido.origen = paqueteRecibido.getTipoPedido();
 
     std::stringstream s;
-    ss << "Rosas : " << pedido.cantRosas
-        << "Tulipanes : " << pedido.cantTulipanes
-        << "Origen : " << Utils::getTextTipoPedido( pedido.origen) << endl;
+    s << paqueteRecibido.toString()<< endl;
     logger.log(s.str());
 
     return pedido;
@@ -152,8 +145,6 @@ Cajon* PuntoVenta::recibirCajon(char *buffer) {
             mensajeError = "Error al leer la siguiente persona en la fifo";
         throw(std::string(mensajeError));
     }
-
-    ss << "Datos recibidos: " << buffer << endl;
     logger.log(ss.str());
 
     Cajon* paqueteRecibido = new Cajon(buffer, Cajon::CAPACIDAD_RAMOS_DISTRIBUIDOR);

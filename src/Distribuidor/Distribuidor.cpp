@@ -52,6 +52,10 @@ pid_t Distribuidor::ejecutar() {
     exit(0);
 }
 
+void Distribuidor::inicializarValores() {
+    this->ptsVentaIterator = this->ptos_de_venta.begin();
+}
+
 void Distribuidor::iniciarAtencion() {
     int ramos_recibidos = 0;
     std::vector<Ramo*> stock;
@@ -59,6 +63,7 @@ void Distribuidor::iniciarAtencion() {
     auto ptos_venta_iterator = ptos_de_venta.begin();
     char buffer[Cajon::TAM_TOTAL_BYTES];
 
+    this->inicializarValores();
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         try {
 
@@ -147,7 +152,14 @@ bool Distribuidor::hayDiponiblidadParaEnvio() {
 }
 
 void Distribuidor::enviarAPuntosDeVenta() {
-    // TODO: ENVIO A PUNTOS DE VENTA
+    this->puntoVenta_actual = *this->ptsVentaIterator;
+    if(this->ptsVentaIterator == ptos_de_venta.end()) {
+        this->ptsVentaIterator = ptos_de_venta.begin();
+        this->siguientePtoVenta = 0;
+        puntoVenta_actual = *this->ptsVentaIterator;
+    }
+    this->enviarCajon(puntoVenta_actual);
+    ++this->ptsVentaIterator;
 }
 
 const vector<Ramo> &Distribuidor::getStockRosas() const {
@@ -175,8 +187,11 @@ void Distribuidor::logearStatus() {
 }
 
 
-void Distribuidor::enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
-
+void Distribuidor::enviarCajon( Pipe *distribuidor_destino) {
+    vector<Ramo>::const_iterator first = stockRosas.begin() + 100;
+    vector<Ramo>::const_iterator last = stockTulipanes.begin() + 100;
+    vector<Ramo> ramos(first, last);
+    ramos.insert(ramos.end(),std::begin(stockTulipanes),std::end(stockTulipanes));
     std::stringstream ss;
     ss << "DISTRIBUIDOR " << this->idDistribuidor << " envía cajón a destino." << endl;
     logger.log(ss.str());
@@ -189,5 +204,6 @@ void Distribuidor::enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_dest
     logger.log(ss.str());
 
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
-
+    stockRosas.clear();
+    stockTulipanes.clear();
 }
