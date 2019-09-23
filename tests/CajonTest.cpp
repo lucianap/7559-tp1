@@ -42,3 +42,27 @@ TEST(CajonFixture, ContructorCopa) {
     EXPECT_EQ(2, otroCajon.ramos.size());
 
 }
+
+TEST(CajonFixture, FiltrarRamos) {
+
+    std::vector<Ramo> ramos;
+
+    Ramo ramo(1, Tulipan);
+    Ramo ramo2(2, Rosa);
+    Ramo ramo3(1, Rosa);
+    Ramo ramo4(2, Rosa);
+    ramos.push_back(ramo);
+    ramos.push_back(ramo2);
+    ramos.push_back(ramo3);
+    ramos.push_back(ramo4);
+
+    Cajon cajon(ramos);
+
+    std::vector<Ramo> ramosfiltrado = cajon.filtrar(Rosa);
+
+    EXPECT_EQ(3, ramosfiltrado.size());
+    EXPECT_EQ(Rosa, ramosfiltrado.at(0).getTipoFlor());
+    EXPECT_EQ(Rosa, ramosfiltrado.at(1).getTipoFlor());
+    EXPECT_EQ(Rosa, ramosfiltrado.at(2).getTipoFlor());
+
+}

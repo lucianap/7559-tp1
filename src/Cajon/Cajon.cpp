@@ -37,6 +37,17 @@ std::string Cajon::serializar(){
     return cajon_serializado;
 }
 
+vector<Ramo> Cajon::filtrar(TipoFlor tipoFlor) {
+    vector<Ramo> filtrado;
+
+    for (auto & ramo : this->ramos) {
+        if (ramo.getTipoFlor() == tipoFlor) {
+            filtrado.push_back(ramo);
+        }
+    }
+    return filtrado;
+}
+
 Cajon::~Cajon() {
     ramos.clear();
 }

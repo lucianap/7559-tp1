@@ -150,14 +150,14 @@ Ramo Productor::producir_ramo() {
 
 void Productor::enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino) {
     std::stringstream ss;
-    ss << "PRODUCTOR " << this->id << " envía cajón a destino." << endl;
+    ss << "PRODUCTOR " << this->id << " envía cajón a destino.";
     logger.log(ss.str());
 
     Cajon c(ramos);
     std::string cajon_a_enviar = c.serializar();
 
     std::stringstream ss2;
-    ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;
+    ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str();
     logger.log(ss.str());
 
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
