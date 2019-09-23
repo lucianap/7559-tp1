@@ -36,8 +36,8 @@ class Productor : public ProcesoHijo {
     private:
 
         void cerrarPipes();
-        Ramo* producir_ramo();
-        void enviar_cajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino);
+        Ramo producir_ramo();
+        void enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino);
 
         //Comienzo de la ejecución de un productor.
         //El comportamiento actual es armar un cajón y enviarlo por el pipe apenas termina de armarlo.
@@ -45,7 +45,7 @@ class Productor : public ProcesoHijo {
         void inicializarValores();
 
         //Datos del estado actual, para luego cargarlos cuando se reanude
-        std::vector<Ramo*> ramosAEnviar;
+        std::vector<Ramo> ramosAEnviar;
         int siguienteDistribuidor;
 
 };
