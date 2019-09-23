@@ -16,9 +16,9 @@ void ProcesoInicial::iniciarEjecucion() {
     int puntos_de_venta = parametros.cantPuntosVenta;
 
     //todo leer archivo de pedidos y cargarlo a partir del mismo
-    std::vector<t_parametros_pedido_internet> config_pedidos_internet;
+    std::vector<t_parametros_pedido> config_pedidos_internet;
     for (int j = 0; j < 10; ++j) {
-        t_parametros_pedido_internet pedido_internet1;
+        t_parametros_pedido pedido_internet1;
         pedido_internet1.cantTulipanes = j+1;
         pedido_internet1.cantRosas = j+1;
         config_pedidos_internet.push_back(pedido_internet1);

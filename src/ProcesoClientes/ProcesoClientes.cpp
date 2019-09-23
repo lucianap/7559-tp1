@@ -5,7 +5,8 @@
 
 #include "ProcesoClientes.h"
 
-ProcesoClientes::ProcesoClientes(Logger &logger, Pipe *pipePtoVenta, std::vector<t_parametros_pedido_internet> paramPedidosInternet) :
+
+ProcesoClientes::ProcesoClientes(Logger &logger, Pipe *pipePtoVenta, std::vector<t_parametros_pedido> paramPedidosInternet) :
         ProcesoHijo(logger),
         pipePtoVenta(*pipePtoVenta),
         paramPedidosInternet(paramPedidosInternet){}
@@ -31,8 +32,35 @@ pid_t ProcesoClientes::ejecutar() {
 
 void ProcesoClientes::iniciarAtencion() {
 
+    int llegaCliente;
+    int pideRosa;
+    auto pedidos_internet_iterator = this->paramPedidosInternet.begin();
+    t_parametros_pedido pedido_actual = *pedidos_internet_iterator;
+    //Distribuye uniformemente entre los distribuidores asignados a este productor.
+    while (sigint_handler.getGracefulQuit() == 0) {
+        llegaCliente = std::rand() % 2;
+        if(llegaCliente == 1){
+            pideRosa = std::rand() % 2;
+            t_parametros_pedido pedido;
+            pedido.cantTulipanes = pideRosa == 1? 1 : 0;
+            pedido.cantRosas = pideRosa == 1? 0 : 1;
+            this->enviar_pedido(pedido, Local);
+        }
+        if(pedidos_internet_iterator == this->paramPedidosInternet.end()) {
+            pedidos_internet_iterator = this->paramPedidosInternet.begin();
+            pedido_actual = *pedidos_internet_iterator;
+        }
+        this->enviar_pedido(pedido_actual, Internet);
+        ++pedidos_internet_iterator;
+        sleep(1);
+    }
+
 }
 
 ProcesoClientes::~ProcesoClientes() {
     logger.log("Proceso de clientes destruido");
+}
+
+void ProcesoClientes::enviar_pedido(t_parametros_pedido pedido, TipoPedido tipoPedido) {
+    //Pedido* pedido = new Pedido(pedido, tipoPedido);
 };

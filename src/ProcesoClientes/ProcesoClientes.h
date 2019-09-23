@@ -11,16 +11,21 @@
 #include <Cajon/Cajon.h>
 #include <ProcesoHijo/ProcesoHijo.h>
 
-typedef struct parametros_pedido_internet {
+typedef struct parametros_pedido{
     int cantTulipanes;
     int cantRosas;
-} t_parametros_pedido_internet;
+} t_parametros_pedido;
+
+enum TipoPedido {
+    Internet,
+    Local
+};
 
 class ProcesoClientes : public ProcesoHijo {
 
 private:
 
-    std::vector<t_parametros_pedido_internet> paramPedidosInternet;
+    std::vector<t_parametros_pedido> paramPedidosInternet;
 
     Pipe pipePtoVenta;
 
@@ -29,11 +34,13 @@ private:
 
 public:
 
-    ProcesoClientes(Logger& logger, Pipe* pipePtoVenta, vector<t_parametros_pedido_internet> paramPedidosInternet);
+    ProcesoClientes(Logger& logger, Pipe* pipePtoVenta, vector<t_parametros_pedido> paramPedidosInternet);
 
     ~ProcesoClientes() override;
 
     pid_t ejecutar() override;
+
+    void enviar_pedido(t_parametros_pedido pedido,TipoPedido tipoPedido);
 };
 
 
