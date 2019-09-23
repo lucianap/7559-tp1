@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <iomanip>
+#include <TipoPedido/TipoPedido.h>
 #include "../TipoFlor/TipoFlor.h"
 
 
@@ -39,11 +40,15 @@ public:
 
     static string getTextTipoFlor(TipoFlor tipoFlor);
 
+    static string getTextTipoPedido(TipoPedido tipoPedido);
+
     static int remove_directory(const char* path);
 
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();
+
+    string getTextTipoPedido(TipoPedido tipoPedido);
 };
 
 #endif /* UTILS_H_ */

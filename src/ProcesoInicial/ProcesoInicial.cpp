@@ -22,6 +22,7 @@ void ProcesoInicial::iniciarEjecucion() {
         t_parametros_pedido pedido_internet1;
         pedido_internet1.cantTulipanes = j+1;
         pedido_internet1.cantRosas = j+1;
+        pedido_internet1.origen = INTERNET;
         config_pedidos_internet.push_back(pedido_internet1);
     }
 
@@ -76,7 +77,7 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     for (int j = 0; j < puntos_de_venta; ++j) {
-        ProcesoClientes* procesoClientes = new ProcesoClientes(logger,this->pVentasEntradaClientes.at(j),config_pedidos_internet);
+        ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntradaClientes.at(j),config_pedidos_internet);
         PuntoVenta* pto_venta = new PuntoVenta(logger, j, this->pVentasEntrada.at(j), this->pVentasEntradaClientes.at(j));
         this->puntosVenta.push_back(pto_venta);
         this->procesosClientes.push_back(procesoClientes);

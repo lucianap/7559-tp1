@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "../Ramo/Ramo.h"
+#include "Ramo/Ramo.h"
 
 class Cajon {
     private:

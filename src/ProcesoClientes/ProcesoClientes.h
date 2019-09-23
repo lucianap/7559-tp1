@@ -10,16 +10,7 @@
 #include <vector>
 #include <Cajon/Cajon.h>
 #include <ProcesoHijo/ProcesoHijo.h>
-
-typedef struct parametros_pedido{
-    int cantTulipanes;
-    int cantRosas;
-} t_parametros_pedido;
-
-enum TipoPedido {
-    Internet,
-    Local
-};
+#include <TipoPedido/TipoPedido.h>
 
 class ProcesoClientes : public ProcesoHijo {
 
@@ -29,12 +20,14 @@ private:
 
     Pipe pipePtoVenta;
 
+    int idCliente;
+
     void iniciarAtencion();
 
 
 public:
 
-    ProcesoClientes(Logger& logger, Pipe* pipePtoVenta, vector<t_parametros_pedido> paramPedidosInternet);
+    ProcesoClientes(Logger& logger, int idCliente,Pipe* pipePtoVenta, vector<t_parametros_pedido> paramPedidosInternet);
 
     ~ProcesoClientes() override;
 

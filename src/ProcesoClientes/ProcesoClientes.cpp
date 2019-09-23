@@ -3,11 +3,13 @@
 //
 
 
+#include <TipoProceso/TipoProceso.h>
 #include "ProcesoClientes.h"
 
 
-ProcesoClientes::ProcesoClientes(Logger &logger, Pipe *pipePtoVenta, std::vector<t_parametros_pedido> paramPedidosInternet) :
+ProcesoClientes::ProcesoClientes(Logger &logger, int idCliente, Pipe *pipePtoVenta, std::vector<t_parametros_pedido> paramPedidosInternet) :
         ProcesoHijo(logger),
+        idCliente(idCliente),
         pipePtoVenta(*pipePtoVenta),
         paramPedidosInternet(paramPedidosInternet){}
 
@@ -20,6 +22,7 @@ pid_t ProcesoClientes::ejecutar() {
 
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     logger.log("Naci como Proceso de clientes y tengo el pid: "+to_string(getpid()));
 
@@ -44,13 +47,13 @@ void ProcesoClientes::iniciarAtencion() {
             t_parametros_pedido pedido;
             pedido.cantTulipanes = pideRosa == 1? 1 : 0;
             pedido.cantRosas = pideRosa == 1? 0 : 1;
-            this->enviar_pedido(pedido, Local);
+            this->enviar_pedido(pedido, LOCAL);
         }
         if(pedidos_internet_iterator == this->paramPedidosInternet.end()) {
             pedidos_internet_iterator = this->paramPedidosInternet.begin();
             pedido_actual = *pedidos_internet_iterator;
         }
-        this->enviar_pedido(pedido_actual, Internet);
+        this->enviar_pedido(pedido_actual, INTERNET);
         ++pedidos_internet_iterator;
         sleep(1);
     }
@@ -62,5 +65,12 @@ ProcesoClientes::~ProcesoClientes() {
 }
 
 void ProcesoClientes::enviar_pedido(t_parametros_pedido pedido, TipoPedido tipoPedido) {
-    //Pedido* pedido = new Pedido(pedido, tipoPedido);
+    std::stringstream ss;
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << CLIENTE_T;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << this->idCliente;
+    
+    
 };

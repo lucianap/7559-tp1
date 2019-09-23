@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <cstring>
 #include <sys/stat.h>
+#include <TipoPedido/TipoPedido.h>
 
 void Utils::join(const std::vector<std::string>& v, char c, std::string& s) {
    s.clear();
@@ -117,6 +118,17 @@ string Utils::getTextTipoFlor(TipoFlor tipoFlor) {
             return "Rosa";
         default:
             return std::to_string(tipoFlor);
+    }
+}
+
+string Utils::getTextTipoPedido(TipoPedido tipoPedido) {
+    switch (tipoPedido) {
+        case INTERNET:
+            return "Internet";
+        case LOCAL:
+            return "Local";
+        default:
+            return std::to_string(tipoPedido);
     }
 }
 

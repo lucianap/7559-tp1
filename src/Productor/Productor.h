@@ -10,7 +10,7 @@
 #include <Pipes/Pipe.h>
 
 
-#include "../Ramo/Ramo.h"
+#include "Ramo/Ramo.h"
 #include "../Cajon/Cajon.h"
 
 class Productor : public ProcesoHijo {

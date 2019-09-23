@@ -51,7 +51,7 @@ void Distribuidor::iniciarAtencion() {
             std::stringstream ss;
             ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                ss << (*it)->toString() << endl;
                 stock.push_back(*it);
                 ramos_recibidos++;
                 ss << "Cant actual " << ramos_recibidos << endl;
@@ -70,11 +70,6 @@ void Distribuidor::iniciarAtencion() {
                 ptos_venta_iterator = ptos_de_venta.begin();
                 pto_venta_actual = *ptos_venta_iterator;
             }
-                //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
-                ss << (*it)->toString() << endl;
-            }
-
-            logger.log(ss.str());
 
             // todo agregar logica y enviar a punto de venta
 
