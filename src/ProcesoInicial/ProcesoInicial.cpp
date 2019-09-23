@@ -10,6 +10,14 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros):
         parametros(parametros), logger(true), loggerProcess("log.txt", logger) {
 }
 
+void ProcesoInicial::reanudarEjecucion() {
+    //Restaurador::restaurarProductores
+    //Restaurador::restaurarDistribuidores
+    //Restaurador::restaurarAsignaciones
+
+    //iniciarEjecucion
+}
+
 void ProcesoInicial::iniciarEjecucion() {
 
     int productores = parametros.cantProductores;
@@ -65,7 +73,6 @@ void ProcesoInicial::iniciarEjecucion() {
             Productor* p = new Productor(i, distribuidores_escuchando, ramos_por_cajon, logger);
             this->productores.push_back(p);
             p->ejecutar();
-
         }
     }
 
@@ -86,10 +93,28 @@ void ProcesoInicial::iniciarEjecucion() {
     }
     Menu menu;
 
-    menu.agregarProcesos(this->productores);
-    menu.agregarProcesos(this->distribuidores);
-    menu.iniciar();
 
+    int status = menu.iniciar();
+
+    if (status == 1) {
+
+        this->pausar();
+
+    }
+
+}
+
+void ProcesoInicial::pausar() {
+
+    for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
+
+    for(auto it = productores.begin(); it != productores.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
 }
 
 ProcesoInicial::~ProcesoInicial() {

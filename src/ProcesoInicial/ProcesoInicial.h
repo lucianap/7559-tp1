@@ -52,6 +52,9 @@ public:
     void asignar_pipes(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
                             std::map<int, vector<Pipe*>>* distribuidores_por_productor );
 
+    void pausar();
+
+    void reanudarEjecucion();
 
 };
 

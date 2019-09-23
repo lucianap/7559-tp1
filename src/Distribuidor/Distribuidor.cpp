@@ -1,4 +1,4 @@
-
+#include <Guardador/Guardador.h>
 #include <TipoProceso/TipoProceso.h>
 #include "Distribuidor.h"
 #include "../Signal/SignalHandler.h"
@@ -9,6 +9,18 @@ Distribuidor::Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int 
         idDistribuidor(idDistribuidor),
         entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
 }
+
+Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) : ProcesoHijo(logger) {
+
+    int tamanioTipoProcesoBytes = 5;
+    int tamanioIdBytes = 5;
+
+    int tipo = std::stoi(distribuidorSerializado.substr(0, tamanioTipoProcesoBytes));
+    idDistribuidor = std::stoi(distribuidorSerializado.substr(tamanioTipoProcesoBytes,
+            tamanioTipoProcesoBytes+tamanioIdBytes));
+
+};
+
 
 Distribuidor::~Distribuidor() {
     logger.log("Distribuidor destruido");
@@ -43,7 +55,7 @@ void Distribuidor::iniciarAtencion() {
     char buffer[Cajon::TAM_TOTAL_BYTES];
     Cajon* paqueteCajon;
 
-    while (sigint_handler.getGracefulQuit() == 0) {
+    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         try {
             Pipe* pto_venta_actual = *ptos_venta_iterator;
             paqueteCajon = recibirCajon(buffer);
@@ -78,6 +90,12 @@ void Distribuidor::iniciarAtencion() {
             break;
         }
     }
+
+    if(sigusr1_handler.getSaveAndQuit() != 0) {
+        Guardador g;
+        g.guardar(this);
+    }
+
 
     entradaFlores.cerrar();
 }
@@ -115,7 +133,10 @@ std::string Distribuidor::serializar() {
     //5 bytes: tipo de proceso.
     ss << std::setw(5) << this->idDistribuidor;
 
-};
+    return ss.str();
+
+}
+
 
 void Distribuidor::enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) {
 

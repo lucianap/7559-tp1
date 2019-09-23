@@ -30,7 +30,7 @@ public:
     virtual pid_t ejecutar() = 0;
 
     //Por defecto es no-op.
-    virtual std::string serializar() { };
+    virtual std::string serializar() {};
 
 protected:
     Logger& logger;

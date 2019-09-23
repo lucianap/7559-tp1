@@ -16,12 +16,11 @@ void Guardador::inicializar(){
 }
 
 void Guardador::cleanUp() {
-    Utils::remove_directory(Guardador::carpeta.c_str());
+    int status = Utils::remove_directory(Guardador::carpeta.c_str());
     //TODO manejar errores.
 }
 
 void Guardador::guardar(ProcesoHijo *proceso, std::string prefijo) {
-    cout << "guardo con el nombre: " << prefijo << endl;
     std::ofstream out(prefijo);
     out << proceso->serializar();
     out.close();
@@ -42,12 +41,6 @@ void Guardador::guardar(Distribuidor *proceso) {
 
 }
 
-
 Guardador::Guardador() {}
-
-ProcesoHijo* Guardador::restaurar(Logger& logger, std::string procesoSerializado) {
-    return ProcesoHijoFactory::crear(procesoSerializado, logger);
-}
-
 
 

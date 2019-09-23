@@ -2,6 +2,7 @@
 #ifndef INC_7559_TP1_DISTRIBUIDOR_H
 #define INC_7559_TP1_DISTRIBUIDOR_H
 
+#include <TipoProceso/TipoProceso.h>
 #include <Ramo/Ramo.h>
 #include <Cajon/Cajon.h>
 #include "Distribuidor.h"
@@ -24,6 +25,7 @@ private:
 
     void enviarCajon(std::vector<Ramo*> ramos, Pipe *distribuidor_destino) ;
 public:
+    Distribuidor(Logger& logger, std::string distribuidorSerializado);
     Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int idDistribuidor, Pipe* pipe);
 
     ~Distribuidor() override;
