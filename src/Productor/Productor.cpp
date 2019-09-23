@@ -104,7 +104,6 @@ void Productor::producir() {
     }
 
     if(sigusr1_handler.getSaveAndQuit() != 0) {
-        cout << "Me di cuenta que me quieren guardar y me guardo" << endl;
         Guardador g;
         g.guardar(this);
     }

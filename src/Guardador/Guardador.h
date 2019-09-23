@@ -8,9 +8,9 @@
 #include <fstream>
 #include <sstream>
 #include <ProcesoHijo/ProcesoHijo.h>
-#include <Distribuidor/Distribuidor.h>
 #include <Productor/Productor.h>
 #include <ProcesoHijoFactory/ProcesoHijoFactory.h>
+#include <Distribuidor/Distribuidor.h>
 
 class Guardador {
 
@@ -28,23 +28,13 @@ class Guardador {
 
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);
-
         //TODO
         //static void guardar(Vendedor &proceso);
-
-        void restaurarProductores();
-        void restaurarDistribuidores();
-
-        //TODO
-        //void restaurarVendedores;
 
 
     private:
 
         void guardar(ProcesoHijo *proceso, std::string prefijo);
-
-        //TODO scan directorio para restaurar
-        ProcesoHijo* restaurar(Logger& logger, std::string procesoSerializado);
 
 };
 
