@@ -4,6 +4,7 @@
 #include <iostream>
 #include <getopt.h>
 #include <sstream>
+#include <TipoFlor/TipoFlor.h>
 #include <dirent.h>
 #include <cstring>
 #include <sys/stat.h>
@@ -108,8 +109,18 @@ std::string Utils::formatearMensajeLog(std::string mensaje) {
     return logMessage.str();
 }
 
-int Utils::remove_directory(const char *path)
-{
+string Utils::getTextTipoFlor(TipoFlor tipoFlor) {
+    switch (tipoFlor) {
+        case Tulipan:
+            return "Tulipan";
+        case Rosa:
+            return "Rosa";
+        default:
+            return std::to_string(tipoFlor);
+    }
+}
+
+int Utils::remove_directory(const char *path) {
     DIR *d = opendir(path);
     size_t path_len = strlen(path);
     int r = -1;

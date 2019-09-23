@@ -35,8 +35,8 @@ pid_t Distribuidor::ejecutar() {
 }
 
 void Distribuidor::iniciarAtencion() {
-    char buffer[200]; // cambiarlo con Lu
-    Cajon* paqueteCajon; // cambiarlo con Lu
+    char buffer[Cajon::TAM_TOTAL_BYTES];
+    Cajon* paqueteCajon;
 
     while (sigint_handler.getGracefulQuit() == 0) {
         try {
@@ -46,7 +46,8 @@ void Distribuidor::iniciarAtencion() {
             std::stringstream ss;
             ss << "DISTRIBUIDOR " << this->idDistribuidor << " recibe un cajón con el contenido:" << endl;
             for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                //ss << "Ramo de " << (*it)->get_productor() << " con flores de tipo " << (*it)->getTipoFlor() << endl;
+                ss << (*it)->toString() << endl;
             }
 
             logger.log(ss.str());
@@ -66,13 +67,12 @@ void Distribuidor::iniciarAtencion() {
 Cajon* Distribuidor::recibirCajon(char *buffer) {
     string mensajeError;
 
-    //TODO este 200 debería ser un parámetro de configuración.
-    ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), 200);
+    ssize_t bytesleidos = entradaFlores.leer(static_cast<void*>(buffer), Cajon::TAM_TOTAL_BYTES);
 
     std::stringstream ss;
     ss << "DISTRIBUIDOR "<< this->idDistribuidor << " lee " << bytesleidos << " bytes del pipe." << endl;
 
-    if (bytesleidos != 200) { // cambiarlo con lu
+    if (bytesleidos != Cajon::TAM_TOTAL_BYTES) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else

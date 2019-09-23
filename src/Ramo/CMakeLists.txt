@@ -1,10 +1,8 @@
-set(SOURCE
-        ${SOURCE}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Ramo.cpp
-        PARENT_SCOPE
+set(SOURCE_FILES
+        Ramo.cpp
         )
-set(HEADERS
-        ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Ramo.h
-        PARENT_SCOPE
+set(HEADER_FILES
+        Ramo.h
         )
+
+add_library(Ramo_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
