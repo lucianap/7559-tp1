@@ -33,6 +33,8 @@ class Productor : public ProcesoHijo {
         pid_t ejecutar() override;
         std::string serializar() override;
 
+        int getId();
+
     private:
 
         void cerrarPipes();

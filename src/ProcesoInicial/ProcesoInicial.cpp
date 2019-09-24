@@ -1,5 +1,6 @@
 
 #include <Guardador/Guardador.h>
+#include <Restaurador/Restaurador.h>
 #include "ProcesoInicial.h"
 
 
@@ -11,9 +12,14 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros):
 }
 
 void ProcesoInicial::reanudarEjecucion() {
-    //Restaurador::restaurarProductores
-    //Restaurador::restaurarDistribuidores
-    //Restaurador::restaurarAsignaciones
+
+    loggerProcess.ejecutar();
+    logger.log("-----------Restaurando sistema-------------");
+
+    Restaurador r;
+    auto productores = r.restaurarProductores(logger);
+    auto distribuidores = r.restaurarDistribuidores(logger);
+    r.conectarPipes(productores, distribuidores);
 
     //iniciarEjecucion
 }
@@ -56,7 +62,7 @@ void ProcesoInicial::iniciarEjecucion() {
         Pipe* pipeInPVenta = new Pipe();
         this->pVentasEntrada.push_back(pipeInPVenta);
         int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
-        this->asignacionesProductorDistribuidores.insert(std::pair<int,int>(distribuidorAsignado, j));
+        this->asignacionesDistribuidorPuntosDeVenta.insert(std::pair<int,int>(distribuidorAsignado, j));
     }
 
     /**** hasta este punto se deben inicializar todos los pipes ****/
@@ -140,9 +146,9 @@ void ProcesoInicial::guardar() {
 
     //Controlo que todos los procesos se hayan guardado.
     while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size())){}
-    Guardador g;
 
-    g.guardarAsignaciones(this->asignacionesProductorDistribuidores);
+    Guardador g;
+    g.guardarAsignaciones(this->asignacionesProductorDistribuidores, this->asignacionesDistribuidorPuntosDeVenta);
 
     this->terminarProcesos();
 

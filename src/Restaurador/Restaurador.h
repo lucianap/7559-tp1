@@ -10,11 +10,17 @@
 #include <Distribuidor/Distribuidor.h>
 
 class Restaurador {
+private:
+    std::vector<string> leerProcesoSerializado(std::string prefijo);
+    std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);
+    std::string leerAsignacionesProductorDistribuidor();
+
+    map<int, Pipe *> distribuidoresEntradaByDistId;
 
 public:
 
-    std::vector<Productor*> restaurarProductores();
-    std::vector<Distribuidor*> restaurarDistribuidores();
+    std::vector<Productor*> restaurarProductores(Logger& logger);
+    std::vector<Distribuidor*> restaurarDistribuidores(Logger& logger);
 
     void conectarPipes(std::vector<Productor*> productores,
                        std::vector<Distribuidor*> distribuidores);

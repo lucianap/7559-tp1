@@ -18,7 +18,7 @@ class Ramo {
         int producido_por;
         TipoFlor tipoFlor;
     public:
-        static const int TAM_ID_PRODUCTOR = 2;
+        static const int TAM_ID_PRODUCTOR = 4;
         static const int TAM_TIPO_FLOR = 1;
         static const int TAM_TOTAL = TAM_ID_PRODUCTOR + TAM_TIPO_FLOR;
 

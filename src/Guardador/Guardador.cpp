@@ -15,6 +15,11 @@ const std::string Guardador::separadorAsignaciones = "|";
 const std::string Guardador::simboloAsignadoA = ">";
 const std::string Guardador::prefijoClientes = "Clientes_pid_";
 
+
+const std::string Guardador::prefijoAsignacionesProductorDistribuidor = "distribuidores_por_productor:";
+const std::string Guardador::prefijoAsignacionesDistribuidorPuntoDeVenta = "pvta_por_productor:";
+
+
 void Guardador::inicializar(){
     int status = mkdir(Guardador::carpeta.c_str(), 0777);
     //TODO manejar errores.
@@ -60,8 +65,6 @@ void Guardador::guardar_ptoVenta(PuntoVenta *proceso) {
 
 }
 
-
-
 Guardador::Guardador() {}
 
 bool Guardador::isCantidadDeArchivosGuardadosOk(int cantidadEsperada) {
@@ -69,12 +72,16 @@ bool Guardador::isCantidadDeArchivosGuardadosOk(int cantidadEsperada) {
 }
 
 
-void Guardador::guardarAsignaciones(std::multimap<int, int> distribuidores_por_productor) {
+void Guardador::guardarAsignaciones(std::multimap<int, int> mapaDistribuidoresPorProductor,
+                                    std::multimap<int, int> mapaPvtaPorDistribuidor ) {
     stringstream ss;
     ss << Guardador::carpeta << "/" << Guardador::archivoAsignaciones;
     std::ofstream out(ss.str());
-    out << "distribuidores_por_productor:";
-    out << formatearAsignacion(distribuidores_por_productor);
+    out << Guardador::prefijoAsignacionesProductorDistribuidor;
+    out << formatearAsignacion(mapaDistribuidoresPorProductor) << endl;
+
+    out << Guardador::prefijoAsignacionesDistribuidorPuntoDeVenta;
+    out << formatearAsignacion(mapaPvtaPorDistribuidor) << endl;
     out.close();
 }
 
@@ -94,17 +101,6 @@ std::string Guardador::formatearAsignacion(std::multimap<int, int> mapaDeAsignac
     return ss.str();
 }
 
-std::multimap<int, int> Guardador::restaurarAsignaciones(std::string asignaciones) {
-    std::multimap<int, int> m;
-    vector<string> asignacionesVector = Utils::split(asignaciones , Guardador::separadorAsignaciones);
-    for(auto it = asignacionesVector.begin(); it != asignacionesVector.end(); it++){
-        vector<string> par = Utils::split((*it), Guardador::simboloAsignadoA);
-        std::pair<int, int> asignacion(stoi(par[0]), stoi(par[1]));
-        m.insert(asignacion);
-    }
-
-    return m;
-}
 
 
 

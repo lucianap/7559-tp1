@@ -10,7 +10,12 @@ int main(int argc, char* argv[]) {
     t_parametros parametros = Utils::tomarParametros(argc, argv);
 
     ProcesoInicial procesoInicial(parametros);
-    procesoInicial.iniciarEjecucion();
+
+    if(parametros.reanudar) {
+        procesoInicial.reanudarEjecucion();
+    } else {
+        procesoInicial.iniciarEjecucion();
+    }
 
     return 0;
 }

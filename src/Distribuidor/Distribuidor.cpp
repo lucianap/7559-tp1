@@ -15,7 +15,9 @@ Distribuidor::Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int 
         entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
 }
 
-Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado) : ProcesoHijo(logger) {
+Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado, Pipe* entrada) :
+    ProcesoHijo(logger),
+    entradaFlores(*entrada) {
 
     int tamanioTipoProcesoBytes = 5;
     int tamanioIdBytes = 5;
@@ -226,4 +228,8 @@ void Distribuidor::enviarCajon( Pipe *distribuidor_destino) {
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
     stockRosas.clear();
     stockTulipanes.clear();
+}
+
+int Distribuidor::getId() {
+    return idDistribuidor;
 }
