@@ -21,8 +21,6 @@ Cajon::Cajon(const std::string& cajon_serializado, int ramos_por_cajon) {
     }
 }
 
-//lo que hace es serializar un cajón, concatenando las serializaciones de sus ramos,
-//para deserializarlo habría que hacer split por el separador y deserializar cada ramo.
 std::string Cajon::serializar(){
 
     std::vector<std::string> string_vector;

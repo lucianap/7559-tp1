@@ -7,11 +7,10 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h src/FileManager/FileManager.cpp src/FileManager/FileManager.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/FileManager")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Productor")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Pedido")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Ramo")
@@ -28,6 +27,8 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Fifos")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoInicial")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoClientes")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Guardador")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/Status")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/Informe")
 
 add_executable(7559_tp1 ${SOURCE} ${HEADERS})
 

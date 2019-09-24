@@ -12,17 +12,24 @@
 #include <vector>
 #include <Distribuidor/Distribuidor.h>
 #include <Productor/Productor.h>
-
+#include <Status/Status.h>
+#include "Informe/Informe.h"
 class Menu {
 
+private:
+    Status & status;
+
 public:
-    Menu();
+    Menu(Status & status);
 
     /**
      * Inicia el menu interactivo para el usuario.
      */
     int iniciar();
 
+    void mostrarInfome();
+
+    Informe realizarConsulta();
 };
 
 

@@ -7,7 +7,7 @@ using std::vector;
 
 
 ProcesoInicial::ProcesoInicial(t_parametros parametros):
-        parametros(parametros), logger(true), loggerProcess("log.txt", logger) {
+        parametros(parametros), logger(true), loggerProcess("log.txt", logger), status(logger) {
 }
 
 void ProcesoInicial::reanudarEjecucion() {
@@ -89,7 +89,8 @@ void ProcesoInicial::iniciarEjecucion() {
         procesoClientes->ejecutar();
         pto_venta->ejecutar();
     }
-    Menu menu;
+
+    Menu menu(status);
 
     int status = menu.iniciar();
     if (status == 1) {
