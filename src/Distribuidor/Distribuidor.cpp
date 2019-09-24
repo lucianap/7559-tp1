@@ -172,34 +172,7 @@ Cajon Distribuidor::recibirCajon(char *buffer) {
     return unCajon;
 }
 
-std::string Distribuidor::serializar() {
-    std::stringstream ss;
 
-    //5 bytes: tipo de proceso.
-    ss << std::setw(5) << TipoProceso::DISTRIBUIDOR_T;
-
-    //5 bytes: tipo de proceso.
-    ss << std::setw(5) << this->idDistribuidor;
-
-    //5 bytes: cantidad de tulipanes.
-    ss << std::setw(5) << stockTulipanes.size();
-
-    //3 bytes por ramo de tulipan
-    for(auto it = stockTulipanes.begin(); it != stockTulipanes.end(); it++) {
-        ss << (*it).serializar();
-    }
-
-    //5 bytes: cantidad de rosas.
-    ss << std::setw(5) << stockRosas.size();
-
-    //3 bytes por ramo de rosas
-    for(auto it = stockRosas.begin(); it != stockRosas.end(); it++) {
-        ss << (*it).serializar();
-    }
-
-    return ss.str();
-
-}
 
 void Distribuidor::clasificar(Cajon &cajon) {
 
@@ -212,6 +185,7 @@ void Distribuidor::clasificar(Cajon &cajon) {
 }
 
 bool Distribuidor::hayDiponiblidadParaEnvio() {
+    this->logearStatus();
     return (this->stockTulipanes.size() + this->stockRosas.size()  >= CANT_RAMOS_PARA_ENVIO);
 }
 

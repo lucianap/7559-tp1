@@ -10,6 +10,45 @@ PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeEntrada)  :
         idPuntoVenta(idPuntoVenta),
         pipeEntrada(*pipeEntrada){};
 
+PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado) : ProcesoHijo(logger) {
+
+    int tamanioTipoProcesoBytes = 5;
+    int tamanioIdBytes = 5;
+    int tamanioCantTulipanes = 5;
+    int tamanioCantRosas = 5;
+
+    int tipo = std::stoi(puntoVentaSerializado.substr(0, tamanioTipoProcesoBytes));
+    this->idPuntoVenta = std::stoi(puntoVentaSerializado.substr(tamanioTipoProcesoBytes, tamanioIdBytes));
+
+    // deserealizao tamaño y ramos tulipanes
+    int sizeTulipanes = std::stoi(puntoVentaSerializado.substr(tamanioTipoProcesoBytes + tamanioIdBytes, tamanioCantTulipanes));
+    int posicionInicioTulipanes = tamanioTipoProcesoBytes + tamanioIdBytes + tamanioCantTulipanes;
+    for(int i = 0; i < sizeTulipanes; i++) {
+        //leo de un ramo
+        int inicioRamo = i * Ramo::TAM_TOTAL + posicionInicioTulipanes;
+        std::string ramoStr = puntoVentaSerializado.substr(inicioRamo, Ramo::TAM_TOTAL);
+        Ramo unRamo(ramoStr);
+        stockTulipanes.push_back(unRamo);
+    }
+
+    // deserealizao tamaño y ramos rosas
+    int inicioBloqueRosas = tamanioTipoProcesoBytes +
+                            tamanioIdBytes +
+                            tamanioCantTulipanes +
+                            Ramo::TAM_TOTAL * sizeTulipanes;
+
+    int sizeRosas = std::stoi(puntoVentaSerializado.substr(inicioBloqueRosas, tamanioCantRosas));
+    int posicionInicioRosas = inicioBloqueRosas + tamanioCantRosas;
+    for (int i = 0; i < sizeRosas; i++) {
+        //leo de un ramo
+        int inicioRamo = i * Ramo::TAM_TOTAL + posicionInicioRosas;
+        std::string ramoStr = puntoVentaSerializado.substr(inicioRamo, Ramo::TAM_TOTAL);
+        Ramo unRamo(ramoStr);
+        stockRosas.push_back(unRamo);
+    }
+
+};
+
 PuntoVenta::~PuntoVenta() {
     logger.log("Punto de venta destruido");
 }
@@ -50,6 +89,7 @@ void PuntoVenta::iniciarAtencion() {
             if(proceso_header == CLIENTE_T){
                 t_parametros_pedido pedido_actual;
                 pedido_actual = recibirPedido(buffer_pedido);
+                this->manejarPedido(pedido_actual);
             }else{
                 paqueteCajon = recibirCajon(buffer_cajon);
 
@@ -87,15 +127,55 @@ void PuntoVenta::cerrarPipe() {
 }
 
 void PuntoVenta::clasificar(Cajon paqueteCajon){
-    std::stringstream ss;
-    for(auto it = paqueteCajon.ramos.begin(); it != paqueteCajon.ramos.end(); ++it ) {
+
+    /*for(auto it = paqueteCajon.ramos.begin(); it != paqueteCajon.ramos.end(); ++it ) {
+        std::stringstream ss;
         ss << "Ramo de " << (it)->get_productor() << " con flores de tipo " << (it)->getTipoFlor() << endl;
-    }
+        logger.log(ss.str());
+    }*/
+
     vector<Ramo> rosas = paqueteCajon.filtrar(TipoFlor::Rosa);
     this->stockRosas.insert(this->stockRosas.end(), rosas.begin(), rosas.end());
 
     vector<Ramo> tulipanes = paqueteCajon.filtrar(TipoFlor::Tulipan);
     this->stockTulipanes.insert(this->stockTulipanes.end(), tulipanes.begin(), tulipanes.end());
+    this->printStock();
+}
+
+void PuntoVenta::manejarPedido(t_parametros_pedido pedido) {
+    std::stringstream ss;
+    ss << "Tipo Pedido: " << ((pedido.origen == 0)?"Internet":"Local")<< endl;
+    int i;
+    for(i = 0; i < pedido.cantTulipanes;i++){
+        if(this->stockTulipanes.size()>0){
+            Ramo ramo = stockTulipanes.back();
+            stockTulipanes.pop_back();
+            //enviar ramo stats
+        }else{
+            break;
+        }
+    }
+    ss << "Cantidad Tulipanes enviados" << i<< endl;
+    for(i = 0; i < pedido.cantRosas;i++){
+        if(this->stockRosas.size()>0){
+            Ramo ramo = stockRosas.back();
+            stockRosas.pop_back();
+            //enviar ramo stats
+        }else{
+            break;
+        }
+    }
+    ss << "Cantidad Rosas enviados" << i << endl;
+    logger.log(ss.str());
+    this->printStock();
+}
+
+void PuntoVenta::printStock(){
+    std::stringstream ss;
+    ss << "Punto de venta " << this->idPuntoVenta << endl;
+    ss << "Cantidad Tulipanes " << this->stockTulipanes.size() << endl;
+    ss << "Cantidad Rosas " << this->stockRosas.size() << endl;
+    logger.log(ss.str());
 }
 
 TipoProceso PuntoVenta::recibirHeader(char *buffer) {
@@ -174,3 +254,31 @@ Cajon PuntoVenta::recibirCajon(char *buffer) {
     Cajon paqueteRecibido(buffer, Cajon::CAPACIDAD_RAMOS_DISTRIBUIDOR);
     return paqueteRecibido;
 };
+std::string PuntoVenta::serializar() {
+    std::stringstream ss;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << TipoProceso::VENDEDOR_T;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << this->idPuntoVenta;
+
+    //5 bytes: cantidad de tulipanes.
+    ss << std::setw(5) << stockTulipanes.size();
+
+    //3 bytes por ramo de tulipan
+    for(auto it = stockTulipanes.begin(); it != stockTulipanes.end(); it++) {
+        ss << (*it).serializar();
+    }
+
+    //5 bytes: cantidad de rosas.
+    ss << std::setw(5) << stockRosas.size();
+
+    //3 bytes por ramo de rosas
+    for(auto it = stockRosas.begin(); it != stockRosas.end(); it++) {
+        ss << (*it).serializar();
+    }
+
+    return ss.str();
+
+}

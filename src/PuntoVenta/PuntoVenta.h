@@ -25,13 +25,20 @@ private:
 
     t_parametros_pedido recibirPedido(char *buffer);
 
+    std::string serializar() override;
+
     void clasificar(Cajon paqueteCajon);
+
+    void manejarPedido(t_parametros_pedido pedido);
+
+    void printStock();
 
     void cerrarPipe();
 
 public:
 
     PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeEntrada);
+    PuntoVenta(Logger &logger, std::string puntoVentaSerializado);
 
     ~PuntoVenta() override;
 

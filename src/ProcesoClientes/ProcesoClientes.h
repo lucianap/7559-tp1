@@ -28,9 +28,12 @@ private:
 
     void cerrarPipe();
 
+    std::string serializar() override;
+
 public:
 
     ProcesoClientes(Logger& logger, int idCliente,Pipe* pipePtoVenta, vector<t_parametros_pedido> paramPedidosInternet);
+    ProcesoClientes(Logger &logger, std::string puntoVentaSerializado);
 
     ~ProcesoClientes() override;
 

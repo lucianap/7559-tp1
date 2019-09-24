@@ -11,6 +11,26 @@ ProcesoClientes::ProcesoClientes(Logger &logger, int idCliente, Pipe *pipePtoVen
         pipePtoVenta(pipePtoVenta),
         paramPedidosInternet(paramPedidosInternet){}
 
+ProcesoClientes::ProcesoClientes(Logger &logger, std::string puntoVentaSerializado) : ProcesoHijo(logger) {
+    int tamanioTipoProcesoBytes = 5;
+    int tamanioIdBytes = 5;
+
+    int tipo = std::stoi(puntoVentaSerializado.substr(0, tamanioTipoProcesoBytes));
+    this->idCliente = std::stoi(puntoVentaSerializado.substr(tamanioTipoProcesoBytes, tamanioIdBytes));
+
+    int cantidad_pedidos =  std::stoi(puntoVentaSerializado.substr(tamanioTipoProcesoBytes+tamanioIdBytes, tamanioIdBytes));
+    int post_ini = tamanioTipoProcesoBytes+tamanioIdBytes;
+    for(int i = 0;i <cantidad_pedidos;i++){
+        t_parametros_pedido pedido;
+        pedido.cantRosas =  std::stoi(puntoVentaSerializado.substr(post_ini, tamanioIdBytes));
+        post_ini += tamanioIdBytes;
+        pedido.cantTulipanes = std::stoi(puntoVentaSerializado.substr(post_ini, tamanioIdBytes));;
+        post_ini += tamanioIdBytes;
+        pedido.origen = (TipoPedido)std::stoi(puntoVentaSerializado.substr(post_ini, tamanioIdBytes));
+        post_ini += tamanioIdBytes;
+    }
+}
+
 pid_t ProcesoClientes::ejecutar() {
     logger.log("Ejecutamos un Proceso de clientes");
     pid = fork();
@@ -103,3 +123,24 @@ void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     pipePtoVenta->escribir(data_envio.c_str(), data_envio.length());
 
 };
+std::string ProcesoClientes::serializar() {
+    std::stringstream ss;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << TipoProceso::CLIENTE_T;
+
+    //5 bytes: tipo de proceso.
+    ss << std::setw(5) << this->idCliente;
+
+    //5 bytes: cantidad de pedidos.
+    ss << std::setw(5) << paramPedidosInternet.size();
+
+    for(auto it = paramPedidosInternet.begin(); it != paramPedidosInternet.end(); it++) {
+        ss << std::setw(5)  << (*it).cantTulipanes;
+        ss << std::setw(5)  << (*it).cantRosas;
+        ss << std::setw(5)  << (*it).origen;
+    }
+
+    return ss.str();
+
+}
