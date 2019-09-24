@@ -34,6 +34,8 @@ public:
 
     static std::string& trim(std::string& str);
 
+    static std::vector<std::string> split(const std::string& str, const std::string& delim);
+
     static t_parametros tomarParametros(int argc,char* argv[]);
 
     static std::string formatearMensajeLog(std::string mensaje);

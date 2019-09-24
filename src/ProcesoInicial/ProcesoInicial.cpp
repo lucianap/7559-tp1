@@ -34,7 +34,6 @@ void ProcesoInicial::iniciarEjecucion() {
         config_pedidos_internet.push_back(pedido_internet1);
     }
 
-
     Guardador::cleanUp();
     Guardador::inicializar();
 
@@ -49,13 +48,15 @@ void ProcesoInicial::iniciarEjecucion() {
     for (int j = 0; j < distribuidores; ++j) {
         Pipe* pipeInDistribuidor1 = new Pipe();
         this->distribuidoresEntrada.push_back(pipeInDistribuidor1);
-        this->asignar_pipes(j, pipeInDistribuidor1, productores, &distribuidores_por_productor);
+        int productorAsignado = this->asignar_pipes(j, pipeInDistribuidor1, productores, &distribuidores_por_productor);
+        this->asignacionesProductorDistribuidores.insert(std::pair<int,int>(productorAsignado, j));
     }
     std::map<int, vector<Pipe*>> p_ventas_por_distribuidor;
     for (int j = 0; j < puntos_de_venta; ++j) {
         Pipe* pipeInPVenta = new Pipe();
         this->pVentasEntrada.push_back(pipeInPVenta);
-        this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
+        int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
+        this->asignacionesProductorDistribuidores.insert(std::pair<int,int>(distribuidorAsignado, j));
     }
 
     /**** hasta este punto se deben inicializar todos los pipes ****/
@@ -93,7 +94,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     int status = menu.iniciar();
     if (status == 1) {
-        this->pausar();
+        this->guardar();
     } else if (status == 0) {
         this->terminarProcesos();
     }
@@ -104,7 +105,7 @@ ProcesoInicial::~ProcesoInicial() {
     this->limpiarMemoria();
 }
 
-void ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad_a_asignar,
+int ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad_a_asignar,
         std::map<int, vector<Pipe*>>* pipe_map ) {
 
     //Se asigna el Distribuidor j a un Productor N y se guarda el resultado en el mapa distribuidores_por Productor.
@@ -120,9 +121,11 @@ void ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad
         pipe_map->insert(std::make_pair(n, pipe_vector));
     }
 
+    return n;
+
 }
 
-void ProcesoInicial::pausar() {
+void ProcesoInicial::guardar() {
 
     for(auto it = productores.begin(); it != productores.end(); it++) {
         //mando señales a todos para que guarden y mueran.
@@ -136,6 +139,9 @@ void ProcesoInicial::pausar() {
 
     //Controlo que todos los procesos se hayan guardado.
     while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size())){}
+    Guardador g;
+
+    g.guardarAsignaciones(this->asignacionesProductorDistribuidores);
 
     this->terminarProcesos();
 

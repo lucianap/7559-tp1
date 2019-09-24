@@ -11,6 +11,7 @@
 #include <Productor/Productor.h>
 #include <ProcesoHijoFactory/ProcesoHijoFactory.h>
 #include <Distribuidor/Distribuidor.h>
+#include <map>
 
 class Guardador {
 
@@ -18,6 +19,11 @@ class Guardador {
     static const std::string prefijoProductores;
     static const std::string prefijoDistribuidores;
     static const std::string prefijoVendedores;
+    static const std::string archivoAsignaciones;
+
+    static const std::string separadorAsignaciones;
+    static const std::string separadorAsignadosA;
+    static const std::string simboloAsignadoA;
 
     public:
 
@@ -31,9 +37,14 @@ class Guardador {
         //TODO
         //static void guardar(Vendedor &proceso);
 
+        void guardarAsignaciones(std::multimap<int, int> mapaAsignaciones);
+        std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);
+
         static bool isCantidadDeArchivosGuardadosOk(int cantidadEsperada);
 
     private:
+
+        std::string formatearAsignacion(std::multimap<int, int> mapaDeAsignaciones);
 
         void guardar(ProcesoHijo *proceso, std::string prefijo);
 

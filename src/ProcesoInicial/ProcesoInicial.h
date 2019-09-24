@@ -43,6 +43,9 @@ private:
     Logger logger;
     LoggerProcess loggerProcess;
 
+    std::multimap<int,int> asignacionesProductorDistribuidores;
+    std::multimap<int,int> asignacionesDistribuidorPuntosDeVenta;
+
 
 public:
     ProcesoInicial(t_parametros parametros);
@@ -50,10 +53,10 @@ public:
 
     void iniciarEjecucion();
 
-    void asignar_pipes(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
+    int asignar_pipes(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
                             std::map<int, vector<Pipe*>>* distribuidores_por_productor );
 
-    void pausar();
+    void guardar();
 
     void reanudarEjecucion();
 
