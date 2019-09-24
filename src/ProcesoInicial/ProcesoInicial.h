@@ -15,6 +15,7 @@
 #include <Productor/Productor.h>
 
 #include <ProcesoClientes/ProcesoClientes.h>
+#include <Status/Status.h>
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"
 #include "PuntoVenta/PuntoVenta.h"
@@ -43,6 +44,7 @@ private:
     Logger logger;
     LoggerProcess loggerProcess;
 
+    Status status;
 
 public:
     ProcesoInicial(t_parametros parametros);
