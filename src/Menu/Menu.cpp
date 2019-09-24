@@ -1,12 +1,12 @@
 
 #include <Informe/Informe.h>
+#include <Status/SolicitudStatus.h>
 #include "Menu.h"
 using std::cin;
 using std::cout;
 using std::endl;
 
-Menu::Menu(Status & status) : status(status) {
-
+Menu::Menu(Status & status, Logger & logger) : status(status), logger(logger) {
 }
 
 int Menu::iniciar() {
@@ -40,18 +40,45 @@ int Menu::iniciar() {
 }
 
 void Menu::mostrarInfome() {
+    try {
+        //Informe informe = this->realizarConsulta();
 
-    Informe informe = this->realizarConsulta();
-
-    cout << "******************************************" << endl;
-    cout << "Id del productor que mas vendio : " << informe.getProductorMejorVenta()<< endl;
-    cout << "Tipo de flor mas comprada       : " << Utils::getTextTipoFlor(informe.getFlorMasCompada())<< endl;
-    cout << "******************************************" << endl;
+        cout << "******************************************" << endl;
+        cout << "Id del productor que mas vendio : ";// << informe.getProductorMejorVenta()<< endl;
+        cout << "Tipo de flor mas comprada       : ";// << Utils::getTextTipoFlor(informe.getFlorMasCompada())<< endl;
+        cout << "******************************************" << endl;
+    } catch (std::string &error) {
+        logger.log("Error consultando informe: " + error);
+    }
 
 }
 
 Informe Menu::realizarConsulta() {
-    return Informe(0, Tulipan);
+
+    SolicitudStatus solicitudStatus(SolicitudStatus::TIPO_SOLICITUD_INFORME);
+    ssize_t status = this->status.getPipeEntrada().escribir(solicitudStatus.serializar().c_str(),
+            SolicitudStatus::TAM_TOTAL);
+    if (status != SolicitudStatus::TAM_TOTAL) {
+        string mensajeError;
+        if (status == -1)
+            mensajeError = strerror(errno);
+        else
+            mensajeError = "Error al leer la siguiente persona en la fifo";
+        throw(std::string(mensajeError));
+    }
+
+    char buffer[Informe::TAM_TOTAL_BYTES];
+    status = this->status.getPipeEntrada().leer(buffer, Informe::TAM_TOTAL_BYTES);
+    if (status != Informe::TAM_TOTAL_BYTES) {
+        string mensajeError;
+        if (status == -1)
+            mensajeError = strerror(errno);
+        else
+            mensajeError = "Error al leer la siguiente persona en la fifo";
+        throw(std::string(mensajeError));
+    }
+
+    return Informe(buffer);
 }
 
 

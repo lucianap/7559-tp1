@@ -1,10 +1,12 @@
 set(SOURCE
         ${SOURCE}
         ${CMAKE_CURRENT_SOURCE_DIR}/Status.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/SolicitudStatus.cpp
         PARENT_SCOPE
         )
 set(HEADERS
         ${HEADERS}
         ${CMAKE_CURRENT_SOURCE_DIR}/Status.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/SolicitudStatus.h
         PARENT_SCOPE
         )

@@ -21,6 +21,10 @@ public:
 
     virtual ~Status();
 
+    Pipe getPipeEntrada();
+
+    Pipe getPipeSalida();
+
 private:
     Pipe pipeEntrada;
 
@@ -32,6 +36,7 @@ private:
      * Almacena los ramos vendidos
      */
     vector<Ramo> ramosVendidos;
+
 
 };
 

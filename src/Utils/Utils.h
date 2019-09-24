@@ -55,6 +55,8 @@ public:
 
     static vector<string> listarArchivosConPrefijo(const char* path, string prefijo);
 
+    static TipoFlor getTipoFlor(int tipoFlor);
+
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();

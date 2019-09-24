@@ -237,3 +237,16 @@ std::vector<std::string> Utils::split(const std::string &str, const std::string 
 
 }
 
+TipoFlor Utils::getTipoFlor(int tipoFlor) {
+    switch (tipoFlor) {
+        case 0:
+            return Tulipan;
+        case 1:
+            return Rosa;
+        default: {
+            string mensajeError = "Tipo de flor invalido";
+            throw(std::string(mensajeError));
+        }
+    }
+}
+

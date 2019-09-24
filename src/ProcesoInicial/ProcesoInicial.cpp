@@ -97,7 +97,7 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
 
-    Menu menu(status);
+    Menu menu(status, logger);
 
     int status = menu.iniciar();
     if (status == 1) {

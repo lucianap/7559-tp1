@@ -13,3 +13,11 @@ Status::~Status() {
 pid_t Status::ejecutar() {
     return 0;
 }
+
+Pipe Status::getPipeEntrada()  {
+    return pipeEntrada;
+}
+
+Pipe Status::getPipeSalida() {
+    return pipeSalida;
+}

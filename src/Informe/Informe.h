@@ -21,7 +21,7 @@ private:
     /**
      * La flor mas comprada
      */
-    TipoFlor florMasCompada;
+    TipoFlor florMasComprada;
 
 
 public:
@@ -29,6 +29,7 @@ public:
     Informe(int productorMejorVenta, TipoFlor florMasCompada);
 
     Informe(const Informe & informe);
+    Informe(const std::string& informe_serializado);
 
     int getProductorMejorVenta() const;
 
@@ -37,6 +38,11 @@ public:
     TipoFlor getFlorMasCompada() const;
 
     void setFlorMasCompada(TipoFlor florMasCompada);
+
+    static const int TAM_CAMPO_PRODUCTOR = 2;
+    static const int TAM_CAMPO_TIPOFLOR = 1;
+    static const int TAM_TOTAL_BYTES = TAM_CAMPO_PRODUCTOR+TAM_CAMPO_TIPOFLOR;
+
 };
 
 
