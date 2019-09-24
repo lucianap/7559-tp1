@@ -3,6 +3,7 @@
 //
 
 #include <cstring>
+#include <sys/stat.h>
 #include "Guardador.h"
 
 const std::string Guardador::carpeta = "data";

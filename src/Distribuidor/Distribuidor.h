@@ -6,7 +6,6 @@
 #include <Ramo/Ramo.h>
 #include <Cajon/Cajon.h>
 #include "Distribuidor.h"
-#include <Fifos/FifoLectura.h>
 #include <Pipes/Pipe.h>
 #include "../ProcesoHijo/ProcesoHijo.h"
 

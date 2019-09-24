@@ -21,10 +21,38 @@ Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado, 
 
     int tamanioTipoProcesoBytes = 5;
     int tamanioIdBytes = 5;
+    int tamanioCantTulipanes = 5;
+    int tamanioCantRosas = 5;
 
     int tipo = std::stoi(distribuidorSerializado.substr(0, tamanioTipoProcesoBytes));
-    idDistribuidor = std::stoi(distribuidorSerializado.substr(tamanioTipoProcesoBytes,
-            tamanioTipoProcesoBytes+tamanioIdBytes));
+    this->idDistribuidor = std::stoi(distribuidorSerializado.substr(tamanioTipoProcesoBytes, tamanioIdBytes));
+
+    // deserealizao tamaño y ramos tulipanes
+    int sizeTulipanes = std::stoi(distribuidorSerializado.substr(tamanioTipoProcesoBytes + tamanioIdBytes, tamanioCantTulipanes));
+    int posicionInicioTulipanes = tamanioTipoProcesoBytes + tamanioIdBytes + tamanioCantTulipanes;
+    for(int i = 0; i < sizeTulipanes; i++) {
+        //leo de un ramo
+        int inicioRamo = i * Ramo::TAM_TOTAL + posicionInicioTulipanes;
+        std::string ramoStr = distribuidorSerializado.substr(inicioRamo, Ramo::TAM_TOTAL);
+        Ramo unRamo(ramoStr);
+        stockTulipanes.push_back(unRamo);
+    }
+
+    // deserealizao tamaño y ramos rosas
+    int inicioBloqueRosas = tamanioTipoProcesoBytes +
+                            tamanioIdBytes +
+                            tamanioCantTulipanes +
+                            Ramo::TAM_TOTAL * sizeTulipanes;
+
+    int sizeRosas = std::stoi(distribuidorSerializado.substr(inicioBloqueRosas, tamanioCantRosas));
+    int posicionInicioRosas = inicioBloqueRosas + tamanioCantRosas;
+    for (int i = 0; i < sizeRosas; i++) {
+        //leo de un ramo
+        int inicioRamo = i * Ramo::TAM_TOTAL + posicionInicioRosas;
+        std::string ramoStr = distribuidorSerializado.substr(inicioRamo, Ramo::TAM_TOTAL);
+        Ramo unRamo(ramoStr);
+        stockRosas.push_back(unRamo);
+    }
 
 };
 
@@ -154,6 +182,22 @@ std::string Distribuidor::serializar() {
 
     //5 bytes: tipo de proceso.
     ss << std::setw(5) << this->idDistribuidor;
+
+    //5 bytes: cantidad de tulipanes.
+    ss << std::setw(5) << stockTulipanes.size();
+
+    //3 bytes por ramo de tulipan
+    for(auto it = stockTulipanes.begin(); it != stockTulipanes.end(); it++) {
+        ss << (*it).serializar();
+    }
+
+    //5 bytes: cantidad de rosas.
+    ss << std::setw(5) << stockRosas.size();
+
+    //3 bytes por ramo de rosas
+    for(auto it = stockRosas.begin(); it != stockRosas.end(); it++) {
+        ss << (*it).serializar();
+    }
 
     return ss.str();
 
