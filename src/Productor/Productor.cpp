@@ -58,7 +58,7 @@ std::string Productor::serializar() {
     //5 bytes: cantidad de ramos a enviar.
     ss << std::setw(5) << ramosAEnviar.size();
 
-    //20 bytes por ramo.
+    //3 bytes por ramo.
     for(auto it = ramosAEnviar.begin(); it != ramosAEnviar.end(); it++) {
         ss << (*it).serializar();
     }
@@ -71,6 +71,7 @@ std::string Productor::serializar() {
 
     //5 bytes finales para el id del productor.
     ss << std::setw(5) << this->id << endl;
+
     return ss.str();
 }
 
