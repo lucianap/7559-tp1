@@ -50,6 +50,10 @@ public:
 
     static int countFiles(std::string dir);
 
+    static bool startsWith(const char *pre, const char *str);
+
+    static vector<string> listarArchivosConPrefijo(const char* path, string prefijo);
+
 private:
         //para hacer completamente estática la clase prohíbo la construcción
         Utils();

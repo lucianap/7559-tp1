@@ -21,6 +21,7 @@ class Guardador {
     static const std::string prefijoProductores;
     static const std::string prefijoDistribuidores;
     static const std::string prefijoVendedores;
+    static const std::string prefijoClientes;
     static const std::string archivoAsignaciones;
 
     static const std::string separadorAsignaciones;

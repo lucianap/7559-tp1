@@ -133,6 +133,26 @@ string Utils::getTextTipoPedido(TipoPedido tipoPedido) {
     }
 }
 
+vector<string> Utils::listarArchivosConPrefijo(const char* path, string prefijo) {
+    DIR *d = opendir(path);
+    vector<string> files;
+    if (d) {
+        struct dirent *p;
+        while ((p = readdir(d))) {
+            if(Utils::startsWith(prefijo.c_str(), p->d_name)) {
+                files.push_back(p->d_name);
+            }
+        }
+    }
+    closedir(d);
+}
+
+bool Utils::startsWith(const char *pre, const char *str) {
+    size_t lenpre = strlen(pre),
+            lenstr = strlen(str);
+    return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
+}
+
 int Utils::remove_directory(const char *path) {
     DIR *d = opendir(path);
     size_t path_len = strlen(path);

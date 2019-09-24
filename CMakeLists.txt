@@ -7,7 +7,7 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h src/Restaurador/Restaurador.cpp src/Restaurador/Restaurador.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
