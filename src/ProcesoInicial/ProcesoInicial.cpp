@@ -1,11 +1,12 @@
 
 #include <Guardador/Guardador.h>
 #include <Restaurador/Restaurador.h>
+#include <FileManager/FileManager.h>
 #include "ProcesoInicial.h"
 
 
 using std::vector;
-
+const string RUTA_ARCHIVO_PEDIDOS = "pedidos.csv";
 
 ProcesoInicial::ProcesoInicial(t_parametros parametros):
         parametros(parametros), logger(true), loggerProcess("log.txt", logger), status(logger) {
@@ -42,14 +43,6 @@ void ProcesoInicial::iniciarEjecucion() {
     int puntos_de_venta = parametros.cantPuntosVenta;
 
     //todo leer archivo de pedidos y cargarlo a partir del mismo
-    std::vector<t_parametros_pedido> config_pedidos_internet;
-    for (int j = 0; j < 10; ++j) {
-        t_parametros_pedido pedido_internet1;
-        pedido_internet1.cantTulipanes = j+1;
-        pedido_internet1.cantRosas = j+1;
-        pedido_internet1.origen = INTERNET;
-        config_pedidos_internet.push_back(pedido_internet1);
-    }
 
     Guardador::cleanUp();
     Guardador::inicializar();
@@ -75,7 +68,7 @@ void ProcesoInicial::iniciarEjecucion() {
         int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
         this->asignacionesDistribuidorPuntosDeVenta.insert(std::pair<int,int>(distribuidorAsignado, j));
     }
-
+    Pipe* pipeStatus =  new Pipe();
     /**** hasta este punto se deben inicializar todos los pipes ****/
     loggerProcess.ejecutar();
     logger.log("-----------Iniciando sistema-------------");
@@ -99,9 +92,12 @@ void ProcesoInicial::iniciarEjecucion() {
         distribuidor->ejecutar();
     }
 
+    FileManager file_manager(RUTA_ARCHIVO_PEDIDOS,logger);
+    vector<t_parametros_pedido>config_pedidos_internet = file_manager.ReadFile();
+
     for (int j = 0; j < puntos_de_venta; ++j) {
         ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntrada.at(j),config_pedidos_internet);
-        PuntoVenta* pto_venta = new PuntoVenta(logger, j, this->pVentasEntrada.at(j));
+        PuntoVenta* pto_venta = new PuntoVenta(logger, j, pipeStatus, this->pVentasEntrada.at(j));
         this->puntosVenta.push_back(pto_venta);
         this->procesosClientes.push_back(procesoClientes);
         procesoClientes->ejecutar();

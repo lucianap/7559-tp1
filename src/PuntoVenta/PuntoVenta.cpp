@@ -2,10 +2,11 @@
 #include <Pedido/Pedido.h>
 #include <TipoProceso/TipoProceso.h>
 #include <Guardador/Guardador.h>
+#include <Status/SolicitudStatus.h>
 #include "PuntoVenta.h"
 #include "../Signal/SignalHandler.h"
 
-PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeEntrada)  :
+PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe* pipeEntrada)  :
         ProcesoHijo(logger),
         idPuntoVenta(idPuntoVenta),
         pipeEntrada(*pipeEntrada){};
@@ -63,6 +64,7 @@ pid_t PuntoVenta::ejecutar() {
 
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
+    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     logger.log("Naci como Punto de venta y tengo el pid: "+to_string(getpid()));
 
@@ -120,7 +122,7 @@ void PuntoVenta::iniciarAtencion() {
 
 
 void PuntoVenta::cerrarPipe() {
-    logger.log("Mando EOF a mis pipes. Productor "+to_string(this->idPuntoVenta));
+    logger.log("Mando EOF a mis pipes. Pto_Venta "+to_string(this->idPuntoVenta));
     stringstream ss;
     ss << setw(Ramo::TAM_TOTAL) << EOF;
     //pipeStats->escribir(ss.str().c_str(), Utils::TAM_HEADER);
@@ -150,7 +152,8 @@ void PuntoVenta::manejarPedido(t_parametros_pedido pedido) {
         if(this->stockTulipanes.size()>0){
             Ramo ramo = stockTulipanes.back();
             stockTulipanes.pop_back();
-            //enviar ramo stats
+            // Envio de flar para el calculo de estadisticas
+            this->enviarStatus(ramo);
         }else{
             break;
         }
@@ -160,7 +163,8 @@ void PuntoVenta::manejarPedido(t_parametros_pedido pedido) {
         if(this->stockRosas.size()>0){
             Ramo ramo = stockRosas.back();
             stockRosas.pop_back();
-            //enviar ramo stats
+            // Envio de flar para el calculo de estadisticas
+            this->enviarStatus(ramo);
         }else{
             break;
         }
@@ -176,6 +180,12 @@ void PuntoVenta::printStock(){
     ss << "Cantidad Tulipanes " << this->stockTulipanes.size() << endl;
     ss << "Cantidad Rosas " << this->stockRosas.size() << endl;
     logger.log(ss.str());
+}
+
+void PuntoVenta::enviarStatus(Ramo ramo){
+    SolicitudStatus solicitud(VENDEDOR_T,ramo);
+    string solicitud_serializada = solicitud.serializar();
+    this->pipeStatus.escribir(solicitud_serializada.c_str(),solicitud_serializada.length());
 }
 
 TipoProceso PuntoVenta::recibirHeader(char *buffer) {

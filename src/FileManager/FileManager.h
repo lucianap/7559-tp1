@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <vector>
 #include <Logger/Logger.h>
 
 using namespace std;
@@ -18,10 +19,11 @@ private:
     ifstream inFile;
     string fileName;
     Logger& logger;
+    std::vector<t_parametros_pedido> get_default();
 public:
     FileManager(string fileName, Logger& logger);
-    string ReadFile();
-    ~FileManager();
+    std::vector<t_parametros_pedido>  ReadFile();
+    ~FileManager(){};
 };
 
 

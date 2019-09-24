@@ -13,11 +13,15 @@ private:
 
     Pipe pipeEntrada;
 
-    void iniciarAtencion();
+    Pipe pipeStatus;
 
     vector<Ramo> stockRosas;
 
     vector<Ramo> stockTulipanes;
+
+    void iniciarAtencion();
+
+    void enviarStatus(Ramo ramo);
 
     Cajon recibirCajon(char *buffer);
 
@@ -37,7 +41,7 @@ private:
 
 public:
 
-    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeEntrada);
+    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe* pipeEntrada);
     PuntoVenta(Logger &logger, std::string puntoVentaSerializado);
 
     ~PuntoVenta() override;
