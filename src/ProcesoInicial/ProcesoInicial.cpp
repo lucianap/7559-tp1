@@ -138,8 +138,18 @@ void ProcesoInicial::guardar() {
         (*it)->guardar();
     }
 
+    for(auto it = procesosClientes.begin(); it != procesosClientes.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
+
+    for(auto it = puntosVenta.begin(); it != puntosVenta.end(); it++) {
+        //mando señales a todos para que guarden y mueran.
+        (*it)->guardar();
+    }
     //Controlo que todos los procesos se hayan guardado.
-    while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size())){}
+    while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
+                + puntosVenta.size() + procesosClientes.size())){}
     Guardador g;
 
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores);
