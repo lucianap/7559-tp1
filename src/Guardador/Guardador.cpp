@@ -6,14 +6,14 @@
 #include "Guardador.h"
 
 const std::string Guardador::carpeta = "data";
-const std::string Guardador::prefijoProductores = "data/productor_pid_";
-const std::string Guardador::prefijoDistribuidores = "data/distribuidor_pid_";
-const std::string Guardador::prefijoVendedores = "data/vendedor_pid_";
-const std::string Guardador::archivoAsignaciones = "data/asignaciones";
+const std::string Guardador::prefijoProductores = "productor_pid_";
+const std::string Guardador::prefijoDistribuidores = "distribuidor_pid_";
+const std::string Guardador::prefijoVendedores = "vendedor_pid_";
+const std::string Guardador::archivoAsignaciones = "asignaciones";
 
 const std::string Guardador::separadorAsignaciones = "|";
 const std::string Guardador::simboloAsignadoA = ">";
-const std::string Guardador::prefijoClientes = "data/Clientes_pid_";
+const std::string Guardador::prefijoClientes = "Clientes_pid_";
 
 void Guardador::inicializar(){
     int status = mkdir(Guardador::carpeta.c_str(), 0777);
@@ -34,28 +34,28 @@ void Guardador::guardar(ProcesoHijo *proceso, std::string prefijo) {
 
 void Guardador::guardar(Productor *proceso) {
     std::stringstream ss;
-    ss << Guardador::prefijoProductores << getpid();
+    ss << Guardador::carpeta << "/" << Guardador::prefijoProductores << getpid();
     guardar(proceso, ss.str());
 
 }
 
 void Guardador::guardar(Distribuidor *proceso) {
     std::stringstream ss;
-    ss << Guardador::prefijoDistribuidores << getpid();
+    ss << Guardador::carpeta << "/" << Guardador::prefijoDistribuidores << getpid();
     guardar(proceso, ss.str());
 
 }
 
 void Guardador::guardar_cliente(ProcesoClientes *proceso) {
     std::stringstream ss;
-    ss << Guardador::prefijoClientes << getpid();
+    ss << Guardador::carpeta << "/" << Guardador::prefijoClientes << getpid();
     guardar(proceso, ss.str());
 
 }
 
 void Guardador::guardar_ptoVenta(PuntoVenta *proceso) {
     std::stringstream ss;
-    ss << Guardador::prefijoVendedores << getpid();
+    ss << Guardador::carpeta << "/" << Guardador::prefijoVendedores << getpid();
     guardar(proceso, ss.str());
 
 }
@@ -70,7 +70,9 @@ bool Guardador::isCantidadDeArchivosGuardadosOk(int cantidadEsperada) {
 
 
 void Guardador::guardarAsignaciones(std::multimap<int, int> distribuidores_por_productor) {
-    std::ofstream out(Guardador::archivoAsignaciones);
+    stringstream ss;
+    ss << Guardador::carpeta << "/" << Guardador::archivoAsignaciones;
+    std::ofstream out(ss.str());
     out << "distribuidores_por_productor:";
     out << formatearAsignacion(distribuidores_por_productor);
     out.close();
