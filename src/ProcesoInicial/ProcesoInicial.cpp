@@ -17,11 +17,11 @@ void ProcesoInicial::reanudarEjecucion() {
     logger.log("-----------Restaurando sistema-------------");
 
     Restaurador r;
-    auto productores = r.restaurarProductores(logger);
-    auto distribuidores = r.restaurarDistribuidores(logger);
-    r.conectarPipes(productores, distribuidores);
+    auto productoresR = r.restaurarProductores(logger);
+    auto distribuidoresR = r.restaurarDistribuidores(logger);
+    r.conectarPipes(productoresR, distribuidoresR);
 
-    //iniciarEjecucion
+
 }
 
 void ProcesoInicial::iniciarEjecucion() {
