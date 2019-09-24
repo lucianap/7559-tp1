@@ -12,6 +12,8 @@
 #include <ProcesoHijoFactory/ProcesoHijoFactory.h>
 #include <Distribuidor/Distribuidor.h>
 #include <map>
+#include <PuntoVenta/PuntoVenta.h>
+#include <ProcesoClientes/ProcesoClientes.h>
 
 class Guardador {
 
@@ -34,8 +36,8 @@ class Guardador {
 
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);
-        //TODO
-        //static void guardar(Vendedor &proceso);
+        void guardar_ptoVenta(PuntoVenta *proceso);
+        void guardar_cliente(ProcesoClientes *proceso);
 
         void guardarAsignaciones(std::multimap<int, int> mapaAsignaciones);
         std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);

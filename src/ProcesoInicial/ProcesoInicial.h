@@ -15,6 +15,7 @@
 #include <Productor/Productor.h>
 
 #include <ProcesoClientes/ProcesoClientes.h>
+#include <Status/Status.h>
 #include "Productor/Productor.h"
 #include "Distribuidor/Distribuidor.h"
 #include "PuntoVenta/PuntoVenta.h"
@@ -46,6 +47,7 @@ private:
     std::multimap<int,int> asignacionesProductorDistribuidores;
     std::multimap<int,int> asignacionesDistribuidorPuntosDeVenta;
 
+    Status status;
 
 public:
     ProcesoInicial(t_parametros parametros);

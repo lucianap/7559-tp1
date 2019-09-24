@@ -23,6 +23,8 @@ class Utils {
 
 public:
 
+    static const int TAM_HEADER = 5;
+
     //hace un join usando el char c de las string pasadas en el vector v y coloca el resultado en s.
     static void join(const std::vector<std::string>& v, char c, std::string& s );
 

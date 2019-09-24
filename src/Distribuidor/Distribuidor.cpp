@@ -168,8 +168,7 @@ void Distribuidor::clasificar(Cajon &cajon) {
 }
 
 bool Distribuidor::hayDiponiblidadParaEnvio() {
-    return (this->stockTulipanes.size() >= CANT_RAMOS_PARA_ENVIO
-            && this->stockRosas.size() >= CANT_RAMOS_PARA_ENVIO);
+    return (this->stockTulipanes.size() + this->stockRosas.size()  >= CANT_RAMOS_PARA_ENVIO);
 }
 
 void Distribuidor::enviarAPuntosDeVenta() {
@@ -209,16 +208,16 @@ void Distribuidor::logearStatus() {
 
 
 void Distribuidor::enviarCajon( Pipe *distribuidor_destino) {
-    vector<Ramo>::const_iterator first = stockRosas.begin() + 100;
-    vector<Ramo>::const_iterator last = stockTulipanes.begin() + 100;
-    vector<Ramo> ramos(first, last);
+    vector<Ramo> ramos(stockRosas.begin(), stockRosas.end());
     ramos.insert(ramos.end(),std::begin(stockTulipanes),std::end(stockTulipanes));
     std::stringstream ss;
     ss << "DISTRIBUIDOR " << this->idDistribuidor << " envía cajón a destino." << endl;
     logger.log(ss.str());
 
+    std::stringstream header;
     Cajon c(ramos);
-    std::string cajon_a_enviar = this->serializar() + c.serializar();
+    header << std::setw(Utils::TAM_HEADER) << TipoProceso::DISTRIBUIDOR_T;
+    std::string cajon_a_enviar = header.str() + c.serializar();
 
     std::stringstream ss2;
     ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;
