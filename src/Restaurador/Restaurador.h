@@ -15,7 +15,7 @@ private:
     std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);
     std::string leerAsignacionesProductorDistribuidor();
 
-    map<int, Pipe *> distribuidoresEntradaByDistId;
+    map<int, Pipe*> distribuidoresEntradaByDistId;
 
 public:
 
