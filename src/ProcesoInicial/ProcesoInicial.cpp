@@ -158,7 +158,7 @@ void ProcesoInicial::guardar() {
                 + puntosVenta.size() + procesosClientes.size())){}
     Guardador g;
 
-    g.guardarAsignaciones(this->asignacionesProductorDistribuidores);
+    g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);
 
     this->terminarProcesos();
 
