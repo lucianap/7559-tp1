@@ -1,10 +1,7 @@
 //
 // Created by root on 22/9/19.
 //
-
-
-#include <TipoProceso/TipoProceso.h>
-#include <Pedido/Pedido.h>
+#include <Guardador/Guardador.h>
 #include "ProcesoClientes.h"
 
 
@@ -45,7 +42,7 @@ void ProcesoClientes::iniciarAtencion() {
     ss << "Soy el proceso de clientes de id: "<< this->idCliente << endl;
     //Distribuye uniformemente entre los distribuidores asignados a este productor
     sleep(5);
-    while (sigint_handler.getGracefulQuit() == 0) {
+    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         std::stringstream ss;
         llegaCliente = std::rand() % 2;
         if(llegaCliente == 1){
@@ -68,7 +65,25 @@ void ProcesoClientes::iniciarAtencion() {
         logger.log(ss.str());
         sleep(2);
     }
+    if(sigusr1_handler.getSaveAndQuit() != 0) {
+        logger.log( "Clientes: "+ to_string(this->idCliente) +" sale.");
+        Guardador g;
+        g.guardar_cliente(this);
 
+        //Cierro la canilla y espero a que me maten, eventualmente
+        this->cerrarPipe();
+    }
+
+    //Espero a que me maten.
+    while(sigint_handler.getGracefulQuit() == 0) {}
+
+}
+
+void ProcesoClientes::cerrarPipe() {
+    logger.log("Mando EOF a mis pipes. Productor "+to_string(this->idCliente));
+    stringstream ss;
+    ss << setw( Utils::TAM_HEADER) << EOF;
+    pipePtoVenta->escribir(ss.str().c_str(), Utils::TAM_HEADER);
 }
 
 ProcesoClientes::~ProcesoClientes() {
@@ -78,10 +93,7 @@ ProcesoClientes::~ProcesoClientes() {
 void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     std::stringstream ss;
     //5 bytes: tipo de proceso.
-    ss << std::setw(5) << CLIENTE_T;
-
-    //5 bytes: tipo de proceso.
-    ss << std::setw(5) << this->idCliente;
+    ss << std::setw(Utils::TAM_HEADER) << CLIENTE_T;
 
     Pedido pedido(this->idCliente, param_pedido);
     std::string pedido_serializado = pedido.serializar();

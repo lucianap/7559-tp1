@@ -169,7 +169,7 @@ void ProcesoInicial::terminarProcesos() {
 }
 
 void ProcesoInicial::limpiarMemoria() {
-    
+
     for (int j = 0; j < productores.size(); ++j) {
         delete(productores.at(j));
     }

@@ -9,6 +9,7 @@ const std::string Guardador::carpeta = "data";
 const std::string Guardador::prefijoProductores = "data/productor_pid_";
 const std::string Guardador::prefijoDistribuidores = "data/distribuidor_pid_";
 const std::string Guardador::prefijoVendedores = "data/vendedor_pid_";
+const std::string Guardador::prefijoClientes = "data/Clientes_pid_";
 
 void Guardador::inicializar(){
     int status = mkdir(Guardador::carpeta.c_str(), 0777);
@@ -40,6 +41,22 @@ void Guardador::guardar(Distribuidor *proceso) {
     guardar(proceso, ss.str());
 
 }
+
+void Guardador::guardar_cliente(ProcesoClientes *proceso) {
+    std::stringstream ss;
+    ss << Guardador::prefijoClientes << getpid();
+    guardar(proceso, ss.str());
+
+}
+
+void Guardador::guardar_ptoVenta(PuntoVenta *proceso) {
+    std::stringstream ss;
+    ss << Guardador::prefijoVendedores << getpid();
+    guardar(proceso, ss.str());
+
+}
+
+
 
 Guardador::Guardador() {}
 

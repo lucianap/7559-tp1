@@ -11,6 +11,8 @@
 #include <Cajon/Cajon.h>
 #include <ProcesoHijo/ProcesoHijo.h>
 #include <TipoPedido/TipoPedido.h>
+#include <TipoProceso/TipoProceso.h>
+#include <Pedido/Pedido.h>
 
 class ProcesoClientes : public ProcesoHijo {
 
@@ -24,6 +26,7 @@ private:
 
     void iniciarAtencion();
 
+    void cerrarPipe();
 
 public:
 

@@ -1,6 +1,7 @@
 #include <Ramo/Ramo.h>
 #include <Pedido/Pedido.h>
 #include <TipoProceso/TipoProceso.h>
+#include <Guardador/Guardador.h>
 #include "PuntoVenta.h"
 #include "../Signal/SignalHandler.h"
 
@@ -34,31 +35,26 @@ pid_t PuntoVenta::ejecutar() {
 }
 
 void PuntoVenta::iniciarAtencion() {
-    char buffer_header[10];
+    char buffer_header[Utils::TAM_HEADER];
     char buffer_cajon[Cajon::TAM_TOTAL_BYTES_DISTRIBUIDOR];
     char buffer_pedido[Pedido::TAM_TOTAL];
-    Cajon* paqueteCajon;
+    Cajon paqueteCajon;
     TipoProceso proceso_header;
-    while (sigint_handler.getGracefulQuit() == 0) {
+    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         try {
 
             std::stringstream ss;
             ss << "Soy el punto de venta y voy a intentar recibir el header del mensaje" << endl;
             proceso_header = recibirHeader(buffer_header);
-            ss << proceso_header<< endl;
-
-            t_parametros_pedido pedido_actual;
 
             if(proceso_header == CLIENTE_T){
+                t_parametros_pedido pedido_actual;
                 pedido_actual = recibirPedido(buffer_pedido);
             }else{
                 paqueteCajon = recibirCajon(buffer_cajon);
 
                 ss << "Pto Vta Nro " << this->idPuntoVenta << " recibe un cajón con el contenido:" << endl;
-
-                for(auto it = paqueteCajon->ramos.begin(); it != paqueteCajon->ramos.end(); ++it ) {
-                    ss << "Ramo de " << (it)->get_productor() << " con flores de tipo " << (it)->getTipoFlor() << endl;
-                }
+                this->clasificar(paqueteCajon);
 
                 logger.log(ss.str());
             }
@@ -69,20 +65,48 @@ void PuntoVenta::iniciarAtencion() {
         }
     }
 
-    pipeEntrada.cerrar();
+    if(sigusr1_handler.getSaveAndQuit() != 0) {
+        logger.log( "Clientes: "+ to_string(this->idPuntoVenta) +" sale.");
+        Guardador g;
+        g.guardar_ptoVenta(this);
+
+        //Cierro la canilla y espero a que me maten, eventualmente
+        this->cerrarPipe();
+    }
+
+    //Espero a que me maten.
+    while(sigint_handler.getGracefulQuit() == 0) {}
 }
 
 
+void PuntoVenta::cerrarPipe() {
+    logger.log("Mando EOF a mis pipes. Productor "+to_string(this->idPuntoVenta));
+    stringstream ss;
+    ss << setw(Ramo::TAM_TOTAL) << EOF;
+    //pipeStats->escribir(ss.str().c_str(), Utils::TAM_HEADER);
+}
+
+void PuntoVenta::clasificar(Cajon paqueteCajon){
+    std::stringstream ss;
+    for(auto it = paqueteCajon.ramos.begin(); it != paqueteCajon.ramos.end(); ++it ) {
+        ss << "Ramo de " << (it)->get_productor() << " con flores de tipo " << (it)->getTipoFlor() << endl;
+    }
+    vector<Ramo> rosas = paqueteCajon.filtrar(TipoFlor::Rosa);
+    this->stockRosas.insert(this->stockRosas.end(), rosas.begin(), rosas.end());
+
+    vector<Ramo> tulipanes = paqueteCajon.filtrar(TipoFlor::Tulipan);
+    this->stockTulipanes.insert(this->stockTulipanes.end(), tulipanes.begin(), tulipanes.end());
+}
 
 TipoProceso PuntoVenta::recibirHeader(char *buffer) {
     string mensajeError;
 
-    ssize_t bytesleidos = pipeEntrada.leer(static_cast<void*>(buffer), 10);
+    ssize_t bytesleidos = pipeEntrada.leer(static_cast<void*>(buffer), Utils::TAM_HEADER);
 
     std::stringstream ss;
     ss << "PTO VENTA "<< this->idPuntoVenta << " lee " << bytesleidos << " bytes del pipe." << endl;
 
-    if (bytesleidos != 10) {
+    if (bytesleidos != Utils::TAM_HEADER) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
@@ -130,7 +154,7 @@ t_parametros_pedido PuntoVenta::recibirPedido(char *buffer) {
 
 };
 
-Cajon* PuntoVenta::recibirCajon(char *buffer) {
+Cajon PuntoVenta::recibirCajon(char *buffer) {
     string mensajeError;
 
     ssize_t bytesleidos = pipeEntrada.leer(static_cast<void*>(buffer), Cajon::TAM_TOTAL_BYTES_DISTRIBUIDOR);
@@ -147,6 +171,6 @@ Cajon* PuntoVenta::recibirCajon(char *buffer) {
     }
     logger.log(ss.str());
 
-    Cajon* paqueteRecibido = new Cajon(buffer, Cajon::CAPACIDAD_RAMOS_DISTRIBUIDOR);
+    Cajon paqueteRecibido(buffer, Cajon::CAPACIDAD_RAMOS_DISTRIBUIDOR);
     return paqueteRecibido;
 };

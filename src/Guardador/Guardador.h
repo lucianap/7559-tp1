@@ -11,6 +11,8 @@
 #include <Productor/Productor.h>
 #include <ProcesoHijoFactory/ProcesoHijoFactory.h>
 #include <Distribuidor/Distribuidor.h>
+#include <PuntoVenta/PuntoVenta.h>
+#include <ProcesoClientes/ProcesoClientes.h>
 
 class Guardador {
 
@@ -18,6 +20,7 @@ class Guardador {
     static const std::string prefijoProductores;
     static const std::string prefijoDistribuidores;
     static const std::string prefijoVendedores;
+    static const std::string prefijoClientes;
 
     public:
 
@@ -28,8 +31,8 @@ class Guardador {
 
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);
-        //TODO
-        //static void guardar(Vendedor &proceso);
+        void guardar_ptoVenta(PuntoVenta *proceso);
+        void guardar_cliente(ProcesoClientes *proceso);
 
         static bool isCantidadDeArchivosGuardadosOk(int cantidadEsperada);
 

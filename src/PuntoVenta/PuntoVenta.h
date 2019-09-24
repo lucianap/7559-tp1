@@ -10,16 +10,24 @@ class PuntoVenta : public ProcesoHijo {
 
 private:
     int idPuntoVenta;
+
     Pipe pipeEntrada;
-    std::vector<Ramo> stock_flores;
+
     void iniciarAtencion();
 
-    Cajon* recibirCajon(char *buffer);
-    TipoProceso recibirData(char *buffer);
+    vector<Ramo> stockRosas;
+
+    vector<Ramo> stockTulipanes;
+
+    Cajon recibirCajon(char *buffer);
 
     TipoProceso recibirHeader(char *buffer);
 
     t_parametros_pedido recibirPedido(char *buffer);
+
+    void clasificar(Cajon paqueteCajon);
+
+    void cerrarPipe();
 
 public:
 
