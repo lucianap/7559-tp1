@@ -17,9 +17,20 @@ void ProcesoInicial::reanudarEjecucion() {
     logger.log("-----------Restaurando sistema-------------");
 
     Restaurador r;
-    auto productoresR = r.restaurarProductores(logger);
-    auto distribuidoresR = r.restaurarDistribuidores(logger);
-    r.conectarPipes(productoresR, distribuidoresR);
+    auto productoresRestaurados = r.restaurarProductores(logger);
+    auto distribuidoresRestaurados = r.restaurarDistribuidores(logger);
+    r.conectarPipes(productoresRestaurados, distribuidoresRestaurados);
+
+    //damos play a todos los procesos..
+    for(auto it = productoresRestaurados.begin(); it != productoresRestaurados.end(); it++) {
+        (*it)->ejecutar();
+    }
+
+    for(auto it = distribuidoresRestaurados.begin(); it != distribuidoresRestaurados.end(); it++) {
+        (*it)->ejecutar();
+    }
+
+
 
 
 }
@@ -156,8 +167,8 @@ void ProcesoInicial::guardar() {
     //Controlo que todos los procesos se hayan guardado.
     while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
                 + puntosVenta.size() + procesosClientes.size())){}
-    Guardador g;
 
+    Guardador g;
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);
 
     this->terminarProcesos();

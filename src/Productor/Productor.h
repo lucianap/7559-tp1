@@ -23,6 +23,14 @@ class Productor : public ProcesoHijo {
         std::vector<Pipe*> distribuidores;
         std::vector<Pipe*>::iterator distribuidoresIterator;
 
+        //Protocolo de serializacion
+        static const int tamanioTipoDeProceso;
+        static const int tamanioSizeEnBytes;
+        static const int tamanioRamoEnBytes;
+        static const int tamanioRamosPorCajonEnBytes;
+        static const int tamanioIdProductor;
+        static const int tamanioSiguienteDistribuidorEnBytes;
+
     public:
 
         Productor(int id, std::vector<Pipe*> distribuidores, int ramos_por_cajon, Logger& logger);
@@ -38,8 +46,8 @@ class Productor : public ProcesoHijo {
     private:
 
         void cerrarPipes();
-        Ramo producir_ramo();
-        void enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino);
+        Ramo producirRamo();
+        void enviarCajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino);
 
         //Comienzo de la ejecución de un productor.
         //El comportamiento actual es armar un cajón y enviarlo por el pipe apenas termina de armarlo.

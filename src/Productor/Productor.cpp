@@ -5,6 +5,13 @@
 
 #include "Productor.h"
 
+const int Productor::tamanioTipoDeProceso = 5;
+const int Productor::tamanioSizeEnBytes = 5;
+const int Productor::tamanioRamoEnBytes = Ramo::TAM_TOTAL;
+const int Productor::tamanioRamosPorCajonEnBytes = 5;
+const int Productor::tamanioIdProductor = 5;
+const int Productor::tamanioSiguienteDistribuidorEnBytes = 5;
+
 Productor::Productor(int id, std::vector<Pipe*> distribuidores, int ramos_por_cajon, Logger& logger):
         ProcesoHijo(logger), id(id), distribuidores(distribuidores), ramosPorCajon(ramos_por_cajon) {
     this->inicializarValores();
@@ -16,10 +23,8 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 };
 
 Productor::Productor(Logger &logger, std::string productorSerializado) : ProcesoHijo(logger) {
-    int tamanioTipoDeProceso = 5;
-    int tamanioSizeEnBytes = 5;
-    int tamanioRamoEnBytes = Ramo::TAM_TOTAL;
-    int tamanioRamosPorCajonEnBytes = 5;
+
+
 
     int inicio = tamanioTipoDeProceso;
     int fin = tamanioTipoDeProceso+tamanioSizeEnBytes;
@@ -46,6 +51,12 @@ Productor::Productor(Logger &logger, std::string productorSerializado) : Proceso
     for(int i = 0; i < siguienteDistribuidorLeido; i++) {
         distribuidoresIterator++;
     }
+
+    inicio = fin;
+    fin = inicio+Productor::tamanioIdProductor;
+    int idProductor = std::stoi(productorSerializado.substr(inicio, fin));
+    this->id = idProductor;
+
 }
 
 
@@ -53,10 +64,10 @@ std::string Productor::serializar() {
     std::stringstream ss;
 
     //5 bytes: tipo de proceso.
-    ss << std::setw(5) << TipoProceso::PRODUCTOR_T;
+    ss << std::setw(Productor::tamanioTipoDeProceso) << TipoProceso::PRODUCTOR_T;
 
     //5 bytes: cantidad de ramos a enviar.
-    ss << std::setw(5) << ramosAEnviar.size();
+    ss << std::setw(Productor::tamanioSizeEnBytes) << ramosAEnviar.size();
 
     //3 bytes por ramo.
     for(auto it = ramosAEnviar.begin(); it != ramosAEnviar.end(); it++) {
@@ -64,13 +75,13 @@ std::string Productor::serializar() {
     }
 
     //5 bytes: cantidad de ramos por cajón
-    ss << std::setw(5) << ramosPorCajon;
+    ss << std::setw(Productor::tamanioRamosPorCajonEnBytes) << ramosPorCajon;
 
     //5 bytes: siguiente productor a entregar cajón.
-    ss << std::setw(5) << siguienteDistribuidor;
+    ss << std::setw(Productor::tamanioSiguienteDistribuidorEnBytes) << siguienteDistribuidor;
 
     //5 bytes finales para el id del productor.
-    ss << std::setw(5) << this->id << endl;
+    ss << std::setw(Productor::tamanioIdProductor) << this->id << endl;
 
     return ss.str();
 }
@@ -90,11 +101,11 @@ void Productor::producir() {
             distribuidorActual = *this->distribuidoresIterator;
         }
 
-        Ramo r = this->producir_ramo();
+        Ramo r = this->producirRamo();
         ramosAEnviar.push_back(r);
 
         if (ramosAEnviar.size() >= this->ramosPorCajon) {
-            this->enviar_cajon(ramosAEnviar, distribuidorActual);
+            this->enviarCajon(ramosAEnviar, distribuidorActual);
             ++this->distribuidoresIterator;
             ramosAEnviar.clear();
 
@@ -153,7 +164,7 @@ void Productor::agregarDistribuidor(Pipe* distribuidor) {
     this->distribuidores.push_back(distribuidor);
 }
 
-Ramo Productor::producir_ramo() {
+Ramo Productor::producirRamo() {
     //Solo para simular la producción del ramo.
     sleep(1);
     int rnd = std::rand() % 2;
@@ -162,7 +173,7 @@ Ramo Productor::producir_ramo() {
     return unRamo;
 }
 
-void Productor::enviar_cajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino) {
+void Productor::enviarCajon(std::vector<Ramo> ramos, Pipe *distribuidor_destino) {
     std::stringstream ss;
     ss << "PRODUCTOR " << this->id << " envía cajón a destino.";
     logger.log(ss.str());
