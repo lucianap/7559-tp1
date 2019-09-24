@@ -12,6 +12,7 @@
 
 using namespace std;
 typedef struct parametros {
+    bool reanudar;
     int cantProductores;
     int cantPuntosVenta;
     int cantDistribuidores;

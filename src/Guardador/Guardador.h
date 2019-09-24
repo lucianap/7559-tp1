@@ -25,10 +25,14 @@ class Guardador {
     static const std::string archivoAsignaciones;
 
     static const std::string separadorAsignaciones;
-    static const std::string separadorAsignadosA;
     static const std::string simboloAsignadoA;
 
+    static const std::string prefijoAsignacionesProductorDistribuidor;
+    static const std::string prefijoAsignacionesDistribuidorPuntoDeVenta;
+
     public:
+
+        friend class Restaurador;
 
         Guardador();
 
@@ -40,8 +44,8 @@ class Guardador {
         void guardar_ptoVenta(PuntoVenta *proceso);
         void guardar_cliente(ProcesoClientes *proceso);
 
-        void guardarAsignaciones(std::multimap<int, int> mapaAsignaciones);
-        std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);
+        void guardarAsignaciones(std::multimap<int, int> mapaAsignacionesDP,
+                                 std::multimap<int, int> mapaAsignacionesVD);
 
         static bool isCantidadDeArchivosGuardadosOk(int cantidadEsperada);
 

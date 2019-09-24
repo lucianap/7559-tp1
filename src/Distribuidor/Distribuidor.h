@@ -38,7 +38,10 @@ private:
     void enviarCajon( Pipe *distribuidor_destino) ;
 
     void inicializarValores();
+
 public:
+
+    int getId();
 
     void clasificar(Cajon &cajon);
 
@@ -48,7 +51,7 @@ public:
 
     Distribuidor(Logger& logger);
     Distribuidor(Logger& logger, int idDistribuidor, Pipe* pipe);
-    Distribuidor(Logger& logger, std::string distribuidorSerializado);
+    Distribuidor(Logger& logger, std::string distribuidorSerializado, Pipe* pipe);
     Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int idDistribuidor, Pipe* pipe);
 
     ~Distribuidor() override;

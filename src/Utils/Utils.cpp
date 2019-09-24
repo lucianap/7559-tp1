@@ -55,20 +55,22 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
    params.cantDistribuidores = 0;
    params.cantPuntosVenta = 0;
    params.debug = false;
+   params.reanudar = false;
 
    while (pendingParams) {
       static struct option long_options[] =
           {
               {"productores",  required_argument, nullptr, 'p'},
-              {"distribuidores",  required_argument, nullptr, 'd'},
-              {"puntosventa",  required_argument, nullptr, 'v'},
+              {"distribuidores", required_argument, nullptr, 'd'},
+              {"puntosventa", required_argument, nullptr, 'v'},
               {"debug",  no_argument, nullptr, 'x'},
+              {"reanudar",  no_argument, nullptr, 'r'},
               {0, 0, 0, 0}
           };
       /* getopt_long stores the option index here. */
       int option_index = 0;
 
-      c = getopt_long(argc, argv, "p:d:v:x",
+      c = getopt_long(argc, argv, "p:d:v:x:r",
                  long_options, &option_index);
 
       /* Detect the end of the options. */
@@ -76,6 +78,9 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
          break;
 
       switch (c) {
+         case 'r':
+            params.reanudar = true;
+            break;
          case 'p':
             params.cantProductores = atoi(optarg);
               break;
@@ -145,6 +150,8 @@ vector<string> Utils::listarArchivosConPrefijo(const char* path, string prefijo)
         }
     }
     closedir(d);
+
+    return files;
 }
 
 bool Utils::startsWith(const char *pre, const char *str) {

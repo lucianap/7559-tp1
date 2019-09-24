@@ -17,8 +17,8 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 
 Productor::Productor(Logger &logger, std::string productorSerializado) : ProcesoHijo(logger) {
     int tamanioTipoDeProceso = 5;
-    int tamanioRamoEnBytes = Ramo::TAM_TOTAL;
     int tamanioSizeEnBytes = 5;
+    int tamanioRamoEnBytes = Ramo::TAM_TOTAL;
     int tamanioRamosPorCajonEnBytes = 5;
 
     int inicio = tamanioTipoDeProceso;
@@ -27,7 +27,7 @@ Productor::Productor(Logger &logger, std::string productorSerializado) : Proceso
     int size = std::stoi(productorSerializado.substr(inicio, fin));
     for(int i = 0; i < size; i++){
         //leo un ramo
-        int inicioRamo = i * tamanioRamoEnBytes + inicio;
+        int inicioRamo = i * tamanioRamoEnBytes + fin;
         std::string ramoStr = productorSerializado.substr(inicioRamo, inicioRamo + tamanioRamoEnBytes);
         Ramo unRamo(ramoStr);
         ramosAEnviar.push_back(unRamo);
@@ -182,6 +182,10 @@ void Productor::inicializarValores() {
     this->distribuidoresIterator = this->distribuidores.begin();
     ramosAEnviar.reserve(10);
     siguienteDistribuidor = 0;
+}
+
+int Productor::getId() {
+    return this->id;
 }
 
 
