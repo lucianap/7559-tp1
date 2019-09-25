@@ -104,10 +104,10 @@ void ProcesoClientes::iniciarAtencion() {
 }
 
 void ProcesoClientes::cerrarPipe() {
-    logger.log("Mando EOF a mis pipes. Cliente "+to_string(this->idCliente));
     stringstream ss;
     ss << setw( Utils::TAM_HEADER) << EOF;
     pipePtoVenta->escribir(ss.str().c_str(), Utils::TAM_HEADER);
+    logger.log("Mando EOF a mis pipes. Cliente "+to_string(this->idCliente));
 }
 
 ProcesoClientes::~ProcesoClientes() {

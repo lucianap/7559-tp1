@@ -24,6 +24,7 @@ public:
 
     static const int TIPO_SOLICITUD_INFORME = 1;
     static const int TIPO_SOLICITUD_ALTA_VENTA = 2;
+    static const int TIPO_SOLICITUD_EOF = 3;
     static const int TAM_TOTAL = 1 + Ramo::TAM_TOTAL;
 
     string serializar();

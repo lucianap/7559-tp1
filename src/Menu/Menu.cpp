@@ -28,6 +28,7 @@ int Menu::iniciar() {
             case '1':
                 cout << endl;
                 cout << "Guardando estado y finalizando." << endl;
+
                 return 1;
             case '2':
                 this->mostrarInfome();

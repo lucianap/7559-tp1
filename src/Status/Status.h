@@ -33,6 +33,8 @@ public:
 
     std::string serializar() override;
 
+    void setCantPipes(int cant);
+
 private:
 
     Pipe pipeEntrada;
@@ -48,6 +50,9 @@ private:
     void despacharSolicitud(SolicitudStatus status);
 
     void enviarInforme();
+
+
+    int cantPipes;
 };
 
 
