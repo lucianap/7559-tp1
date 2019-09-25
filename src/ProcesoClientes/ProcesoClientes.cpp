@@ -123,9 +123,7 @@ void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     std::string pedido_serializado = pedido.serializar();
     ss << std::setw(Pedido::TAM_TOTAL)<< pedido_serializado;
     std::string data_envio = ss.str();
-    stringstream log;
-    log <<data_envio.length()<<endl;
-    logger.log(log.str());
+
     pipePtoVenta->escribir(data_envio.c_str(), data_envio.length());
 
 };
