@@ -122,6 +122,8 @@ string Utils::getTextTipoFlor(TipoFlor tipoFlor) {
             return "Tulipan";
         case Rosa:
             return "Rosa";
+        case Ninguno:
+            return "Ninguna";
         default:
             return std::to_string(tipoFlor);
     }
@@ -243,6 +245,8 @@ TipoFlor Utils::getTipoFlor(int tipoFlor) {
             return Tulipan;
         case 1:
             return Rosa;
+        case 2:
+            return Ninguno;
         default: {
             string mensajeError = "Tipo de flor invalido";
             throw(std::string(mensajeError));

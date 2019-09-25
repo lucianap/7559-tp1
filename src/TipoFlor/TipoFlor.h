@@ -7,7 +7,8 @@
 
 enum TipoFlor {
     Tulipan,
-    Rosa
+    Rosa,
+    Ninguno
 };
 
 

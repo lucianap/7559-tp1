@@ -29,10 +29,11 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoClientes")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Guardador")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Status")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Informe")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/RegistroVenta")
 
 add_executable(7559_tp1 ${SOURCE} ${HEADERS})
 
-target_link_libraries(7559_tp1 Ramo_lib Cajon_lib Utils_lib Pedido_lib)
+target_link_libraries(7559_tp1 Ramo_lib Cajon_lib Utils_lib Pedido_lib Informe_lib RegistroVenta_lib)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests")

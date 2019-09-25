@@ -108,6 +108,8 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
 
+    status.ejecutar();
+
     Menu menu(status, logger);
 
     int status = menu.iniciar();

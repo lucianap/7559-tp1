@@ -1,10 +1,8 @@
-set(SOURCE
-        ${SOURCE}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Informe.cpp
-        PARENT_SCOPE
+set(SOURCE_FILES
+        Informe.cpp
         )
-set(HEADERS
-        ${HEADERS}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Informe.h
-        PARENT_SCOPE
+set(HEADER_FILES
+        Informe.h
         )
+
+add_library(Informe_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})

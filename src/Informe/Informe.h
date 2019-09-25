@@ -8,6 +8,9 @@
 
 #include <TipoFlor/TipoFlor.h>
 #include "Utils/Utils.h"
+#include <sstream>
+#include <iomanip>
+
 
 class Informe {
 
@@ -35,7 +38,7 @@ public:
 
     void setProductorMejorVenta(int productorMejorVenta);
 
-    TipoFlor getFlorMasCompada() const;
+    TipoFlor getFlorMasComprada() const;
 
     void setFlorMasCompada(TipoFlor florMasCompada);
 
@@ -43,6 +46,7 @@ public:
     static const int TAM_CAMPO_TIPOFLOR = 1;
     static const int TAM_TOTAL_BYTES = TAM_CAMPO_PRODUCTOR+TAM_CAMPO_TIPOFLOR;
 
+    std::string serializar();
 };
 
 
