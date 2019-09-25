@@ -123,8 +123,8 @@ void Distribuidor::iniciarAtencion() {
 
         Guardador g;
         g.guardar(this);
-        this->cerrarPipes();
     }
+    this->cerrarPipes();
     while(sigint_handler.getGracefulQuit() == 0) {}
 
 

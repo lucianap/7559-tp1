@@ -34,7 +34,8 @@ public:
     void conectarPipes(std::vector<Productor*> productores,
                        std::vector<Distribuidor*> distribuidores,
                        std::vector<PuntoVenta*> vendedores,
-                       std::vector<ProcesoClientes*> clientes);
+                       std::vector<ProcesoClientes*> clientes,
+                       Pipe pipeEntradaStatus);
 
 };
 

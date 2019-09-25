@@ -125,8 +125,8 @@ void Productor::producir() {
         g.guardar(this);
 
         //Cierro la canilla y espero a que me maten, eventualmente
-        this->cerrarPipes();
     }
+    this->cerrarPipes();
 
     //Espero a que me maten.
     while(sigint_handler.getGracefulQuit() == 0) {}

@@ -28,7 +28,7 @@ void ProcesoInicial::reanudarEjecucion() {
     this->procesosClientes = r.restaurarProcesosClientes(logger);
 
     r.conectarPipes(this->productores, this->distribuidores,
-            this->puntosVenta, this->procesosClientes);
+            this->puntosVenta, this->procesosClientes, this->status.getPipeEntrada());
 
     loggerProcess.ejecutar();
     logger.log("-----------Restaurando sistema-------------");

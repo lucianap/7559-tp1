@@ -311,3 +311,7 @@ std::string PuntoVenta::serializar() {
 int PuntoVenta::getId() {
     return idPuntoVenta;
 }
+
+void PuntoVenta::asignarPipeStatus(Pipe pipeStatus) {
+    this->pipeStatus = pipeStatus;
+}

@@ -50,6 +50,8 @@ public:
 
     int getId();
 
+    void asignarPipeStatus(Pipe pipeStatus);
+
 };
 
 

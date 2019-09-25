@@ -51,7 +51,7 @@ std::vector<PuntoVenta *> Restaurador::restaurarPuntosDeVenta(Logger &logger) {
 void Restaurador::conectarPipes(std::vector<Productor *> productores,
         std::vector<Distribuidor *> distribuidores,
         std::vector<PuntoVenta*> puntosVentas,
-        std::vector<ProcesoClientes*> clientes) {
+        std::vector<ProcesoClientes*> clientes, Pipe pipeEntradaStatus) {
 
     //Recupero todas las asignaciones Productor>Distribuidor.
     multimap<int, int> asignacionesProdDist =
@@ -87,6 +87,9 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
 
     //Asigno punto de venta con clientes.
     for(auto itVenta = puntosVentas.begin(); itVenta != puntosVentas.end(); itVenta++) {
+
+        (*itVenta)->asignarPipeStatus(pipeEntradaStatus);
+
         for(auto itClientes = clientes.begin(); itClientes != clientes.end(); itClientes++) {
 
             //si tienen el mismo id los conecto.
