@@ -7,9 +7,10 @@
 #include "../Signal/SignalHandler.h"
 #include "Remito/Remito.h"
 
-PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe* pipeEntrada)  :
+PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe pipeStatus, Pipe* pipeEntrada)  :
         ProcesoHijo(logger),
         idPuntoVenta(idPuntoVenta),
+        pipeStatus(pipeStatus),
         pipeEntrada(*pipeEntrada){};
 
 PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado, Pipe* entrada) :
@@ -191,9 +192,9 @@ void PuntoVenta::printStock(){
 }
 
 void PuntoVenta::enviarStatus(Ramo ramo){
-    SolicitudStatus solicitud(VENDEDOR_T,ramo);
+    SolicitudStatus solicitud(SolicitudStatus::TIPO_SOLICITUD_ALTA_VENTA, ramo);
     string solicitud_serializada = solicitud.serializar();
-    //this->pipeStatus.escribir(solicitud_serializada.c_str(),solicitud_serializada.length());
+    this->pipeStatus.escribir(solicitud_serializada.c_str(),solicitud_serializada.length());
 }
 
 TipoProceso PuntoVenta::recibirHeader(char *buffer) {

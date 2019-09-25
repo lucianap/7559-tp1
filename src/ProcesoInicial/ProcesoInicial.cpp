@@ -2,6 +2,7 @@
 #include <Guardador/Guardador.h>
 #include <Restaurador/Restaurador.h>
 #include <FileManager/FileManager.h>
+#include <FDRegistry/FDRegistry.h>
 #include "ProcesoInicial.h"
 #include <Remito/Remito.h>
 
@@ -11,6 +12,12 @@ const string ProcesoInicial::RUTA_ARCHIVO_PEDIDOS = "pedidos.csv";
 
 ProcesoInicial::ProcesoInicial(t_parametros parametros):
         parametros(parametros), logger(true), loggerProcess("log.txt", logger), status(logger) {
+
+    FDRegistry::AddFileDescriptor(logger.getPipe().getFdLectura());
+    FDRegistry::AddFileDescriptor(logger.getPipe().getFdEscritura());
+    FDRegistry::AddFileDescriptor(status.getPipeEntrada().getFdEscritura());
+    FDRegistry::AddFileDescriptor(status.getPipeSalida().getFdEscritura());
+
 }
 
 void ProcesoInicial::reanudarEjecucion() {
@@ -84,7 +91,7 @@ void ProcesoInicial::iniciarEjecucion() {
         int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
         this->asignacionesDistribuidorPuntosDeVenta.insert(std::pair<int,int>(distribuidorAsignado, j));
     }
-    Pipe* pipeStatus =  new Pipe();
+
     /**** hasta este punto se deben inicializar todos los pipes ****/
     loggerProcess.ejecutar();
     logger.log("-----------Iniciando sistema-------------");
@@ -119,7 +126,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     for (int j = 0; j < puntos_de_venta; ++j) {
         ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntrada.at(j),config_pedidos_internet);
-        PuntoVenta* pto_venta = new PuntoVenta(logger, j, pipeStatus, this->pVentasEntrada.at(j));
+        PuntoVenta* pto_venta = new PuntoVenta(logger, j, status.getPipeEntrada(), this->pVentasEntrada.at(j));
         this->puntosVenta.push_back(pto_venta);
         this->procesosClientes.push_back(procesoClientes);
         procesoClientes->ejecutar();
@@ -209,8 +216,6 @@ void ProcesoInicial::terminarProcesos() {
         proceso->terminar();
     }
     this->status.terminar();
-    this->status.getPipeSalida().cerrar();
-    this->status.getPipeEntrada().cerrar();
     this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }

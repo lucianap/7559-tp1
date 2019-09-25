@@ -41,7 +41,7 @@ private:
 
 public:
 
-    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe* pipeEntrada);
+    PuntoVenta(Logger& logger, int idPuntoVenta, Pipe pipeStatus, Pipe* pipeEntrada);
     PuntoVenta(Logger &logger, std::string puntoVentaSerializado, Pipe* entrada);
 
     ~PuntoVenta() override;

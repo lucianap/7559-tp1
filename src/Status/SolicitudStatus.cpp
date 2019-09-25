@@ -17,11 +17,11 @@ string SolicitudStatus::serializar() {
     return ss.str();
 }
 
-SolicitudStatus::SolicitudStatus(int tipoSolicitud) : tipoSolicitud(tipoSolicitud), ramo(0, TipoFlor::Tulipan) {}
+SolicitudStatus::SolicitudStatus(int tipoSolicitud) : tipoSolicitud(tipoSolicitud), ramo(0, TipoFlor::Ninguno) {}
 
 SolicitudStatus::SolicitudStatus(int tipoSolicitud, const Ramo &ramo) : tipoSolicitud(tipoSolicitud), ramo(ramo) {}
 
-SolicitudStatus::SolicitudStatus(string solicitudSerializada): ramo(0, Tulipan) {
+SolicitudStatus::SolicitudStatus(string solicitudSerializada): ramo(0, Ninguno) {
     this->tipoSolicitud = atoi(solicitudSerializada.substr(0, 1).c_str());
     if (this->tipoSolicitud == TIPO_SOLICITUD_ALTA_VENTA) {
         Ramo unRamo(solicitudSerializada.substr(1, Ramo::TAM_TOTAL));
@@ -47,6 +47,16 @@ void SolicitudStatus::setRamo(const Ramo &ramo) {
 
 std::string SolicitudStatus::toString() {
     std::stringstream ss;
-    ss << "[tipoSolicitud:" << this->getTipoSolicitud() << " Ramo: "<< this->getRamo().toString()<<"]";
+    std::string tipoSolicitudText;
+    switch (this->getTipoSolicitud()) {
+        case TIPO_SOLICITUD_INFORME:
+            tipoSolicitudText = "SOLICITUD_INFORME";
+            break;
+        case TIPO_SOLICITUD_ALTA_VENTA:
+            tipoSolicitudText = "SOLICITUD_ALTA VENTA";
+            break;
+
+    }
+    ss << "[tipoSolicitud:" << tipoSolicitudText << " Ramo: "<< this->getRamo().toString()<<"]";
     return ss.str();
 }
