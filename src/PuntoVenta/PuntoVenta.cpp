@@ -81,7 +81,8 @@ void PuntoVenta::iniciarAtencion() {
     char buffer_pedido[Pedido::TAM_TOTAL];
     Cajon paqueteCajon;
     TipoProceso proceso_header;
-    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
+    int eofRecibidos = 0;
+    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0 && eofRecibidos!=2) {
         try {
 
             std::stringstream ss;
@@ -92,13 +93,15 @@ void PuntoVenta::iniciarAtencion() {
                 t_parametros_pedido pedido_actual;
                 pedido_actual = recibirPedido(buffer_pedido);
                 this->manejarPedido(pedido_actual);
-            }else{
+            }else if(proceso_header == DISTRIBUIDOR_T){
                 paqueteCajon = recibirCajon(buffer_cajon);
 
                 ss << "Pto Vta Nro " << this->idPuntoVenta << " recibe un cajón con el contenido:" << endl;
                 this->clasificar(paqueteCajon);
 
                 logger.log(ss.str());
+            }else{
+                ++eofRecibidos;
             }
 
         } catch (std::string &error) {
@@ -129,12 +132,6 @@ void PuntoVenta::cerrarPipe() {
 }
 
 void PuntoVenta::clasificar(Cajon paqueteCajon){
-
-    /*for(auto it = paqueteCajon.ramos.begin(); it != paqueteCajon.ramos.end(); ++it ) {
-        std::stringstream ss;
-        ss << "Ramo de " << (it)->get_productor() << " con flores de tipo " << (it)->getTipoFlor() << endl;
-        logger.log(ss.str());
-    }*/
 
     vector<Ramo> rosas = paqueteCajon.filtrar(TipoFlor::Rosa);
     this->stockRosas.insert(this->stockRosas.end(), rosas.begin(), rosas.end());
@@ -205,7 +202,15 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
     }
 
     logger.log(ss.str());
+    if(stoi(string(buffer)) == EOF) {
+        stringstream ss;
+        ss << "EOF RECIBIDO. Distribuidor " << idPuntoVenta;
+        logger.log(ss.str());
 
+        //fin del pipe, significa que se está apagando tode.
+        //Devuelvo un cajón vacío para indicar que se tiene que ir guardando.
+        return NO_PROCESS_T;
+    };
     std::string strTipoProceso = ((string)buffer).substr(0, 5);
 
     return (TipoProceso)std::stoi(Utils::trim(strTipoProceso));

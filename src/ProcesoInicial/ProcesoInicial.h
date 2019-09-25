@@ -56,7 +56,7 @@ public:
     void iniciarEjecucion();
 
     int asignar_pipes(const int j, Pipe* pipeInDistribuidor, const int cantidad_productores,
-                            std::map<int, vector<Pipe*>>* distribuidores_por_productor );
+                            std::map<int, vector<Pipe*>>* distribuidores_por_productor);
 
     void guardar();
 

@@ -48,7 +48,6 @@ void ProcesoInicial::iniciarEjecucion() {
     Guardador::inicializar();
 
     int ramos_por_cajon = 10;
-    int ramos_por_envio = 100;
 
     /***** inicializamos los pipes para todo el sistema *****/
 
@@ -86,10 +85,15 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     for (int j = 0; j < distribuidores; ++j) {
-        std::vector<Pipe*> pts_de_venta_escuchando = p_ventas_por_distribuidor.at(j);
-        Distribuidor* distribuidor = new Distribuidor(logger, pts_de_venta_escuchando, j, this->distribuidoresEntrada.at(j));
-        this->distribuidores.push_back(distribuidor);
-        distribuidor->ejecutar();
+        if(p_ventas_por_distribuidor.find(j) == p_ventas_por_distribuidor.end()) {
+            logger.log("No hay ptos de venta para el distribuidor " + to_string(j));
+        } else {
+            std::vector<Pipe *> pts_de_venta_escuchando = p_ventas_por_distribuidor.at(j);
+            Distribuidor *distribuidor = new Distribuidor(logger, pts_de_venta_escuchando, j,
+                                                          this->distribuidoresEntrada.at(j));
+            this->distribuidores.push_back(distribuidor);
+            distribuidor->ejecutar();
+        }
     }
 
     FileManager file_manager(RUTA_ARCHIVO_PEDIDOS,logger);
