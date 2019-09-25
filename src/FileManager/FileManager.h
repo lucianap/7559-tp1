@@ -19,10 +19,10 @@ private:
     ifstream inFile;
     string fileName;
     Logger& logger;
-    std::vector<t_parametros_pedido> get_default();
+    void get_default(std::vector<t_parametros_pedido>& config_pedidos_internet);
 public:
     FileManager(string fileName, Logger& logger);
-    std::vector<t_parametros_pedido>  ReadFile();
+    void ReadFile(std::vector<t_parametros_pedido>& config_pedidos_internet);
     ~FileManager(){};
 };
 

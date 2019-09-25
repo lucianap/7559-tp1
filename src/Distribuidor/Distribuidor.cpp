@@ -268,8 +268,8 @@ void Distribuidor::enviarCajon( Pipe *distribuidor_destino) {
     std::string cajon_a_enviar = header.str() + c.serializar();
 
     std::stringstream ss2;
-    ss2 << "Contenido del cajón: " << cajon_a_enviar.c_str() << endl;
-    logger.log(ss.str());
+    ss2 << "largo del cajón: " << cajon_a_enviar.length() << endl;
+    logger.log(ss2.str());
 
     distribuidor_destino->escribir(cajon_a_enviar.c_str(), cajon_a_enviar.length());
     stockRosas.clear();

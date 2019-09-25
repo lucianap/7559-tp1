@@ -166,7 +166,7 @@ void Productor::agregarDistribuidor(Pipe* distribuidor) {
 
 Ramo Productor::producirRamo() {
     //Solo para simular la producción del ramo.
-    sleep(1);
+    usleep(300000);
     int rnd = std::rand() % 2;
     TipoFlor t = rnd == 1? TipoFlor::Rosa : TipoFlor::Tulipan;
     Ramo unRamo(this->id, t);

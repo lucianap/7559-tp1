@@ -2,6 +2,8 @@
 // Created by root on 22/9/19.
 //
 #include <Guardador/Guardador.h>
+
+#include <utility>
 #include "ProcesoClientes.h"
 
 
@@ -9,7 +11,7 @@ ProcesoClientes::ProcesoClientes(Logger &logger, int idCliente, Pipe *pipePtoVen
         ProcesoHijo(logger),
         idCliente(idCliente),
         pipePtoVenta(pipePtoVenta),
-        paramPedidosInternet(paramPedidosInternet){}
+        paramPedidosInternet(std::move(paramPedidosInternet)){}
 
 ProcesoClientes::ProcesoClientes(Logger &logger, std::string puntoVentaSerializado) : ProcesoHijo(logger) {
     int tamanioTipoProcesoBytes = 5;
@@ -28,6 +30,7 @@ ProcesoClientes::ProcesoClientes(Logger &logger, std::string puntoVentaSerializa
         post_ini += tamanioIdBytes;
         pedido.origen = (TipoPedido)std::stoi(puntoVentaSerializado.substr(post_ini, tamanioIdBytes));
         post_ini += tamanioIdBytes;
+        this->paramPedidosInternet.push_back(pedido);
     }
 }
 
@@ -58,10 +61,11 @@ void ProcesoClientes::iniciarAtencion() {
     auto pedidos_internet_iterator = this->paramPedidosInternet.begin();
     t_parametros_pedido pedido_actual = *pedidos_internet_iterator;
 
+    sleep(15);
+
     std::stringstream ss;
     ss << "Soy el proceso de clientes de id: "<< this->idCliente << endl;
-    //Distribuye uniformemente entre los distribuidores asignados a este productor
-    sleep(5);
+
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
         std::stringstream ss;
         llegaCliente = std::rand() % 2;
@@ -73,8 +77,8 @@ void ProcesoClientes::iniciarAtencion() {
             pedido.cantRosas = pideRosa == 1? 0 : 1;
             pedido.origen = LOCAL;
             this->enviar_pedido(pedido);
-            sleep(1);
         }
+        //todo fix arreglar round robin
         if(pedidos_internet_iterator == this->paramPedidosInternet.end()) {
             pedidos_internet_iterator = this->paramPedidosInternet.begin();
             pedido_actual = *pedidos_internet_iterator;
@@ -83,7 +87,7 @@ void ProcesoClientes::iniciarAtencion() {
         this->enviar_pedido(pedido_actual);
         ++pedidos_internet_iterator;
         logger.log(ss.str());
-        sleep(2);
+        sleep(5);
     }
     if(sigusr1_handler.getSaveAndQuit() != 0) {
         logger.log( "Clientes: "+ to_string(this->idCliente) +" sale.");
@@ -119,7 +123,9 @@ void ProcesoClientes::enviar_pedido(t_parametros_pedido param_pedido) {
     std::string pedido_serializado = pedido.serializar();
     ss << std::setw(Pedido::TAM_TOTAL)<< pedido_serializado;
     std::string data_envio = ss.str();
-
+    stringstream log;
+    log <<data_envio.length()<<endl;
+    logger.log(log.str());
     pipePtoVenta->escribir(data_envio.c_str(), data_envio.length());
 
 };

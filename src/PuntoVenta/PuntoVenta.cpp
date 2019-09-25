@@ -5,6 +5,7 @@
 #include <Status/SolicitudStatus.h>
 #include "PuntoVenta.h"
 #include "../Signal/SignalHandler.h"
+#include "Remito/Remito.h"
 
 PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe* pipeEntrada)  :
         ProcesoHijo(logger),
@@ -85,25 +86,17 @@ void PuntoVenta::iniciarAtencion() {
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0 && eofRecibidos!=2) {
         try {
 
-            std::stringstream ss;
-            ss << "Soy el punto de venta y voy a intentar recibir el header del mensaje" << endl;
             proceso_header = recibirHeader(buffer_header);
-
             if(proceso_header == CLIENTE_T){
                 t_parametros_pedido pedido_actual;
                 pedido_actual = recibirPedido(buffer_pedido);
                 this->manejarPedido(pedido_actual);
             }else if(proceso_header == DISTRIBUIDOR_T){
                 paqueteCajon = recibirCajon(buffer_cajon);
-
-                ss << "Pto Vta Nro " << this->idPuntoVenta << " recibe un cajón con el contenido:" << endl;
                 this->clasificar(paqueteCajon);
-
-                logger.log(ss.str());
-            }else{
+            }else if(proceso_header==NO_PROCESS_T){
                 ++eofRecibidos;
             }
-
         } catch (std::string &error) {
             logger.log("Error atendiendo personas: " + error);
             break;
@@ -132,7 +125,9 @@ void PuntoVenta::cerrarPipe() {
 }
 
 void PuntoVenta::clasificar(Cajon paqueteCajon){
-
+    stringstream ss;
+    ss << "Pto Vta Nro " << this->idPuntoVenta << " recibe un cajón con el contenido:" << endl;
+    this->logger.log(ss.str());
     vector<Ramo> rosas = paqueteCajon.filtrar(TipoFlor::Rosa);
     this->stockRosas.insert(this->stockRosas.end(), rosas.begin(), rosas.end());
 
@@ -143,32 +138,40 @@ void PuntoVenta::clasificar(Cajon paqueteCajon){
 
 void PuntoVenta::manejarPedido(t_parametros_pedido pedido) {
     std::stringstream ss;
-    ss << "Tipo Pedido: " << ((pedido.origen == 0)?"Internet":"Local")<< endl;
+    int cantidadTulipanesEnviados;
+    int cantidadRosasEnviadas;
     int i;
+    ss << "Tipo Pedido: " << ((pedido.origen == 0)?"Internet":"Local")<< endl;
+    Remito remito(idPuntoVenta);
     for(i = 0; i < pedido.cantTulipanes;i++){
         if(this->stockTulipanes.size()>0){
             Ramo ramo = stockTulipanes.back();
             stockTulipanes.pop_back();
             // Envio de flar para el calculo de estadisticas
             this->enviarStatus(ramo);
+            remito.agregarRamo(ramo);
         }else{
             break;
         }
     }
-    ss << "Cantidad Tulipanes enviados" << i<< endl;
+    cantidadTulipanesEnviados = i;
+    ss << "Cantidad Tulipanes enviados" << cantidadTulipanesEnviados<< endl;
     for(i = 0; i < pedido.cantRosas;i++){
         if(this->stockRosas.size()>0){
             Ramo ramo = stockRosas.back();
             stockRosas.pop_back();
             // Envio de flar para el calculo de estadisticas
             this->enviarStatus(ramo);
+            remito.agregarRamo(ramo);
         }else{
             break;
         }
     }
-    ss << "Cantidad Rosas enviados" << i << endl;
+    if(pedido.origen == 0 && cantidadTulipanesEnviados+cantidadRosasEnviadas!=0)remito.guardar();
+    cantidadRosasEnviadas = i;
+    ss << "Cantidad Rosas enviados" << cantidadRosasEnviadas << endl;
     logger.log(ss.str());
-    this->printStock();
+    //this->printStock();
 }
 
 void PuntoVenta::printStock(){
@@ -182,7 +185,7 @@ void PuntoVenta::printStock(){
 void PuntoVenta::enviarStatus(Ramo ramo){
     SolicitudStatus solicitud(VENDEDOR_T,ramo);
     string solicitud_serializada = solicitud.serializar();
-    this->pipeStatus.escribir(solicitud_serializada.c_str(),solicitud_serializada.length());
+    //this->pipeStatus.escribir(solicitud_serializada.c_str(),solicitud_serializada.length());
 }
 
 TipoProceso PuntoVenta::recibirHeader(char *buffer) {
@@ -204,7 +207,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
     logger.log(ss.str());
     if(stoi(string(buffer)) == EOF) {
         stringstream ss;
-        ss << "EOF RECIBIDO. Distribuidor " << idPuntoVenta;
+        ss << "EOF RECIBIDO. PUNTO DE VENTA " << idPuntoVenta;
         logger.log(ss.str());
 
         //fin del pipe, significa que se está apagando tode.

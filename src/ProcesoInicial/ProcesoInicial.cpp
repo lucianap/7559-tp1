@@ -3,6 +3,7 @@
 #include <Restaurador/Restaurador.h>
 #include <FileManager/FileManager.h>
 #include "ProcesoInicial.h"
+#include <Remito/Remito.h>
 
 
 using std::vector;
@@ -46,7 +47,8 @@ void ProcesoInicial::iniciarEjecucion() {
 
     Guardador::cleanUp();
     Guardador::inicializar();
-
+    Remito::cleanUp();
+    Remito::inicializar();
     int ramos_por_cajon = 10;
 
     /***** inicializamos los pipes para todo el sistema *****/
@@ -97,7 +99,8 @@ void ProcesoInicial::iniciarEjecucion() {
     }
 
     FileManager file_manager(RUTA_ARCHIVO_PEDIDOS,logger);
-    vector<t_parametros_pedido>config_pedidos_internet = file_manager.ReadFile();
+    vector<t_parametros_pedido>config_pedidos_internet ;
+    file_manager.ReadFile(config_pedidos_internet);
 
     for (int j = 0; j < puntos_de_venta; ++j) {
         ProcesoClientes* procesoClientes = new ProcesoClientes(logger,j, this->pVentasEntrada.at(j),config_pedidos_internet);
