@@ -94,7 +94,7 @@ SolicitudStatus Status::recibirSolicitud() {
 }
 
 void Status::enviarInforme() {
-    Informe informe = this->registroVenta.generarInforme();
+    Informe informe = this->registroVenta.generarInformes();
     string mensajeError;
     ssize_t bytesleidos = pipeSalida.escribir(informe.serializar().c_str(),
             Informe::TAM_TOTAL_BYTES);
