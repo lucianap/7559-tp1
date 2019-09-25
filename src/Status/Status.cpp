@@ -13,6 +13,14 @@ Status::~Status() {
 
 }
 
+void Status::cargar(std::string statusSerializado) {
+
+    //TODO
+    //implementar leer el proceso del status serializado.
+
+}
+
+
 pid_t Status::ejecutar() {
 
     logger.log("Ejecutamos un Proceso Status");
@@ -108,3 +116,9 @@ void Status::enviarInforme() {
     }
 
 }
+
+std::string Status::serializar() {
+    return "NOT IMPLEMENTED YET\n";
+}
+
+

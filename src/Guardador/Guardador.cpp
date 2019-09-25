@@ -11,6 +11,7 @@ const std::string Guardador::prefijoProductores = "productor_pid_";
 const std::string Guardador::prefijoDistribuidores = "distribuidor_pid_";
 const std::string Guardador::prefijoVendedores = "vendedor_pid_";
 const std::string Guardador::archivoAsignaciones = "asignaciones";
+const std::string Guardador::archivoStatus = "status_";
 
 const std::string Guardador::separadorAsignaciones = "|";
 const std::string Guardador::simboloAsignadoA = ">";
@@ -37,6 +38,11 @@ void Guardador::guardar(ProcesoHijo *proceso, std::string prefijo) {
     out.close();
 }
 
+void Guardador::guardar(Status *status) {
+    std::stringstream ss;
+    ss << Guardador::carpeta << "/" << Guardador::archivoStatus << getpid();
+    guardar(status, ss.str());
+}
 
 void Guardador::guardar(Productor *proceso) {
     std::stringstream ss;

@@ -28,6 +28,7 @@ ProcesoClientes::ProcesoClientes(Logger &logger, std::string puntoVentaSerializa
         post_ini += tamanioIdBytes;
         pedido.origen = (TipoPedido)std::stoi(puntoVentaSerializado.substr(post_ini, tamanioIdBytes));
         post_ini += tamanioIdBytes;
+        this->paramPedidosInternet.push_back(pedido);
     }
 }
 

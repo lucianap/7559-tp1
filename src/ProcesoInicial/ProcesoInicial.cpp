@@ -13,8 +13,6 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros):
 }
 
 void ProcesoInicial::reanudarEjecucion() {
-
-
     Restaurador r;
     this->productores = r.restaurarProductores(logger);
     this->distribuidores = r.restaurarDistribuidores(logger);
@@ -27,7 +25,7 @@ void ProcesoInicial::reanudarEjecucion() {
     loggerProcess.ejecutar();
     logger.log("-----------Restaurando sistema-------------");
 
-    //TODO restaurar STATS.
+    status.cargar(r.getStatusSerializado());
 
     //TODO descomentar para la entrega!!!!!!!
     //Guardador::truncar();
@@ -126,7 +124,7 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
 
-    status.ejecutar();
+
     this->iniciarMenu();
 }
 
@@ -180,7 +178,7 @@ void ProcesoInicial::guardar() {
 
     Guardador g;
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);
-
+    g.guardar(&status);
     this->terminarProcesos();
 
 }
@@ -236,6 +234,7 @@ void ProcesoInicial::limpiarMemoria() {
 }
 
 void ProcesoInicial::iniciarMenu() {
+    status.ejecutar();
     Menu menu(status, logger);
     int status = menu.iniciar();
     if (status == 1) {
