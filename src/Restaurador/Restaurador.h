@@ -8,6 +8,8 @@
 
 #include <Productor/Productor.h>
 #include <Distribuidor/Distribuidor.h>
+#include <Guardador/Guardador.h>
+
 
 class Restaurador {
 private:
@@ -23,6 +25,7 @@ private:
 
 public:
 
+    std::string getStatusSerializado();
     std::vector<Productor*> restaurarProductores(Logger& logger);
     std::vector<Distribuidor*> restaurarDistribuidores(Logger& logger);
     std::vector<PuntoVenta*> restaurarPuntosDeVenta(Logger &logger);
@@ -34,6 +37,7 @@ public:
                        std::vector<ProcesoClientes*> clientes);
 
 };
+
 
 
 #endif //INC_7559_TP1_RESTAURADOR_H

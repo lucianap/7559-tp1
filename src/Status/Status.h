@@ -21,6 +21,8 @@ class Status : public ProcesoHijo {
 public:
     Status(Logger &logger);
 
+    void cargar(std::string statusSerializado);
+
     virtual ~Status();
 
     Pipe getPipeEntrada();
@@ -28,6 +30,8 @@ public:
     Pipe getPipeSalida();
 
     pid_t ejecutar() override;
+
+    std::string serializar() override;
 
 private:
 

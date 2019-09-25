@@ -4,8 +4,13 @@
 
 #include <Guardador/Guardador.h>
 #include <FileManager/FileManager.h>
-#include <ProcesoInicial/ProcesoInicial.h>
 #include "Restaurador.h"
+
+std::string Restaurador::getStatusSerializado() {
+    vector<string> v = leerProcesoSerializado(Guardador::archivoStatus);
+    return v.at(0);
+}
+
 
 std::vector<Productor *> Restaurador::restaurarProductores(Logger& logger) {
     vector<Productor*> procesosRestaurados;
@@ -172,4 +177,5 @@ std::vector<ProcesoClientes *> Restaurador::restaurarProcesosClientes(Logger &lo
     }
     return pcs;
 }
+
 

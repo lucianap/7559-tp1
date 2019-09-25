@@ -13,6 +13,7 @@
 #include <map>
 #include <PuntoVenta/PuntoVenta.h>
 #include <ProcesoClientes/ProcesoClientes.h>
+#include <Status/Status.h>
 
 //TODO ver cómo arreglarla para poder hacer que sus métodos sean estáticos
 class Guardador {
@@ -23,6 +24,7 @@ class Guardador {
     static const std::string prefijoVendedores;
     static const std::string prefijoClientes;
     static const std::string archivoAsignaciones;
+    static const std::string archivoStatus;
 
     static const std::string separadorAsignaciones;
     static const std::string simboloAsignadoA;
@@ -39,6 +41,7 @@ class Guardador {
         static void inicializar();
         static void truncar();
 
+        void guardar(Status* status);
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);
         void guardar_ptoVenta(PuntoVenta *proceso);
