@@ -28,6 +28,9 @@ public:
 
     RegistroVenta();
 
+    void deserializar(string serializado);
+
+
 };
 
 

@@ -43,11 +43,7 @@ Informe RegistroVenta::generarInformes() {
 
     return Informe(productorQueMasVendio, florMasComprada);
 }
-/**
- * CANT_FLORES | TAM_
- *
- *
- */
+
 string RegistroVenta::serializar() {
 
     stringstream ss;
@@ -68,6 +64,12 @@ string RegistroVenta::serializar() {
 }
 
 RegistroVenta::RegistroVenta(string serializado) {
+    this->deserializar(serializado);
+}
+
+RegistroVenta::RegistroVenta() {}
+
+void RegistroVenta::deserializar(string serializado) {
     int TAM_CANT_FLORES = 2;
     int TAM_TIPO_FLOR = 2;
     int TAM_CANT_ACUMULADO = 10;
@@ -94,5 +96,3 @@ RegistroVenta::RegistroVenta(string serializado) {
     }
 
 }
-
-RegistroVenta::RegistroVenta() {}
