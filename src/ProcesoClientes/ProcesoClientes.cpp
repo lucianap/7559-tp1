@@ -59,7 +59,7 @@ void ProcesoClientes::iniciarAtencion() {
     int llegaCliente;
     int pideRosa;
     auto pedidos_internet_iterator = this->paramPedidosInternet.begin();
-    t_parametros_pedido pedido_actual = *pedidos_internet_iterator;
+    t_parametros_pedido pedido_actual;
 
     sleep(15);
 
@@ -78,11 +78,11 @@ void ProcesoClientes::iniciarAtencion() {
             pedido.origen = LOCAL;
             this->enviar_pedido(pedido);
         }
-        //todo fix arreglar round robin
+
         if(pedidos_internet_iterator == this->paramPedidosInternet.end()) {
             pedidos_internet_iterator = this->paramPedidosInternet.begin();
-            pedido_actual = *pedidos_internet_iterator;
         }
+        pedido_actual = *pedidos_internet_iterator;
         ss << "Se genera un pedido online: "<< this->idCliente << endl;
         this->enviar_pedido(pedido_actual);
         ++pedidos_internet_iterator;
