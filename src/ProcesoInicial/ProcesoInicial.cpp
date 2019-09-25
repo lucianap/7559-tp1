@@ -126,6 +126,7 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
 
+    status.ejecutar();
     this->iniciarMenu();
 }
 
@@ -207,6 +208,9 @@ void ProcesoInicial::terminarProcesos() {
         ProcesoHijo* proceso = this->puntosVenta.at(i);
         proceso->terminar();
     }
+    this->status.terminar();
+    this->status.getPipeSalida().cerrar();
+    this->status.getPipeEntrada().cerrar();
     this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }
@@ -228,8 +232,6 @@ void ProcesoInicial::limpiarMemoria() {
     for (int j = 0; j < procesosClientes.size(); ++j) {
         delete(procesosClientes.at(j));
     }
-
-    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }
 

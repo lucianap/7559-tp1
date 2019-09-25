@@ -141,7 +141,7 @@ Cajon Distribuidor::recibirCajon(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer un cajon en el distribuidor";
         throw(std::string(mensajeError));
     }
 

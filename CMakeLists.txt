@@ -7,7 +7,7 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h src/Restaurador/Restaurador.cpp src/Restaurador/Restaurador.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/Restaurador/Restaurador.cpp src/Restaurador/Restaurador.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
@@ -28,10 +28,11 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/ProcesoClientes")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Guardador")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Status")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Informe")
+add_subdirectory("${PROJECT_SOURCE_DIR}/src/RegistroVenta")
 
 add_executable(7559_tp1 ${SOURCE} ${HEADERS})
 
-target_link_libraries(7559_tp1 Ramo_lib Cajon_lib Utils_lib Pedido_lib)
+target_link_libraries(7559_tp1 Ramo_lib Cajon_lib Utils_lib Pedido_lib Informe_lib RegistroVenta_lib)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/tests")

@@ -9,6 +9,8 @@
 #include <Ramo/Ramo.h>
 #include "ProcesoHijo/ProcesoHijo.h"
 #include "Pipes/Pipe.h"
+#include "SolicitudStatus.h"
+#include "RegistroVenta/RegistroVenta.h"
 
 /**
  * Implementa el proceso que atiende consultas del menu
@@ -25,19 +27,23 @@ public:
 
     Pipe getPipeSalida();
 
+    pid_t ejecutar() override;
+
 private:
+
     Pipe pipeEntrada;
 
     Pipe pipeSalida;
 
-    pid_t ejecutar() override;
+    RegistroVenta registroVenta;
 
-    /**
-     * Almacena los ramos vendidos
-     */
-    vector<Ramo> ramosVendidos;
+    void iniciarAtencion();
 
+    SolicitudStatus recibirSolicitud();
 
+    void despacharSolicitud(SolicitudStatus status);
+
+    void enviarInforme();
 };
 
 

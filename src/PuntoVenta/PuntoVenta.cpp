@@ -198,7 +198,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
 
@@ -230,7 +230,7 @@ t_parametros_pedido PuntoVenta::recibirPedido(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
     logger.log(ss.str());
@@ -262,7 +262,7 @@ Cajon PuntoVenta::recibirCajon(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
     logger.log(ss.str());
