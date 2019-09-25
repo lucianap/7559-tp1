@@ -67,6 +67,9 @@ public:
     void setStockTulipanes(const vector<Ramo> &stockTulipanes);
 
     void logearStatus();
+
+    void agregarPuntoVenta(Pipe* puntoVenta);
+
 };
 
 

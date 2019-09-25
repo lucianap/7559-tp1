@@ -26,7 +26,7 @@ void Guardador::inicializar(){
     //TODO manejar errores.
 }
 
-void Guardador::cleanUp() {
+void Guardador::truncar() {
     int status = Utils::remove_directory(Guardador::carpeta.c_str());
     //TODO manejar errores.8
 }

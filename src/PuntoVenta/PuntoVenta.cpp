@@ -11,7 +11,8 @@ PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe*
         idPuntoVenta(idPuntoVenta),
         pipeEntrada(*pipeEntrada){};
 
-PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado) : ProcesoHijo(logger) {
+PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado, Pipe* entrada) :
+    ProcesoHijo(logger), pipeEntrada(*entrada) {
 
     int tamanioTipoProcesoBytes = 5;
     int tamanioIdBytes = 5;
@@ -296,4 +297,8 @@ std::string PuntoVenta::serializar() {
 
     return ss.str();
 
+}
+
+int PuntoVenta::getId() {
+    return idPuntoVenta;
 }

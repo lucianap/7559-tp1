@@ -27,6 +27,18 @@ std::vector<Distribuidor *> Restaurador::restaurarDistribuidores(Logger &logger)
     return procesosRestaurados;
 }
 
+std::vector<PuntoVenta *> Restaurador::restaurarPuntosDeVenta(Logger &logger) {
+    vector<PuntoVenta*> procesosRestaurados;
+    vector<string> procesos = this->leerProcesoSerializado(Guardador::prefijoVendedores);
+    for(auto it = procesos.begin(); it != procesos.end(); it++) {
+        Pipe* entrada = new Pipe();
+        auto* restaurado = new PuntoVenta(logger, (*it), entrada);
+        puntosDeVentaEntradaByPuntoVentaId.insert(std::pair<int, Pipe*>(restaurado->getId(), entrada));
+        procesosRestaurados.push_back(restaurado);
+    }
+    return procesosRestaurados;
+}
+
 void Restaurador::conectarPipes(std::vector<Productor *> productores,
         std::vector<Distribuidor *> distribuidores) {
     //Recupero todas las asignaciones Productor>Distribuidor.
@@ -44,10 +56,36 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
             }
         }
     }
+
+    multimap<int,int> asignacionesDistribuidorPvta =
+            this->restaurarAsignaciones(leerAsignacionesDistribuidorPuntoVenta());
+
+    for(auto it = asignacionesDistribuidorPvta.begin(); it != asignacionesDistribuidorPvta.end(); it++) {
+        int idDistribuidor = it->first;
+        int idPtoVenta = it->second;
+        for(auto itD = distribuidores.begin(); itD != distribuidores.end(); itD++) {
+            Distribuidor *d = *itD;
+            if(d->getId() == idDistribuidor) {
+                d->agregarPuntoVenta(pVtaEntradaByPVtaId
+                                               .find(idDistribuidor)->second);
+            }
+        }
+    }
 }
 
+std::string Restaurador::leerAsignacionesDistribuidorPuntoVenta() {
+    return this->leerAsignaciones(Guardador::prefijoAsignacionesDistribuidorPuntoDeVenta);
+}
+
+
 std::string Restaurador::leerAsignacionesProductorDistribuidor() {
+    return this->leerAsignaciones(Guardador::prefijoAsignacionesProductorDistribuidor);
+}
+
+//TODO usar RAAI
+std::string Restaurador::leerAsignaciones(std::string prefijo) {
     ifstream inFile;
+    std::string retorno;
     inFile.open(Guardador::carpeta + "/" + Guardador::archivoAsignaciones);
 
     if (!inFile) {
@@ -56,13 +94,18 @@ std::string Restaurador::leerAsignacionesProductorDistribuidor() {
     }
     std::string line;
     while (std::getline(inFile, line)) {
-        if(Utils::startsWith(Guardador::prefijoAsignacionesProductorDistribuidor.c_str(),
-                line.c_str())){
+        if(Utils::startsWith(prefijo.c_str(),
+                             line.c_str())){
             //le saco el prefijo
-            return line.substr(Guardador::prefijoAsignacionesProductorDistribuidor.size(), line.size());
+            retorno = line.substr(prefijo.size(), line.size());
         }
     }
+
+    inFile.close();
+    return retorno;
 }
+
+
 
 std::multimap<int, int> Restaurador::restaurarAsignaciones(std::string asignaciones) {
     std::multimap<int, int> m;

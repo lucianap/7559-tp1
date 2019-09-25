@@ -279,3 +279,7 @@ void Distribuidor::enviarCajon( Pipe *distribuidor_destino) {
 int Distribuidor::getId() {
     return idDistribuidor;
 }
+
+void Distribuidor::agregarPuntoVenta(Pipe *puntoVenta) {
+    this->ptos_de_venta.push_back(puntoVenta);
+}

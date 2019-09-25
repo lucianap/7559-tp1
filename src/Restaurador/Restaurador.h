@@ -14,13 +14,17 @@ private:
     std::vector<string> leerProcesoSerializado(std::string prefijo);
     std::multimap<int, int> restaurarAsignaciones(std::string asignaciones);
     std::string leerAsignacionesProductorDistribuidor();
+    std::string leerAsignacionesDistribuidorPuntoVenta();
+    std::string leerAsignaciones(std::string prefijo);
 
     map<int, Pipe*> distribuidoresEntradaByDistId;
+    map<int, Pipe*> puntosDeVentaEntradaByPuntoVentaId;
 
 public:
 
     std::vector<Productor*> restaurarProductores(Logger& logger);
     std::vector<Distribuidor*> restaurarDistribuidores(Logger& logger);
+    std::vector<PuntoVenta*> restaurarPuntosDeVenta(Logger &logger);
 
     void conectarPipes(std::vector<Productor*> productores,
                        std::vector<Distribuidor*> distribuidores);

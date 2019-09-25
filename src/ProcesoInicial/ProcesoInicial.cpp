@@ -44,7 +44,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     //todo leer archivo de pedidos y cargarlo a partir del mismo
 
-    Guardador::cleanUp();
+    Guardador::truncar();
     Guardador::inicializar();
 
     int ramos_por_cajon = 10;
