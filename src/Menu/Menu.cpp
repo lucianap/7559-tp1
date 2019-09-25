@@ -43,11 +43,11 @@ void Menu::mostrarInfome() {
     try {
         Informe informe = this->realizarConsulta();
         string productorQueMasVendioText = "Ninguno";
-        if (informe.getProductorMejorVenta()) {
+        if (informe.getProductorMejorVenta() != 99) {
             productorQueMasVendioText = std::to_string(informe.getProductorMejorVenta());
         }
         cout << "******************************************" << endl;
-        cout << "Id del productor que mas vendio : "<< informe.getProductorMejorVenta()<< endl;
+        cout << "Id del productor que mas vendio : "<< productorQueMasVendioText << endl;
         cout << "Tipo de flor mas comprada       : "<< Utils::getTextTipoFlor(informe.getFlorMasComprada())<< endl;
         cout << "******************************************" << endl;
     } catch (std::string &error) {
