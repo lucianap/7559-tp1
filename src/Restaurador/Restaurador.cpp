@@ -92,7 +92,7 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
             //si tienen el mismo id los conecto.
             //TODO mejorar criterio.. tal vez
             if((*itVenta)->getId() == (*itClientes)->getId()) {
-                (*itClientes)->asignarPtoVenta(pipeVentaClientesByIdPVenta.find((*itVenta)->getId())->second);
+                (*itClientes)->asignarPtoVenta(puntosDeVentaEntradaByPuntoVentaId.find((*itVenta)->getId())->second);
             }
         }
     }
