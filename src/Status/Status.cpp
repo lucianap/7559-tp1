@@ -22,6 +22,9 @@ void Status::cargar(std::string statusSerializado) {
     //this->registroVenta =
 }
 
+void Status::setCantPipes(int cant){
+    this->cantPipes = cant;
+}
 
 pid_t Status::ejecutar() {
 
@@ -53,12 +56,16 @@ Pipe Status::getPipeSalida() {
 }
 
 void Status::iniciarAtencion() {
-
-    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
+    int cantEofs = 0;
+    while (sigint_handler.getGracefulQuit() == 0) {
         try {
-
+            if(cantEofs>=2 && sigusr1_handler.getSaveAndQuit() != 0)break;
             SolicitudStatus unaSolicitud = recibirSolicitud();
-            despacharSolicitud(unaSolicitud);
+            if(unaSolicitud.getTipoSolicitud() != SolicitudStatus::TIPO_SOLICITUD_EOF){
+                despacharSolicitud(unaSolicitud);
+            }else{
+                cantEofs++;
+            }
 
         } catch (std::string &error) {
             logger.log("Error atendiendo solicitudes en el status: " + error);

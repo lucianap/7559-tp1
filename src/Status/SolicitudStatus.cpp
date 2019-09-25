@@ -22,11 +22,16 @@ SolicitudStatus::SolicitudStatus(int tipoSolicitud) : tipoSolicitud(tipoSolicitu
 SolicitudStatus::SolicitudStatus(int tipoSolicitud, const Ramo &ramo) : tipoSolicitud(tipoSolicitud), ramo(ramo) {}
 
 SolicitudStatus::SolicitudStatus(string solicitudSerializada): ramo(0, Ninguno) {
-    this->tipoSolicitud = atoi(solicitudSerializada.substr(0, 1).c_str());
-    if (this->tipoSolicitud == TIPO_SOLICITUD_ALTA_VENTA) {
-        Ramo unRamo(solicitudSerializada.substr(1, Ramo::TAM_TOTAL));
-        this->ramo = unRamo;
-    }
+    if(stoi(solicitudSerializada) == EOF){
+        this->tipoSolicitud = TIPO_SOLICITUD_EOF;
+    }else{
+        this->tipoSolicitud = atoi(solicitudSerializada.substr(0, 1).c_str());
+        if (this->tipoSolicitud == TIPO_SOLICITUD_ALTA_VENTA) {
+            Ramo unRamo(solicitudSerializada.substr(1, Ramo::TAM_TOTAL));
+            this->ramo = unRamo;
+        }
+    };
+
 }
 
 int SolicitudStatus::getTipoSolicitud() const {

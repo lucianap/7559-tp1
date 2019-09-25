@@ -85,16 +85,14 @@ void PuntoVenta::iniciarAtencion() {
     Cajon paqueteCajon;
     TipoProceso proceso_header;
     int eofRecibidos = 0;
-    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
+    while (sigint_handler.getGracefulQuit() == 0 ) {
 
         //ya no tengo nada que hacer si el conteo de eof llegó a dos, pero no puedo
         //continuar hasta que alguna signal se prenda
+        if(eofRecibidos >= 2 && sigusr1_handler.getSaveAndQuit() != 0) break;
         if(eofRecibidos >= 2) continue;
 
         try {
-
-
-
 
             proceso_header = recibirHeader(buffer_header);
             if(proceso_header == CLIENTE_T){
@@ -130,7 +128,7 @@ void PuntoVenta::cerrarPipe() {
     logger.log("Mando EOF a mis pipes. Pto_Venta "+to_string(this->idPuntoVenta));
     stringstream ss;
     ss << setw(Ramo::TAM_TOTAL) << EOF;
-    //pipeStats->escribir(ss.str().c_str(), Utils::TAM_HEADER);
+    pipeStatus.escribir(ss.str().c_str(), Utils::TAM_HEADER);
 }
 
 void PuntoVenta::clasificar(Cajon paqueteCajon){

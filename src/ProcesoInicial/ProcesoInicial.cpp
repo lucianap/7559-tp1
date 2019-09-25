@@ -64,7 +64,7 @@ void ProcesoInicial::iniciarEjecucion() {
     int productores = parametros.cantProductores;
     int distribuidores = parametros.cantDistribuidores;
     int puntos_de_venta = parametros.cantPuntosVenta;
-
+    this->status.setCantPipes(puntos_de_venta);
     //todo leer archivo de pedidos y cargarlo a partir del mismo
 
     Guardador::truncar();
