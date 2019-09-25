@@ -21,6 +21,16 @@ public:
     void contabilizarRamoVendido(Ramo &ramo);
 
     Informe generarInformes();
+
+    string serializar();
+
+    RegistroVenta(string serializado);
+
+    RegistroVenta();
+
+    void deserializar(string serializado);
+
+
 };
 
 
