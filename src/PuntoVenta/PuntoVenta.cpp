@@ -212,7 +212,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
         logger.log(ss.str());
 
         //fin del pipe, significa que se está apagando tode.
-        //Devuelvo un cajón vacío para indicar que se tiene que ir guardando.
+        //Devuelvo un no process, necesito dos para finalizar el proceso
         return NO_PROCESS_T;
     };
     std::string strTipoProceso = ((string)buffer).substr(0, 5);

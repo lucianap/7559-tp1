@@ -129,6 +129,16 @@ void Distribuidor::iniciarAtencion() {
     entradaFlores.cerrar();
 }
 
+void Distribuidor::cerrarPipes() {
+    for(auto itPipes = this->ptos_de_venta.begin(); itPipes != this->ptos_de_venta.end(); itPipes++){
+        //EOF A TODES
+        logger.log("Mando EOF a mis pipes. Distribuidor "+to_string(this->idDistribuidor));
+        stringstream ss;
+        ss << setw( Utils::TAM_HEADER) << EOF;
+        (*itPipes)->escribir(ss.str().c_str(), Utils::TAM_HEADER);
+    }
+}
+
 Cajon Distribuidor::recibirCajon(char *buffer) {
     string mensajeError;
 

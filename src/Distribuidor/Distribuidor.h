@@ -70,6 +70,7 @@ public:
 
     void agregarPuntoVenta(Pipe* puntoVenta);
 
+    void cerrarPipes();
 };
 
 
