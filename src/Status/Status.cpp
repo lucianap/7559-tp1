@@ -18,6 +18,8 @@ void Status::cargar(std::string statusSerializado) {
     //TODO
     //implementar leer el proceso del status serializado.
 
+    // implementar constructor copia
+    //this->registroVenta =
 }
 
 
@@ -118,7 +120,7 @@ void Status::enviarInforme() {
 }
 
 std::string Status::serializar() {
-    return "NOT IMPLEMENTED YET\n";
+    return this->registroVenta.serializar();
 }
 
 
