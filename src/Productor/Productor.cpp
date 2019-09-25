@@ -24,8 +24,6 @@ Productor::Productor(int id, int ramos_por_cajon, Logger &logger):
 
 Productor::Productor(Logger &logger, std::string productorSerializado) : ProcesoHijo(logger) {
 
-
-
     int inicio = tamanioTipoDeProceso;
     int fin = tamanioTipoDeProceso+tamanioSizeEnBytes;
 
@@ -48,9 +46,8 @@ Productor::Productor(Logger &logger, std::string productorSerializado) : Proceso
     inicio = fin;
     fin = inicio + 5;
     int siguienteDistribuidorLeido = std::stoi(productorSerializado.substr(inicio, fin));
-    for(int i = 0; i < siguienteDistribuidorLeido; i++) {
-        distribuidoresIterator++;
-    }
+    this->siguienteDistribuidor = siguienteDistribuidorLeido;
+
 
     inicio = fin;
     fin = inicio+Productor::tamanioIdProductor;
@@ -89,11 +86,18 @@ std::string Productor::serializar() {
 
 void Productor::producir() {
 
+    this->distribuidoresIterator = this->distribuidores.begin();
+    //Fast forward al siguiente distribuidor a entregar cajon.
+    for(int i = 0; i < siguienteDistribuidor; i++) {
+        distribuidoresIterator++;
+    }
+
     //Distribuye uniformemente entre los distribuidores asignados a este productor.
     while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
 
         //Voy recorriendo el array de distribuidores para ir enviando cajones equitativamente.
         Pipe* distribuidorActual = *this->distribuidoresIterator;
+
 
         if(this->distribuidoresIterator == distribuidores.end()) {
             this->distribuidoresIterator = distribuidores.begin();

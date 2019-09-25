@@ -7,7 +7,7 @@ include_directories(src)
 
 
 set(SOURCE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/ProcesoHijoFactory/ProcesoHijoFactory.h src/Restaurador/Restaurador.cpp src/Restaurador/Restaurador.h src/Remito/Remito.cpp src/Remito/Remito.h)
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp src/Signal/SIGUSR1_Handler.h src/Guardador/Guardador.cpp src/Guardador/Guardador.h src/TipoProceso/TipoProceso.h src/TipoPedido/TipoPedido.h src/Restaurador/Restaurador.cpp src/Restaurador/Restaurador.h)
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Cajon")
@@ -16,7 +16,6 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src/Pedido")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Ramo")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Remito")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Utils")
-add_subdirectory("${PROJECT_SOURCE_DIR}/src/Lock")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Logger")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/Distribuidor")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src/FileManager")

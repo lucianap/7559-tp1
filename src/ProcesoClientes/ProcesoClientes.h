@@ -40,6 +40,10 @@ public:
     pid_t ejecutar() override;
 
     void enviar_pedido(t_parametros_pedido pedido );
+
+    int getId();
+
+    void asignarPtoVenta(Pipe* pipe);
 };
 
 

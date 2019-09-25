@@ -12,7 +12,7 @@ void Informe::setProductorMejorVenta(int productorMejorVenta) {
     Informe::productorMejorVenta = productorMejorVenta;
 }
 
-TipoFlor Informe::getFlorMasCompada() const {
+TipoFlor Informe::getFlorMasComprada() const {
     return florMasComprada;
 }
 
@@ -30,6 +30,12 @@ Informe::Informe(const std::string &informe_serializado) {
     this->productorMejorVenta = atoi(informe_serializado.substr(0, TAM_CAMPO_PRODUCTOR).c_str());
     this->florMasComprada = Utils::getTipoFlor(
             atoi(informe_serializado.substr(TAM_CAMPO_PRODUCTOR, TAM_CAMPO_TIPOFLOR).c_str()));
+}
+
+std::string Informe::serializar() {
+    std::stringstream ss;
+    ss << std::setw(TAM_CAMPO_PRODUCTOR)<<this->getProductorMejorVenta()<<std::setw(TAM_CAMPO_TIPOFLOR)<< this->getFlorMasComprada();
+    return ss.str();
 }
 
 

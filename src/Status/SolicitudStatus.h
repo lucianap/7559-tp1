@@ -31,6 +31,18 @@ public:
     SolicitudStatus(int tipoSolicitud);
 
     SolicitudStatus(int tipoSolicitud, const Ramo &ramo);
+
+    SolicitudStatus(string solicitudSerializada);
+
+    int getTipoSolicitud() const;
+
+    void setTipoSolicitud(int tipoSolicitud);
+
+    Ramo &getRamo();
+
+    void setRamo(const Ramo &ramo);
+
+    std::string toString();
 };
 
 

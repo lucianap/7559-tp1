@@ -9,12 +9,12 @@
 #include <sstream>
 #include <ProcesoHijo/ProcesoHijo.h>
 #include <Productor/Productor.h>
-#include <ProcesoHijoFactory/ProcesoHijoFactory.h>
 #include <Distribuidor/Distribuidor.h>
 #include <map>
 #include <PuntoVenta/PuntoVenta.h>
 #include <ProcesoClientes/ProcesoClientes.h>
 
+//TODO ver cómo arreglarla para poder hacer que sus métodos sean estáticos
 class Guardador {
 
     static const std::string carpeta;
@@ -37,7 +37,7 @@ class Guardador {
         Guardador();
 
         static void inicializar();
-        static void cleanUp();
+        static void truncar();
 
         void guardar(Productor *proceso);
         void guardar(Distribuidor *proceso);

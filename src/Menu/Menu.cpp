@@ -41,11 +41,11 @@ int Menu::iniciar() {
 
 void Menu::mostrarInfome() {
     try {
-        //Informe informe = this->realizarConsulta();
+        Informe informe = this->realizarConsulta();
 
         cout << "******************************************" << endl;
-        cout << "Id del productor que mas vendio : ";// << informe.getProductorMejorVenta()<< endl;
-        cout << "Tipo de flor mas comprada       : ";// << Utils::getTextTipoFlor(informe.getFlorMasCompada())<< endl;
+        cout << "Id del productor que mas vendio : "<< informe.getProductorMejorVenta()<< endl;
+        cout << "Tipo de flor mas comprada       : "<< Utils::getTextTipoFlor(informe.getFlorMasComprada())<< endl;
         cout << "******************************************" << endl;
     } catch (std::string &error) {
         logger.log("Error consultando informe: " + error);
@@ -63,18 +63,18 @@ Informe Menu::realizarConsulta() {
         if (status == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al enviar una solicitud del menu al status";
         throw(std::string(mensajeError));
     }
 
     char buffer[Informe::TAM_TOTAL_BYTES];
-    status = this->status.getPipeEntrada().leer(buffer, Informe::TAM_TOTAL_BYTES);
+    status = this->status.getPipeSalida().leer(buffer, Informe::TAM_TOTAL_BYTES);
     if (status != Informe::TAM_TOTAL_BYTES) {
         string mensajeError;
         if (status == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer el informe del status";
         throw(std::string(mensajeError));
     }
 

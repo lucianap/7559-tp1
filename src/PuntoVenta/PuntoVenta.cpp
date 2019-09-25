@@ -12,7 +12,8 @@ PuntoVenta::PuntoVenta(Logger& logger, int idPuntoVenta, Pipe* pipeStatus, Pipe*
         idPuntoVenta(idPuntoVenta),
         pipeEntrada(*pipeEntrada){};
 
-PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado) : ProcesoHijo(logger) {
+PuntoVenta::PuntoVenta(Logger &logger, std::string puntoVentaSerializado, Pipe* entrada) :
+    ProcesoHijo(logger), pipeEntrada(*entrada) {
 
     int tamanioTipoProcesoBytes = 5;
     int tamanioIdBytes = 5;
@@ -200,7 +201,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
 
@@ -232,7 +233,7 @@ t_parametros_pedido PuntoVenta::recibirPedido(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
     logger.log(ss.str());
@@ -264,7 +265,7 @@ Cajon PuntoVenta::recibirCajon(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer la siguiente persona en la fifo";
+            mensajeError = "Error al leer pipe en el punto de venta";
         throw(std::string(mensajeError));
     }
     logger.log(ss.str());
@@ -299,4 +300,8 @@ std::string PuntoVenta::serializar() {
 
     return ss.str();
 
+}
+
+int PuntoVenta::getId() {
+    return idPuntoVenta;
 }

@@ -62,6 +62,9 @@ public:
 
     void reanudarEjecucion();
 
+    void iniciarMenu();
+
+    static const string RUTA_ARCHIVO_PEDIDOS;
 };
 
 

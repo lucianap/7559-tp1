@@ -7,7 +7,7 @@
 
 
 using std::vector;
-const string RUTA_ARCHIVO_PEDIDOS = "pedidos.csv";
+const string ProcesoInicial::RUTA_ARCHIVO_PEDIDOS = "pedidos.csv";
 
 ProcesoInicial::ProcesoInicial(t_parametros parametros):
         parametros(parametros), logger(true), loggerProcess("log.txt", logger), status(logger) {
@@ -15,25 +15,43 @@ ProcesoInicial::ProcesoInicial(t_parametros parametros):
 
 void ProcesoInicial::reanudarEjecucion() {
 
+
+    Restaurador r;
+    this->productores = r.restaurarProductores(logger);
+    this->distribuidores = r.restaurarDistribuidores(logger);
+    this->puntosVenta = r.restaurarPuntosDeVenta(logger);
+    this->procesosClientes = r.restaurarProcesosClientes(logger);
+
+    r.conectarPipes(this->productores, this->distribuidores,
+            this->puntosVenta, this->procesosClientes);
+
     loggerProcess.ejecutar();
     logger.log("-----------Restaurando sistema-------------");
 
-    Restaurador r;
-    auto productoresRestaurados = r.restaurarProductores(logger);
-    auto distribuidoresRestaurados = r.restaurarDistribuidores(logger);
-    r.conectarPipes(productoresRestaurados, distribuidoresRestaurados);
+    //TODO restaurar STATS.
 
-    //damos play a todos los procesos..
-    for(auto it = productoresRestaurados.begin(); it != productoresRestaurados.end(); it++) {
+    //TODO descomentar para la entrega!!!!!!!
+    //Guardador::truncar();
+    //Guardador::inicializar();
+
+    //damos play a todos los procesos.
+    for(auto it = this->productores.begin(); it != this->productores.end(); it++) {
         (*it)->ejecutar();
     }
 
-    for(auto it = distribuidoresRestaurados.begin(); it != distribuidoresRestaurados.end(); it++) {
+    for(auto it = this->distribuidores.begin(); it != this->distribuidores.end(); it++) {
         (*it)->ejecutar();
     }
 
+    for(auto it = this->puntosVenta.begin(); it != this->puntosVenta.end(); it++) {
+        (*it)->ejecutar();
+    }
 
+    for(auto it = this->procesosClientes.begin(); it != this->procesosClientes.end(); it++) {
+        (*it)->ejecutar();
+    }
 
+    this->iniciarMenu();
 
 }
 
@@ -45,7 +63,7 @@ void ProcesoInicial::iniciarEjecucion() {
 
     //todo leer archivo de pedidos y cargarlo a partir del mismo
 
-    Guardador::cleanUp();
+    Guardador::truncar();
     Guardador::inicializar();
     Remito::cleanUp();
     Remito::inicializar();
@@ -111,15 +129,11 @@ void ProcesoInicial::iniciarEjecucion() {
         pto_venta->ejecutar();
     }
 
-    Menu menu(status, logger);
-
-    int status = menu.iniciar();
-    if (status == 1) {
-        this->guardar();
-    } else if (status == 0) {
-        this->terminarProcesos();
-    }
+    status.ejecutar();
+    this->iniciarMenu();
 }
+
+
 
 ProcesoInicial::~ProcesoInicial() {
     // liberar recursos de memoria e ipc
@@ -149,22 +163,18 @@ int ProcesoInicial::asignar_pipes(const int j, Pipe* pipeIn, const int cantidad_
 void ProcesoInicial::guardar() {
 
     for(auto it = productores.begin(); it != productores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
         (*it)->guardar();
     }
 
     for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
         (*it)->guardar();
     }
 
     for(auto it = procesosClientes.begin(); it != procesosClientes.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
         (*it)->guardar();
     }
 
     for(auto it = puntosVenta.begin(); it != puntosVenta.end(); it++) {
-        //mando señales a todos para que guarden y mueran.
         (*it)->guardar();
     }
     //Controlo que todos los procesos se hayan guardado.
@@ -201,6 +211,9 @@ void ProcesoInicial::terminarProcesos() {
         ProcesoHijo* proceso = this->puntosVenta.at(i);
         proceso->terminar();
     }
+    this->status.terminar();
+    this->status.getPipeSalida().cerrar();
+    this->status.getPipeEntrada().cerrar();
     this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
 
 }
@@ -223,6 +236,14 @@ void ProcesoInicial::limpiarMemoria() {
         delete(procesosClientes.at(j));
     }
 
-    this->loggerProcess.terminar(); // tiene que ser el ultimo siempre
+}
 
+void ProcesoInicial::iniciarMenu() {
+    Menu menu(status, logger);
+    int status = menu.iniciar();
+    if (status == 1) {
+        this->guardar();
+    } else if (status == 0) {
+        this->terminarProcesos();
+    }
 }
