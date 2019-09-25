@@ -84,8 +84,16 @@ void PuntoVenta::iniciarAtencion() {
     Cajon paqueteCajon;
     TipoProceso proceso_header;
     int eofRecibidos = 0;
-    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0 && eofRecibidos!=2) {
+    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
+
+        //ya no tengo nada que hacer si el conteo de eof llegó a dos, pero no puedo
+        //continuar hasta que alguna signal se prenda
+        if(eofRecibidos >= 2) continue;
+
         try {
+
+
+
 
             proceso_header = recibirHeader(buffer_header);
             if(proceso_header == CLIENTE_T){
@@ -104,17 +112,16 @@ void PuntoVenta::iniciarAtencion() {
         }
     }
 
+    logger.log( "Count de EOF: "+ to_string(eofRecibidos));
+    logger.log( "Valor de la signal de guardado: "+ to_string(sigusr1_handler.getSaveAndQuit()));
     if(sigusr1_handler.getSaveAndQuit() != 0) {
-        logger.log( "Clientes: "+ to_string(this->idPuntoVenta) +" sale.");
+        logger.log( "Pto Venta: "+ to_string(this->idPuntoVenta) +" sale.");
         Guardador g;
         g.guardar_ptoVenta(this);
 
         //Cierro la canilla y espero a que me maten, eventualmente
         this->cerrarPipe();
     }
-
-    //Espero a que me maten.
-    while(sigint_handler.getGracefulQuit() == 0) {}
 }
 
 

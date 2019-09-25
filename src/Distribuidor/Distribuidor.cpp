@@ -126,7 +126,7 @@ void Distribuidor::iniciarAtencion() {
     }
 
 
-    entradaFlores.cerrar();
+    this->cerrarPipes();
 }
 
 void Distribuidor::cerrarPipes() {

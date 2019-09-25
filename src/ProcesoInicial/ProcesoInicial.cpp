@@ -28,9 +28,8 @@ void ProcesoInicial::reanudarEjecucion() {
 
     status.cargar(r.getStatusSerializado());
 
-    //TODO descomentar para la entrega!!!!!!!
-    //Guardador::truncar();
-    //Guardador::inicializar();
+    Guardador::truncar();
+    Guardador::inicializar();
 
     //damos play a todos los procesos.
     for(auto it = this->productores.begin(); it != this->productores.end(); it++) {
@@ -41,11 +40,11 @@ void ProcesoInicial::reanudarEjecucion() {
         (*it)->ejecutar();
     }
 
-    for(auto it = this->puntosVenta.begin(); it != this->puntosVenta.end(); it++) {
+    for(auto it = this->procesosClientes.begin(); it != this->procesosClientes.end(); it++) {
         (*it)->ejecutar();
     }
 
-    for(auto it = this->procesosClientes.begin(); it != this->procesosClientes.end(); it++) {
+    for(auto it = this->puntosVenta.begin(); it != this->puntosVenta.end(); it++) {
         (*it)->ejecutar();
     }
 
