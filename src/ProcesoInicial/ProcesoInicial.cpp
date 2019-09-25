@@ -212,7 +212,7 @@ void ProcesoInicial::terminarProcesos() {
     }
 
     for (int i = 0; i < this->procesosClientes.size(); ++i) {
-        ProcesoHijo* proceso = this->puntosVenta.at(i);
+        ProcesoHijo* proceso = this->procesosClientes.at(i);
         proceso->terminar();
     }
     this->status.terminar();
