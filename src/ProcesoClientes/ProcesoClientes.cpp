@@ -144,3 +144,11 @@ std::string ProcesoClientes::serializar() {
     return ss.str();
 
 }
+
+int ProcesoClientes::getId() {
+    return idCliente;
+}
+
+void ProcesoClientes::asignarPtoVenta(Pipe* ptoVenta) {
+    this->pipePtoVenta = ptoVenta;
+}

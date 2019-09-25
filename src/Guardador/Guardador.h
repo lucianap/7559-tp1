@@ -9,7 +9,6 @@
 #include <sstream>
 #include <ProcesoHijo/ProcesoHijo.h>
 #include <Productor/Productor.h>
-#include <ProcesoHijoFactory/ProcesoHijoFactory.h>
 #include <Distribuidor/Distribuidor.h>
 #include <map>
 #include <PuntoVenta/PuntoVenta.h>

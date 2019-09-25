@@ -19,15 +19,19 @@ private:
 
     map<int, Pipe*> distribuidoresEntradaByDistId;
     map<int, Pipe*> puntosDeVentaEntradaByPuntoVentaId;
+    map<int, Pipe*> pipeVentaClientesByIdPVenta;
 
 public:
 
     std::vector<Productor*> restaurarProductores(Logger& logger);
     std::vector<Distribuidor*> restaurarDistribuidores(Logger& logger);
     std::vector<PuntoVenta*> restaurarPuntosDeVenta(Logger &logger);
+    std::vector<ProcesoClientes*> restaurarProcesosClientes(Logger &logger);
 
     void conectarPipes(std::vector<Productor*> productores,
-                       std::vector<Distribuidor*> distribuidores);
+                       std::vector<Distribuidor*> distribuidores,
+                       std::vector<PuntoVenta*> vendedores,
+                       std::vector<ProcesoClientes*> clientes);
 
 };
 

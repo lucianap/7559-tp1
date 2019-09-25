@@ -60,11 +60,11 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
    while (pendingParams) {
       static struct option long_options[] =
           {
-              {"productores",  required_argument, nullptr, 'p'},
+              {"productores", required_argument, nullptr, 'p'},
               {"distribuidores", required_argument, nullptr, 'd'},
               {"puntosventa", required_argument, nullptr, 'v'},
-              {"debug",  no_argument, nullptr, 'x'},
-              {"reanudar",  no_argument, nullptr, 'r'},
+              {"debug", no_argument, nullptr, 'x'},
+              {"reanudar", no_argument, nullptr, 'r'},
               {0, 0, 0, 0}
           };
       /* getopt_long stores the option index here. */
@@ -78,9 +78,6 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
          break;
 
       switch (c) {
-         case 'r':
-            params.reanudar = true;
-            break;
          case 'p':
             params.cantProductores = atoi(optarg);
               break;
@@ -91,7 +88,10 @@ t_parametros Utils::tomarParametros(int argc,char* argv[]) {
             params.cantPuntosVenta = atoi(optarg);
               break;
          case 'x':
-            params.debug = true;
+              params.debug = true;
+              break;
+          case 'r':
+              params.reanudar = true;
               break;
 
          case '?':
