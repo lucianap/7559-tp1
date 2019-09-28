@@ -54,10 +54,10 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
         std::vector<ProcesoClientes*> clientes, Pipe pipeEntradaStatus) {
 
     //Recupero todas las asignaciones Productor>Distribuidor.
-    multimap<int, int> asignacionesProdDist =
+    this->asignacionesProductorDistribuidores =
             this->restaurarAsignaciones(leerAsignacionesProductorDistribuidor());
 
-    for(auto it = asignacionesProdDist.begin(); it != asignacionesProdDist.end(); it++) {
+    for(auto it = asignacionesProductorDistribuidores.begin(); it != asignacionesProductorDistribuidores.end(); it++) {
         int idProductor = it->first;
         int idDistribuidor = it->second;
         for(auto itP = productores.begin(); itP != productores.end(); itP++) {
@@ -70,10 +70,10 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
     }
 
     //Recupero asignaciones Distribuidor>PuntoVenta
-    multimap<int,int> asignacionesDistribuidorPvta =
+    this->asignacionesDistribuidorPuntosDeVenta =
             this->restaurarAsignaciones(leerAsignacionesDistribuidorPuntoVenta());
 
-    for(auto it = asignacionesDistribuidorPvta.begin(); it != asignacionesDistribuidorPvta.end(); it++) {
+    for(auto it = asignacionesDistribuidorPuntosDeVenta.begin(); it != asignacionesDistribuidorPuntosDeVenta.end(); it++) {
         int idDistribuidor = it->first;
         int idPtoVenta = it->second;
         for(auto itD = distribuidores.begin(); itD != distribuidores.end(); itD++) {
@@ -179,6 +179,14 @@ std::vector<ProcesoClientes *> Restaurador::restaurarProcesosClientes(Logger &lo
         pcs.push_back(pc);
     }
     return pcs;
+}
+
+std::multimap<int, int> Restaurador::getAsignacionesProductorDistribuidor() {
+    return this->asignacionesProductorDistribuidores;
+}
+
+std::multimap<int, int> Restaurador::getAsignacionesDistribuidorPuntoVenta() {
+    return this->asignacionesDistribuidorPuntosDeVenta;
 }
 
 

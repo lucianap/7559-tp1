@@ -209,7 +209,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
             mensajeError = "RECIBIR HEADER: Error al leer pipe en el punto de venta: " + to_string(bytesleidos) + " | "+string(buffer);
             logger.log("Se descarta el siguiente mensaje. ");
             logger.log(mensajeError);
-        //throw(std::string(mensajeError));
+        throw(std::string(mensajeError));
     }
 
     logger.log(ss.str());

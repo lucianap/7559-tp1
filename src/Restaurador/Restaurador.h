@@ -23,6 +23,9 @@ private:
     map<int, Pipe*> puntosDeVentaEntradaByPuntoVentaId;
     map<int, Pipe*> pipeVentaClientesByIdPVenta;
 
+    std::multimap<int,int> asignacionesProductorDistribuidores;
+    std::multimap<int,int> asignacionesDistribuidorPuntosDeVenta;
+
 public:
 
     std::string getStatusSerializado();
@@ -30,6 +33,9 @@ public:
     std::vector<Distribuidor*> restaurarDistribuidores(Logger& logger);
     std::vector<PuntoVenta*> restaurarPuntosDeVenta(Logger &logger);
     std::vector<ProcesoClientes*> restaurarProcesosClientes(Logger &logger);
+
+    std::multimap<int,int> getAsignacionesProductorDistribuidor();
+    std::multimap<int,int> getAsignacionesDistribuidorPuntoVenta();
 
     void conectarPipes(std::vector<Productor*> productores,
                        std::vector<Distribuidor*> distribuidores,

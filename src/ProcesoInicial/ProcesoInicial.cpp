@@ -30,6 +30,9 @@ void ProcesoInicial::reanudarEjecucion() {
     r.conectarPipes(this->productores, this->distribuidores,
             this->puntosVenta, this->procesosClientes, this->status.getPipeEntrada());
 
+    this->asignacionesDistribuidorPuntosDeVenta = r.getAsignacionesDistribuidorPuntoVenta();
+    this->asignacionesProductorDistribuidores = r.getAsignacionesProductorDistribuidor();
+
     loggerProcess.ejecutar();
     logger.log("-----------Restaurando sistema-------------");
 
@@ -47,11 +50,11 @@ void ProcesoInicial::reanudarEjecucion() {
         (*it)->ejecutar();
     }
 
-    for(auto it = this->procesosClientes.begin(); it != this->procesosClientes.end(); it++) {
+    for(auto it = this->puntosVenta.begin(); it != this->puntosVenta.end(); it++) {
         (*it)->ejecutar();
     }
 
-    for(auto it = this->puntosVenta.begin(); it != this->puntosVenta.end(); it++) {
+    for(auto it = this->procesosClientes.begin(); it != this->procesosClientes.end(); it++) {
         (*it)->ejecutar();
     }
 

@@ -89,6 +89,7 @@ void ProcesoClientes::iniciarAtencion() {
         logger.log(ss.str());
         sleep(5);
     }
+
     if(sigusr1_handler.getSaveAndQuit() != 0) {
         logger.log( "Clientes: "+ to_string(this->idCliente) +" sale.");
         Guardador g;
