@@ -14,20 +14,15 @@ int Menu::iniciar() {
     while (input != '0' && input != '1') {
         cout << endl;
         cout << "------- MENU -------" << endl;
-        cout << "0: Salir" << endl;
         cout << "1: Salvar" << endl;
         cout << "2: Ver informe" << endl;
         cout << "Seleccione una opcion: ";
         cin >> input;
 
         switch (input) {
-            case '0':
-                cout << endl;
-                cout << "Se cierran los procesos." << endl;
-                return 0;
             case '1':
                 cout << endl;
-                cout << "Guardando estado y finalizando." << endl;
+                cout << "Salir y salvar" << endl;
                 return 1;
             case '2':
                 this->mostrarInfome();
