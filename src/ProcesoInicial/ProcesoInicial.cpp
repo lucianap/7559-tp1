@@ -175,8 +175,8 @@ void ProcesoInicial::guardar() {
     }
 
     //Controlo que todos los procesos se hayan guardado.
-    //while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
-     //           + puntosVenta.size() + procesosClientes.size())){}
+    while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
+                + puntosVenta.size() + procesosClientes.size())){}
 
     Guardador g;
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);

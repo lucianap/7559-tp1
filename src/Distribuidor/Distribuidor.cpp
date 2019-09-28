@@ -114,6 +114,8 @@ void Distribuidor::iniciarAtencion() {
                 Guardador g;
                 g.guardar(this);
                 logger.log( "Distribuidor: " + to_string(idDistribuidor) + " se guarda." );
+                //Feo break
+                //TODO después de testear si anda esta solución extraer a una variable.
                 break;
 
             }
@@ -122,11 +124,9 @@ void Distribuidor::iniciarAtencion() {
             logger.log("Error atendiendo a productores: " + error);
             break;
         }
-
-
-        logger.log( "Distribuidor: " + to_string(idDistribuidor) + " se SALE." );
-
     }
+
+    logger.log( "Distribuidor: " + to_string(idDistribuidor) + " se SALE." );
 
 }
 

@@ -204,7 +204,7 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer pipe en el punto de venta";
+            mensajeError = "Error al leer pipe en el punto de venta: " + to_string(bytesleidos) + " | "+string(buffer);
         throw(std::string(mensajeError));
     }
 
