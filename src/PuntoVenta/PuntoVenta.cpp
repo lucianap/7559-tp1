@@ -199,13 +199,17 @@ TipoProceso PuntoVenta::recibirHeader(char *buffer) {
 
     std::stringstream ss;
     ss << "PTO VENTA "<< this->idPuntoVenta << " lee " << bytesleidos << " bytes del pipe." << endl;
+    string msg = "RECIBIR HEADER: se recibe del pipe (punto de venta): " + to_string(bytesleidos) + " | "+string(buffer);
+    logger.log(msg);
 
     if (bytesleidos != Utils::TAM_HEADER) {
         if (bytesleidos == -1)
             mensajeError = strerror(errno);
         else
-            mensajeError = "Error al leer pipe en el punto de venta: " + to_string(bytesleidos) + " | "+string(buffer);
-        throw(std::string(mensajeError));
+            mensajeError = "RECIBIR HEADER: Error al leer pipe en el punto de venta: " + to_string(bytesleidos) + " | "+string(buffer);
+            logger.log("Se descarta el siguiente mensaje. ");
+            logger.log(mensajeError);
+        //throw(std::string(mensajeError));
     }
 
     logger.log(ss.str());

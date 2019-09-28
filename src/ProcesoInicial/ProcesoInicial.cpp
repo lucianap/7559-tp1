@@ -181,7 +181,7 @@ void ProcesoInicial::guardar() {
     Guardador g;
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);
     g.guardar(&status);
- //   this->terminarProcesos();
+    this->terminarProcesos();
 
 }
 
