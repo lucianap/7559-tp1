@@ -85,15 +85,8 @@ void PuntoVenta::iniciarAtencion() {
     Cajon paqueteCajon;
     TipoProceso proceso_header;
     int eofRecibidos = 0;
-    while (sigint_handler.getGracefulQuit() == 0 ) {
-
-        //ya no tengo nada que hacer si el conteo de eof llegó a dos, pero no puedo
-        //continuar hasta que alguna signal se prenda
-        if(eofRecibidos >= 2 && sigusr1_handler.getSaveAndQuit() != 0) break;
-        if(eofRecibidos >= 2) continue;
-
+    while (sigint_handler.getGracefulQuit() == 0) {
         try {
-
             proceso_header = recibirHeader(buffer_header);
             if(proceso_header == CLIENTE_T){
                 t_parametros_pedido pedido_actual;
@@ -102,25 +95,29 @@ void PuntoVenta::iniciarAtencion() {
             }else if(proceso_header == DISTRIBUIDOR_T){
                 paqueteCajon = recibirCajon(buffer_cajon);
                 this->clasificar(paqueteCajon);
-            }else if(proceso_header==NO_PROCESS_T){
+            } else if(proceso_header==NO_PROCESS_T){
                 ++eofRecibidos;
+                logger.log( "Count de EOF: "+ to_string(eofRecibidos));
             }
+
+            if(eofRecibidos >= 2) {
+                logger.log( "Count de EOF: "+ to_string(eofRecibidos));
+                logger.log( "Pto Venta: "+ to_string(this->idPuntoVenta) +" se guarda.");
+                Guardador g;
+                g.guardar_ptoVenta(this);
+                //Cierro la canilla y espero a que me maten, eventualmente
+                this->cerrarPipe();
+                break;
+            }
+
         } catch (std::string &error) {
             logger.log("Error atendiendo personas: " + error);
             break;
         }
     }
 
-    logger.log( "Count de EOF: "+ to_string(eofRecibidos));
-    logger.log( "Valor de la signal de guardado: "+ to_string(sigusr1_handler.getSaveAndQuit()));
-    if(sigusr1_handler.getSaveAndQuit() != 0) {
-        logger.log( "Pto Venta: "+ to_string(this->idPuntoVenta) +" sale.");
-        Guardador g;
-        g.guardar_ptoVenta(this);
+    logger.log( "Pto Venta: "+ to_string(this->idPuntoVenta) +" sale.");
 
-        //Cierro la canilla y espero a que me maten, eventualmente
-        this->cerrarPipe();
-    }
 }
 
 

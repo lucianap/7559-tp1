@@ -70,7 +70,6 @@ pid_t Distribuidor::ejecutar() {
 
     // siendo distribuidor, me seteo y ejecuto lo que quiero
     SignalHandler::getInstance()->registrarHandler(SIGINT, &sigint_handler);
-    SignalHandler::getInstance()->registrarHandler(SIGUSR1, &sigusr1_handler);
 
     logger.log("Naci como distribuidor y tengo el pid: "+to_string(getpid()));
 
@@ -94,18 +93,28 @@ void Distribuidor::iniciarAtencion() {
 
 
     this->inicializarValores();
-    while (sigint_handler.getGracefulQuit() == 0 && sigusr1_handler.getSaveAndQuit() == 0) {
+    while (sigint_handler.getGracefulQuit() == 0) {
         try {
 
             Cajon unCajon = recibirCajon(buffer);
 
             if(!unCajon.estaVacio()) {
+
                 this->clasificar(unCajon);
                 this->logearStatus();
                 if (this->hayDiponiblidadParaEnvio()) {
                     this->enviarAPuntosDeVenta();
-                } else {
                 }
+
+            } else {
+
+                //Cajón vacío significa que llegó un EOF.
+                //Luego, mando EOF a mis pipes y termino
+                this->cerrarPipes();
+                Guardador g;
+                g.guardar(this);
+                logger.log( "Distribuidor: " + to_string(idDistribuidor) + " se guarda." );
+                break;
 
             }
 
@@ -113,20 +122,11 @@ void Distribuidor::iniciarAtencion() {
             logger.log("Error atendiendo a productores: " + error);
             break;
         }
+
+
+        logger.log( "Distribuidor: " + to_string(idDistribuidor) + " se SALE." );
+
     }
-
-    if(sigusr1_handler.getSaveAndQuit() != 0) {
-
-        stringstream ss;
-        ss << "Distribuidor: " << idDistribuidor << " sale." << endl;
-        logger.log(ss.str());
-
-        Guardador g;
-        g.guardar(this);
-    }
-    this->cerrarPipes();
-    while(sigint_handler.getGracefulQuit() == 0) {}
-
 
 }
 

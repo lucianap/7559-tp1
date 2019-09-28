@@ -88,7 +88,7 @@ void ProcesoInicial::iniciarEjecucion() {
     for (int j = 0; j < puntos_de_venta; ++j) {
         Pipe* pipeInPVenta = new Pipe();
         this->pVentasEntrada.push_back(pipeInPVenta);
-        int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, puntos_de_venta, &p_ventas_por_distribuidor);
+        int distribuidorAsignado = this->asignar_pipes(j, pipeInPVenta, distribuidores, &p_ventas_por_distribuidor);
         this->asignacionesDistribuidorPuntosDeVenta.insert(std::pair<int,int>(distribuidorAsignado, j));
     }
 
@@ -170,25 +170,18 @@ void ProcesoInicial::guardar() {
         (*it)->guardar();
     }
 
-    for(auto it = distribuidores.begin(); it != distribuidores.end(); it++) {
-        (*it)->guardar();
-    }
-
     for(auto it = procesosClientes.begin(); it != procesosClientes.end(); it++) {
         (*it)->guardar();
     }
 
-    for(auto it = puntosVenta.begin(); it != puntosVenta.end(); it++) {
-        (*it)->guardar();
-    }
     //Controlo que todos los procesos se hayan guardado.
-    while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
-                + puntosVenta.size() + procesosClientes.size())){}
+    //while(!Guardador::isCantidadDeArchivosGuardadosOk(distribuidores.size() + productores.size()
+     //           + puntosVenta.size() + procesosClientes.size())){}
 
     Guardador g;
     g.guardarAsignaciones(this->asignacionesProductorDistribuidores , this->asignacionesDistribuidorPuntosDeVenta);
     g.guardar(&status);
-    this->terminarProcesos();
+ //   this->terminarProcesos();
 
 }
 
