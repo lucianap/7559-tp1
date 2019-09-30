@@ -95,9 +95,11 @@ void ProcesoClientes::iniciarAtencion() {
         Guardador g;
         g.guardar_cliente(this);
 
-        //Cierro la canilla y espero a que me maten, eventualmente
-        this->cerrarPipe();
+
     }
+
+    //Cierro la canilla y espero a que me maten, eventualmente
+    this->cerrarPipe();
 
     //Espero a que me maten.
     while(sigint_handler.getGracefulQuit() == 0) {}
