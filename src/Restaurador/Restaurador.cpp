@@ -63,8 +63,12 @@ void Restaurador::conectarPipes(std::vector<Productor *> productores,
         for(auto itP = productores.begin(); itP != productores.end(); itP++) {
             Productor *p = *itP;
             if(p->getId() == idProductor) {
-                p->agregarDistribuidor(distribuidoresEntradaByDistId
-                .find(idDistribuidor)->second);
+                if(distribuidoresEntradaByDistId.find(idDistribuidor) != distribuidoresEntradaByDistId.end()) {
+
+                    p->agregarDistribuidor(distribuidoresEntradaByDistId
+                                                   .find(idDistribuidor)->second);
+                }
+
             }
         }
     }

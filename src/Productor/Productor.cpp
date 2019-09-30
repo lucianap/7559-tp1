@@ -203,6 +203,10 @@ int Productor::getId() {
     return this->id;
 }
 
+int Productor::getCantidadDistribuidoresAsignados() {
+    return this->distribuidores.size();
+}
+
 
 
 

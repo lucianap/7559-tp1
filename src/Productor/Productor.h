@@ -41,6 +41,8 @@ class Productor : public ProcesoHijo {
         pid_t ejecutar() override;
         std::string serializar() override;
 
+        int getCantidadDistribuidoresAsignados();
+
         int getId();
 
     private:

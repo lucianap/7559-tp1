@@ -42,9 +42,14 @@ void ProcesoInicial::reanudarEjecucion() {
     Guardador::inicializar();
 
     //damos play a todos los procesos.
+    vector<Productor*> pAsignados;
     for(auto it = this->productores.begin(); it != this->productores.end(); it++) {
-        (*it)->ejecutar();
+        if((*it)->getCantidadDistribuidoresAsignados() >= 1){
+            (*it)->ejecutar();
+            pAsignados.push_back(*it);
+        }
     }
+    this->productores = pAsignados;
 
     for(auto it = this->distribuidores.begin(); it != this->distribuidores.end(); it++) {
         (*it)->ejecutar();
