@@ -69,7 +69,16 @@ void Restaurador::conectarPipes(std::vector<Productor *> &productores,
                     p->agregarDistribuidor(distribuidoresEntradaByDistId
                                                    .find(idDistribuidor)->second);
 
-                    productoresAsginados.push_back(p);
+
+                    bool yaAgregado = false;
+                    for(auto it = productoresAsginados.begin(); it != productoresAsginados.end(); it++ ) {
+                        if ((*it)->getId() == p->getId()) {
+                            yaAgregado = true;
+                        }
+                    }
+
+                    if(!yaAgregado)
+                        productoresAsginados.push_back(p);
                 }
 
 
