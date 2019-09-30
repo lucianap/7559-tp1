@@ -75,6 +75,15 @@ void ProcesoInicial::iniciarEjecucion() {
     this->status.setCantPipes(puntos_de_venta);
     //todo leer archivo de pedidos y cargarlo a partir del mismo
 
+
+    if(puntos_de_venta < distribuidores) {
+        distribuidores = puntos_de_venta;
+    }
+
+    if(distribuidores < productores) {
+        productores = distribuidores;
+    }
+
     Guardador::truncar();
     Guardador::inicializar();
     Remito::cleanUp();
