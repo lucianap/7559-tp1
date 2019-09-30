@@ -12,7 +12,7 @@ Distribuidor::Distribuidor(Logger& logger, std::vector<Pipe*> ptos_de_venta,int 
         ProcesoHijo(logger),
         ptos_de_venta(ptos_de_venta),
         idDistribuidor(idDistribuidor),
-        entradaFlores(*entrada) {
+        entradaFlores(*entrada) { // todo validar, te agrego el pipe por param.
 }
 
 Distribuidor::Distribuidor(Logger &logger, std::string distribuidorSerializado, Pipe* entrada) :

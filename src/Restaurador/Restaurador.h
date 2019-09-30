@@ -37,10 +37,10 @@ public:
     std::multimap<int,int> getAsignacionesProductorDistribuidor();
     std::multimap<int,int> getAsignacionesDistribuidorPuntoVenta();
 
-    void conectarPipes(std::vector<Productor*> &productores,
-                       std::vector<Distribuidor*> &distribuidores,
-                       std::vector<PuntoVenta*> &vendedores,
-                       std::vector<ProcesoClientes*> &clientes,
+    void conectarPipes(std::vector<Productor*> productores,
+                       std::vector<Distribuidor*> distribuidores,
+                       std::vector<PuntoVenta*> vendedores,
+                       std::vector<ProcesoClientes*> clientes,
                        Pipe pipeEntradaStatus);
 
 };

@@ -48,16 +48,14 @@ std::vector<PuntoVenta *> Restaurador::restaurarPuntosDeVenta(Logger &logger) {
     return procesosRestaurados;
 }
 
-void Restaurador::conectarPipes(std::vector<Productor *> &productores,
-        std::vector<Distribuidor *> &distribuidores,
-        std::vector<PuntoVenta*> &puntosVentas,
-        std::vector<ProcesoClientes*> &clientes, Pipe pipeEntradaStatus) {
+void Restaurador::conectarPipes(std::vector<Productor *> productores,
+        std::vector<Distribuidor *> distribuidores,
+        std::vector<PuntoVenta*> puntosVentas,
+        std::vector<ProcesoClientes*> clientes, Pipe pipeEntradaStatus) {
 
     //Recupero todas las asignaciones Productor>Distribuidor.
     this->asignacionesProductorDistribuidores =
             this->restaurarAsignaciones(leerAsignacionesProductorDistribuidor());
-
-    std::vector<Productor*> productoresAsginados;
 
     for(auto it = asignacionesProductorDistribuidores.begin(); it != asignacionesProductorDistribuidores.end(); it++) {
         int idProductor = it->first;
@@ -65,26 +63,15 @@ void Restaurador::conectarPipes(std::vector<Productor *> &productores,
         for(auto itP = productores.begin(); itP != productores.end(); itP++) {
             Productor *p = *itP;
             if(p->getId() == idProductor) {
-                if(distribuidoresEntradaByDistId.find(idDistribuidor) != distribuidoresEntradaByDistId.end()) {
-                    p->agregarDistribuidor(distribuidoresEntradaByDistId
-                                                   .find(idDistribuidor)->second);
-
-                    productoresAsginados.push_back(p);
-                }
-
-
+                p->agregarDistribuidor(distribuidoresEntradaByDistId
+                .find(idDistribuidor)->second);
             }
         }
     }
 
-    productores = productoresAsginados;
-
-
     //Recupero asignaciones Distribuidor>PuntoVenta
     this->asignacionesDistribuidorPuntosDeVenta =
             this->restaurarAsignaciones(leerAsignacionesDistribuidorPuntoVenta());
-
-
 
     for(auto it = asignacionesDistribuidorPuntosDeVenta.begin(); it != asignacionesDistribuidorPuntosDeVenta.end(); it++) {
         int idDistribuidor = it->first;
@@ -97,8 +84,6 @@ void Restaurador::conectarPipes(std::vector<Productor *> &productores,
             }
         }
     }
-
-
 
     //Asigno punto de venta con clientes.
     for(auto itVenta = puntosVentas.begin(); itVenta != puntosVentas.end(); itVenta++) {
