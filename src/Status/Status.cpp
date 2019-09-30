@@ -59,7 +59,7 @@ void Status::iniciarAtencion() {
     int cantEofs = 0;
     while (sigint_handler.getGracefulQuit() == 0) {
         try {
-            if(cantEofs>=2 && sigusr1_handler.getSaveAndQuit() != 0)break;
+            if(cantEofs>=this->cantPipes && sigusr1_handler.getSaveAndQuit() != 0)break;
             SolicitudStatus unaSolicitud = recibirSolicitud();
             if(unaSolicitud.getTipoSolicitud() != SolicitudStatus::TIPO_SOLICITUD_EOF){
                 despacharSolicitud(unaSolicitud);

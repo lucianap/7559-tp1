@@ -36,7 +36,7 @@ void ProcesoInicial::reanudarEjecucion() {
     loggerProcess.ejecutar();
     logger.log("-----------Restaurando sistema-------------");
 
-    status.cargar(r.getStatusSerializado());
+    this->status.setCantPipes(puntosVenta.size());
 
     Guardador::truncar();
     Guardador::inicializar();

@@ -22,13 +22,17 @@ int main(int argc, char* argv[]) {
         cout<<"La cantidad de puntos de venta debe ser menor de 10"<<endl;
         return 0;
     }
-    ProcesoInicial procesoInicial(parametros);
 
-    if(parametros.reanudar) {
-        procesoInicial.reanudarEjecucion();
-    } else {
-        procesoInicial.iniciarEjecucion();
-    }
+    try {
+
+        ProcesoInicial procesoInicial(parametros);
+
+        if(parametros.reanudar) {
+            procesoInicial.reanudarEjecucion();
+        } else {
+            procesoInicial.iniciarEjecucion();
+        }
+    } catch (...) {}
 
     return 0;
 }
