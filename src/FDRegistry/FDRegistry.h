@@ -24,4 +24,4 @@ private:
 };
 
 
-#endif //ADUANACONCULANDIA_STATUS_H
+#endif //STATUS_H
